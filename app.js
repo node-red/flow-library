@@ -43,11 +43,11 @@ app.use(express.urlencoded());
 var renderTemplates = {};
 var partialTemplates = {};
 
-fs.readdir("template",function(err,files) {
+fs.readdir(path.join(__dirname,"template"),function(err,files) {
     files.forEach(function(fn) {
         if (/.html$/.test(fn)) {
             var partname = fn.substring(0,fn.length-5);
-            fs.readFile(path.join("template",fn),'utf8',function(err,data) {
+            fs.readFile(path.join(__dirname,"template",fn),'utf8',function(err,data) {
                 if (fn[0] == "_") {
                     partialTemplates[partname] = data;
                 } else {
@@ -59,7 +59,7 @@ fs.readdir("template",function(err,files) {
     });
 });
 
-app.use("/",express.static('./public'));
+app.use("/",express.static(path.join(__dirname,'public')));
 
 app.use(function(req, res, next) {
     var start = Date.now();

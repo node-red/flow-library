@@ -1,0 +1,10 @@
+  <div class="container toolbar">
+    <div class="row-fluid">
+      <div class="login">
+        {{^sessionuser}}<a class="signin" href="/login"><i class="icon-github"></i> sign in with <b>GitHub</b></a>
+        <script>$(function() { $(".signin").attr('href','/login?return='+window.location.pathname);});</script>
+        {{/sessionuser}}
+        {{#sessionuser}}<a href="/user/{{login}}"><b>{{login}}</b></a> <img src="{{avatar_url}}"/>{{/sessionuser}}  
+      </div>
+    </div>
+  </div>

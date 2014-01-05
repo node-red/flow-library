@@ -1,0 +1,273 @@
+{{>_header}}
+  <div class="container main-content add-form">
+  <!--
+    <div class="row-fluid">
+      <div class="offset3 span2">
+        <a href="/add" class="btn btn-download">Add an existing flow</a>
+      </div>
+      <div class="offset2 span2">
+        <a href="/add" class="btn btn-download">Create a new flow</a>
+      </div>
+    </div>
+   -->
+{{#sessionuser}}   
+   <div class="row-fluid">
+       <div class="span3 add-help">
+           <h3 class="add-flow-label">Title</h3>
+           <P>Give your flow a short, descriptive title. </p>
+       </div>
+       <div class="span8" style="padding-top: 10px;">
+           <input id="add-flow-title" type="text"></input>
+       </div>
+   </div>
+   <div class="row-fluid" style="margin-top: 15px;">
+       <div class="span3 add-help">
+           <h3 class="add-flow-label">Description</h3>
+           <p>Describe what the flow does and how it is used.</p>
+           <p>This uses <a href="http://github.github.com/github-flavored-markdown/">GitHub Flavoured Markdown</a>
+           for formatting. Use the <i>preview</i> tab to see how it looks.</p> 
+       </div>
+       <div class="span8" style="border: 1px solid #fff; position: relative;">
+           <textarea id="add-flow-desc"></textarea>
+           <div id="add-flow-desc-md"></div>
+           <div class="add-flow-desc-buttons"><a href="#" class="active" id="add-flow-desc-edit">edit</a><a href="#" class="inactive" id="add-flow-desc-preview">preview</a></div>
+       </div>
+   </div>
+   <div class="row-fluid" style="margin-top: 15px;">
+       <div class="span3 add-help">
+           <h3 class="add-flow-label">Flow</h3>
+           <p>In Node-RED, select the flow you want to export. Select <i>Export to 
+           &gt; Clipboard</i> from the menu (Ctrl-E), copy the JSON from
+           the dialog and paste here.</p>
+       </div>
+       <div class="span8" style="padding-top: 10px;">
+           <textarea id="add-flow-flow"></textarea>
+       </div>
+   </div>
+   <div class="row-fluid" style="margin-top: 15px;">
+       <div class="span3 add-help">
+           <h3 class="add-flow-label">Tags</h3>
+           <p>Add some tags to your flow that will help others find it. Comma- or space-separate the tags.</p>
+       </div>
+       <div class="span8" style="padding-top: 10px;">
+           <ul class="flow-tags" id="add-flow-tags"></ul>
+       </div>
+   </div>
+   <div class="row-fluid" style="margin-top: 15px;">
+       <div class="offset3 span8">
+            <a id="add-flow-create" href="#" class="btn-create">create flow</a>
+            <p class="create-toc">This will create a public gist, owned by you, on GitHub and add it to the Node-RED flow library on your behalf.</p>
+       </div>
+   </div>
+
+   
+   <!--
+   <div class="row-fluid add-step">
+      <div class="offset1 span1 add-index">1.</div>
+      <div class="span9">
+          <h3>Export your flow from Node-RED</h3>
+          <ul>
+            <li>Select the flow you want to export</li>
+            <li>Select <i>Export to &gt; Clipboard</i> from the menu, or press Ctrl-E</li>
+            <li>Copy the JSON from the Export dialog to your clipboard ready for Step 2</li>
+          </ul>
+      </div>
+    </div>
+    <div class="row-fluid add-step">
+      <div class="offset1 span1 add-index">2.</div>
+      <div class="span9">
+          <h3>Create your flow as a GitHub Gist</h3>
+          <ul>
+            <li>Go to <a target="_new" href="https://gist.github.com">https://gist.github.com</a></li>
+            <li>Give your flow a one-line description</li>
+            <li>Add a file called <code>flow.json</code> containing the flow exported from Node-RED</li>
+            <li>Add a file called <code>README.md</code> containing a full description of the flow</li>
+            <li>Click create</li>
+          </ul>
+      </div>
+    </div>
+    
+    <div class="row-fluid add-step">
+      <div class="offset1 span1 add-index">3.</div>
+      <div class="span9">
+        <h3>Paste the gist's url here</h3>
+         <input id="flowurl" type="text" placeholder="https://gist.github.com/your/gist"></input>
+         <div class="text-warning" id="flowerror">&nbsp;</div>
+      </div>
+    </div>
+
+    <div class="row-fluid add-step">
+      <div class="offset1 span1 add-index">4.</div>
+      <div class="span9">
+         <h3>Click <a href="#" id="addflow" class="addButton">here</a> to add to the library</h3>
+      </div>
+    </div>
+  -->
+<script src="/js/marked.js"></script>
+<script src="/js/tags.js"></script>
+<script>
+
+$(function() {
+    //var stopWordsAr = "node-red,a,able,about,across,after,all,almost,also,am,among,an,and,any,are,as,at,be,because,been,but,by,can,cannot,could,dear,did,do,does,either,else,ever,every,for,from,get,got,had,has,have,he,her,hers,him,his,how,however,i,if,in,into,is,it,its,just,least,let,like,likely,may,me,might,most,must,my,neither,no,nor,not,of,off,often,on,only,or,other,our,own,rather,said,say,says,she,should,since,so,some,than,that,the,their,them,then,there,these,they,this,tis,to,too,twas,us,wants,was,we,were,what,when,where,which,while,who,whom,why,will,with,would,yet,you,your".split(",");
+    //var stopWords = {};
+    //for (var i in stopWordsAr) {
+    //    stopWords[stopWordsAr[i]] = true;
+    //}
+    //
+    //$("#add-flow-title").change(function(e) {
+    //    var title = $("#add-flow-title").val();
+    //    var words = title.split(" ");
+    //    for (var i in words) {
+    //        var w = words[i].toLowerCase();
+    //        if (stopWords[w]) {
+    //            continue;
+    //        }
+    //        console.log(w);
+    //    }
+    //});
+    
+    
+    $("#flowurl").keydown(function(event){
+        if(event.keyCode == 13) {
+            event.preventDefault();
+            return false;
+        }
+    });
+    
+    $("#addflow").click(function(event) {
+        $('#flowurl').popover('destroy');
+        var r = /^https?:\/\/gist\.github\.com(\/.+)*\/([^\/]*)$/
+        var match = r.exec($("#flowurl").val());
+        if (match) {
+            $('#flowurl').removeClass('input-error');
+            $('#flowerror').html('&nbsp;');
+            var id = match.pop();
+            //https://gist.github.com/knolleary/223cbbbedbfd383872a8       
+            
+            $.post("/add/"+id,function(data) {
+                window.location = data;
+            }).fail(function(data) {
+                $('#flowurl').addClass('input-error');
+                $('#flowerror').html(data.responseText);
+                $('#flowurl').focus();
+            });
+            
+        } else {
+            $('#flowurl').addClass('input-error');
+            $('#flowerror').html('Invalid GitHub url');
+        }
+        event.preventDefault();
+    });
+    
+    $("#add-flow-title").change(function(e) {
+        var title = $.trim($(this).val());
+        if (title == "") {
+            $(this).addClass("input-error");
+        } else {
+            $(this).removeClass("input-error");
+        }
+    });
+    $("#add-flow-desc").change(function(e) {
+        var desc = $.trim($(this).val());
+        if (desc == "") {
+            $(this).addClass("input-error");
+        } else {
+            $(this).removeClass("input-error");
+        }
+    });
+    
+    $("#add-flow-flow").change(function(e) {
+        var flow = $(this).val();
+        if (flow == "") {
+            $("#add-flow-flow").removeClass("input-error");
+        } else {            
+            try {
+                JSON.parse(flow);
+                $("#add-flow-flow").removeClass("input-error");
+            } catch(err) {
+                $("#add-flow-flow").addClass("input-error");
+            }
+        }
+    });
+    
+    $('#add-flow-desc-preview').click(function(e) {
+        var desc = $("#add-flow-desc").val();
+        $("#add-flow-desc-md").html(marked(desc))
+        $("#add-flow-desc").hide();        
+        $("#add-flow-desc-md").show();
+        $('#add-flow-desc-preview').removeClass('inactive');
+        $('#add-flow-desc-preview').addClass('active');
+        $('#add-flow-desc-edit').removeClass('active');
+        $('#add-flow-desc-edit').addClass('inactive');
+        e.preventDefault();
+    });
+    $('#add-flow-desc-edit').click(function(e) {
+        $("#add-flow-desc").show();        
+        $("#add-flow-desc-md").hide();
+        $('#add-flow-desc-preview').removeClass('active');
+        $('#add-flow-desc-preview').addClass('inactive');
+        $('#add-flow-desc-edit').removeClass('inactive');
+        $('#add-flow-desc-edit').addClass('active');
+        $("#add-flow-desc").focus();
+        e.preventDefault();
+    });
+    
+    $('#add-flow-create').click(function(e) {
+        e.preventDefault();
+        var flow = {
+            title: $.trim($("#add-flow-title").val()),
+            description: $("#add-flow-desc").val(),
+            flow: $("#add-flow-flow").val(),
+            tags: tags.get()
+        };
+        var errors = false;
+        
+        if (flow.title == "") {
+            errors = true;
+            $("#add-flow-title").addClass("input-error");
+        }
+        if (flow.description == "") {
+            errors = true;
+            $("#add-flow-desc").addClass("input-error");
+        }
+        if (flow.flow == "") {
+            errors = true;
+            $("#add-flow-flow").addClass("input-error");
+        } else {
+            try {
+                JSON.parse(flow.flow);
+            } catch(err) {
+                errors = true;
+                $("#add-flow-flow").addClass("input-error");
+            }
+        }
+        
+        if (!errors) {
+            $.post("/flow",flow,function(data) {
+                window.location = data;
+            }).fail(function(err) {
+                console.log("ERROR",err);
+            });
+        } else {
+            window.scrollTo(0,0);
+        }
+    });
+    
+    var tags = tagger();
+});
+</script>
+{{/sessionuser}}
+{{^sessionuser}}   
+    <div class="row-fluid" style="min-height: 400px">
+      <div class="offset1 span8">
+        <h2 class="pagetitle">Add a flow</h2>
+        <p class="lead">You need to <a href="/login?return=/add">sign in with GitHub</a> before you can add a flow.</p>
+        <h3>Why?</h3>
+        <p class="lead">We save the flow as a Gist under your GitHub account.</p>
+      </div>
+    </div>
+
+{{/sessionuser}}
+  </div>
+
+{{>_footer}}

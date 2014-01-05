@@ -1,0 +1,326 @@
+
+.toolbar {
+    padding-top: 0 5px;
+    background: #fff;
+    color: #676767;
+    height: 42px;
+}
+.login a {
+    color: #676767;
+    line-height: 36px;
+    padding: 3px 6px;
+}
+.login a:hover {
+    text-decoration: none;
+}
+.login a.signin {
+    border: 1px solid #ccc;
+    border-radius: 3px;
+}
+.login a.signin:hover {
+    background: #f0f0f0;
+    text-decoration: none;
+}
+.login {
+    padding-top: 3px;
+    font-size: 13px;
+    text-align: right;
+}
+
+.login img {
+    width: 32px;
+    height: 32px;
+    margin: 3px;
+    border-radius: 5px;
+}
+
+#flow {
+    margin-top: 30px;
+    margin-bottom: 30px;
+    padding: 30px;
+    font-size: 12px;
+    line-height: 22px;
+    font-family: monospace;
+    cursor: pointer;
+}
+
+#dreadme {
+    padding: 30px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-bottom: 30px;
+}
+
+.flowuser img {
+    width:32px;
+    border-radius: 5px;
+}
+.pagetitle {
+    vertical-align:middle;
+}
+
+.pagetitle img {
+    width:64px;
+    border-radius: 5px;
+}
+
+.flowinfo a:hover, .flowuser a:hover {
+    text-decoration: none;
+}
+.flowmeta {
+    dbackground: #FFF7D8;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-bottom: 10px;
+}
+.flowmeta img {
+    border: 1px solid #ccc;
+}
+.flowinfo {
+    margin-left: 10px;
+    font-size: 14px;
+}
+.flowuser {
+    font-family: 'Roboto Slab', serif;
+    font-size: 18px;
+}
+.pagetitle .flowuser {
+    color: #aaa;
+    vertical-align:bottom;
+    font-weight: normal;
+}
+.userinfo {
+    margin-left: 10px;
+    display:inline-block;
+}
+
+
+.nodeTypeCount {
+    font-size: 11px;
+}
+
+.popover {
+    background-color: #FDFFC2;
+}
+.popover.bottom .arrow:after {
+    border-bottom-color:#FDFFC2;
+}
+.popover.top .arrow:after {
+    border-top-color:#FDFFC2;
+}
+.popover.right .arrow:after {
+    border-right-color:#FDFFC2;
+}
+
+.add-help {
+    -border: 1px solid #ccc;
+    -border-radius: 3px;
+    -display: none !important;
+}
+.add-help p {
+    margin-bottom: 10px;
+}
+
+.add-form input[type=text] {
+    margin-bottom: 0;
+    height: 40px;
+    font-size: 20px;
+    width: 100%;
+}
+.add-form textarea {
+    font-size: 14px;
+    width: 100%;
+    resize: none;
+    padding: 10px;
+}
+#add-flow-title {
+    font-family: 'Roboto Slab', serif;
+}
+#add-flow-flow {
+    height: 125px;
+    padding: 10px;
+    font-size: 12px;
+    line-height: 22px;
+    font-family: monospace;
+    
+}
+#add-flow-desc {
+    height: 350px;
+    margin-top: 29px;
+}
+#add-flow-desc-md {
+    min-height: 350px;
+    margin-top: 29px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    display: none;
+    padding: 10px;
+    background: #fff;
+}
+
+
+h3.add-flow-label {
+    margin-top: 5px;
+}
+.add-flow-desc-buttons {
+    position: absolute;
+    top: 0;
+    right:0;
+    text-align: right;
+    margin-bottom: -2px;
+}
+.add-flow-desc-buttons a {
+    background: #fff;
+    border: 1px solid #ccc;
+    margin-right: 10px;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    padding: 4px;
+    width: 90px;
+    display: inline-block;
+    height: 30px;
+    text-align: center;
+    
+}
+.add-flow-desc-buttons a.active {
+    border-bottom: #fff;
+}
+.add-flow-desc-buttons a.active:hover {
+    border-bottom: #fff;
+    cursor: default;
+}
+
+.add-flow-desc-buttons a:hover {
+    text-decoration: none;
+}
+.add-flow-desc-buttons a.inactive {
+    background: #f0f0f0;
+}
+.add-flow-desc-buttons a.inactive:hover {
+    background:#f6f6f6;
+}
+
+ul.flow-tags {
+    list-style-type: none;
+    margin: 0px;
+    padding: 2px 4px;
+}
+ul#add-flow-tags {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    min-height: 40px;
+}
+
+ul#add-flow-tags.active {
+    border-color: rgba(82, 168, 236, 0.8);
+    box-shadow: rgba(0, 0, 0, 0.0745098) 0px 1px 1px 0px inset, rgba(82, 168, 236, 0.6) 0px 0px 8px 0px;
+}    
+
+ul.flow-tags li {
+    transition: all 500ms ease; 
+    -webkit-transition: all 500ms ease; 
+    -moz-transition: all 500ms ease;
+    -o-transition: all 500ms ease;      
+    display: inline-block;
+    padding: 3px 5px 3px 5px ;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background: #f5f5f5;
+    margin: 3px 3px 3px 1px;
+    cursor: default;
+}
+
+ul.flow-tags li:hover {
+    background: #f0f0f0;
+    
+}
+ul#add-flow-tags li.tag-input {
+    border: none;
+    background: none;
+    padding:0;
+}
+ul#add-flow-tags li.tag-input input {
+    border: none !important;
+    box-shadow: none !important;
+    font-size: 14px;
+    padding: 2px 5px 2px 4px;
+    height: 24px;
+    margin-bottom: 2px;
+}
+
+ul#add-flow-tags li i.icon {
+    color: #aaa;
+}
+
+.addButton {
+    border: 2px solid #ddd;
+    padding: 7px 9px;
+    border-radius: 6px;
+    margin: 0px 5px;
+}
+.addButton:hover {
+    background: #f3f3f3;
+}
+
+.add-step {
+    margin-bottom: 20px;
+}
+.add-index {
+    text-align: center;
+    font-weight: bold;
+    font-family: 'Roboto Slab', serif;
+    font-size: 30px;
+}
+.add-step h3 {
+    margin-top:10px;
+}
+.add-step ul {
+    font-size: 20px;
+}
+.add-step ul li {
+    line-height: 30px;
+}
+
+#flowerror {
+    width: 600px;
+    text-align: right;
+    font-size: 18px;
+}
+
+.input-error {
+    border-color: rgb(214, 97, 95) !important;
+}
+.input-error:focus {
+    box-shadow: rgba(0, 0, 0, 0.0745098) 0px 1px 1px 0px inset, 
+                rgba(236, 168, 82, 0.6) 0px 0px 12px 0px !important
+}
+
+.header-image {
+}
+
+.btn-create {
+    display: inline-block;
+    border-radius: 4px;
+    background: #aa6767;
+    text-shadow: none;
+    font-size: 16px;
+    padding: 15px; 
+}
+.btn-create {
+    font-size: 14px;
+    color:  #eee !important;
+    margin-top: 5px;
+}
+.btn-create:hover {
+    text-decoration: none;
+    background: #7F4545;
+    text-shadow: none;
+}
+.create-toc {
+    display: inline-block;
+    max-width: 350px;
+    margin-left: 10px;
+    vertical-align: middle;
+    margin-bottom: 0;
+}

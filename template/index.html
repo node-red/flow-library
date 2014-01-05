@@ -1,0 +1,28 @@
+{{>_header}}
+  <div class="container">
+    <div class="row-fluid">
+      <div class="span12">
+        <img class="header-image"  src="images/flow01.png" />
+      </div>
+    </div>
+  </div>
+  <div class="container main-content">
+    <div class="row-fluid">
+      <div class="offset1 span8">
+        <h2 class="pagetitle">Flow Library</h2>
+        <p class="lead">Share your flows and see what other people have done with Node-RED.</p>
+      </div>
+      <div class="span2" style="padding-top: 30px; text-align: right;">
+        <a href="/add" class="btn btn-download">Add a flow</a>
+      </div>
+    </div>
+    
+    <div class="row-fluid">
+      <div class="offset1 span4">
+        <h3>Recently Added</h3>
+        <ul>{{#recentGists}}{{>_gistlist}}{{/recentGists}}
+        </ul>
+      </div>
+    </div>
+  </div>
+{{>_footer}}

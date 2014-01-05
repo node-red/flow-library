@@ -330,9 +330,7 @@ app.get("/flow/:id/flow",function(req,res) {
 app.get("/add",function(req,res) {
     var context = {};
     context.sessionuser = req.session.user;
-    fs.readFile("template/add.html",'utf8',function(err,data) {
-        res.send(mustache.render(data,context,partialTemplates));
-    });
+    res.send(mustache.render(renderTemplates['add'],context,partialTemplates));
 });
 
 app.get("/user/:id",function(req,res) {

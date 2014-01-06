@@ -75,7 +75,7 @@
     margin-bottom: 10px;
 }
 .flowmeta img {
-    border: 1px solid #ccc;
+    dborder: 1px solid #ccc;
 }
 .flowinfo {
     margin-left: 10px;
@@ -323,4 +323,8 @@ ul#add-flow-tags li i.icon {
     margin-left: 10px;
     vertical-align: middle;
     margin-bottom: 0;
+}
+
+.loader {
+    display: none;
 }

@@ -16,7 +16,7 @@
             {{#updated_at_since}}<div class="flowinfo">  updated {{ updated_at_since }}</div>{{/updated_at_since}}
             <div class="flowinfo"><a href="{{ html_url }}">view on github</a></div>
             {{#owned}}
-                <div class="flowinfo" style="text-align: right;"><a id="refresh-flow" href="#">refresh</a></div>
+                <div class="flowinfo" style="text-align: right;"><img id="refresh-flow-loader" class="loader" src="/images/loader.gif" />&nbsp;&nbsp;<a id="refresh-flow" href="#">refresh</a></div>
                 <div class="flowinfo" style="text-align: right;"><a id="remove-flow" href="#">remove</a></div>
             {{/owned}}
           </div>
@@ -36,7 +36,7 @@
             {{/tags}}
             </ul>
             {{#owned}}
-                <div class="flowinfo" style="text-align: right;"><a id="edit-tags" href="#">edit</a> <a style="margin-right: 20px; display:none;" id="edit-tags-cancel" href="#">cancel</a>  <a style="display:none;" id="edit-tags-done" href="#">done</a></div>
+                <div class="flowinfo" style="text-align: right;"><a id="edit-tags" href="#">edit</a> <a style="margin-right: 10px; display:none;" id="edit-tags-cancel" href="#">cancel</a>  <img id="edit-tags-done-loader" class="loader" src="/images/loader.gif" /> <a style="display:none;" id="edit-tags-done" href="#">done</a></div>
             {{/owned}}
 
           </div>
@@ -72,10 +72,12 @@ $(function() {
         content: "This flow was last refreshed <b>{{refreshed_at_since}}</b>.<br/> Click here and we'll go grab the latest version in the background"
     });
     $('#refresh-flow').click(function(event) {
+        $("#refresh-flow-loader").show();
         $.post("/flow/{{ id }}/refresh",function(data,textStatus,jqXHR) {
             if (jqXHR.status != 304) {
                 window.location.reload();
             }
+            $("#refresh-flow-loader").hide();
         });
         event.preventDefault();
     });
@@ -126,6 +128,7 @@ $(function() {
         
     
     $('#edit-tags-done').click(function(event) {
+        $("#edit-tags-done-loader").show();
         if (tagEditor) {
             $('#edit-tags-cancel').hide();
             $('#edit-tags-done').hide();
@@ -135,8 +138,10 @@ $(function() {
                 $('ul.flow-tags').attr('id',"");
                 tagEditor = null;
                 $('#edit-tags').show();
+                $("#edit-tags-done-loader").hide();
             }).fail(function(err) {
                 console.log(err);
+                $("#edit-tags-done-loader").hide();
             });
         }
     });

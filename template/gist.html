@@ -78,6 +78,8 @@ $(function() {
                 window.location.reload();
             }
             $("#refresh-flow-loader").hide();
+        }).fail(function(err) {
+            window.location.reload();
         });
         event.preventDefault();
     });

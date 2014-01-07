@@ -1,0 +1,14 @@
+{{>_header}}
+  <div class="container main-content">
+    <div class="row-fluid">
+      <div class="offset1 span10">
+        <h3 class="pagetitle">Tag: {{ tag }}</h3>
+      </div>
+    </div>
+    <div class="row-fluid">
+      <div id="readme" class="offset1 span10">
+      <ul>{{#gists}}{{>_gistlist}}{{/gists}}</ul>
+      </div>
+    </div>
+  </div>
+{{>_footer}}

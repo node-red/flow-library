@@ -1,13 +1,21 @@
-var tagger = function() {
+var tagger = function(options) {
     var tags = [];
+    options = options||{};
+    var lipre = options.lipre||"";
+    var lipost = options.lipost||"";
+    
     var tagList = $("ul#add-flow-tags");
     var originalTags = [];
     
+    
+    function formatTag(tag) {
+        return lipre.replace(/@@TAG@@/g,tag)+tag+lipost.replace(/@@TAG@@/g,tag);
+    }
+    
     $("li",tagList).each(function(i,e) {
         var li = $(e);
-        var tag = li.html();
+        var tag = li.attr("tag");
         li.html(tag+' <a href="#"><i class="icon icon-remove"></i></a>');
-        $(li).attr("tag",tag);
         $("a",li).click(function(e) {
                 removeTag(tag);
                 e.preventDefault();
@@ -62,7 +70,7 @@ var tagger = function() {
                 li.remove();
             } else {
                 var tag = $(li).attr("tag");
-                li.html(tag);
+                li.html(formatTag(tag));
             }
         });
     }
@@ -71,7 +79,7 @@ var tagger = function() {
         $("li",tagList).remove();
         tags = originalTags;
         for (var i in tags) {
-            tagList.append($("<li>").html(tags[i]));
+            tagList.append($("<li>").html(formatTag(tags[i])).attr("tag",tags[i]));
         }
     }
     function addTag(tag) {

@@ -127,8 +127,10 @@ app.get("/",function(req,res) {
     context.sessionuser = req.session.user;
     when.all([
         gister.getAll(),
+        gister.getAllTags()
     ]).then(function(results) {
         context.recentGists = results[0];
+        context.popularTags = results[1];
         res.send(mustache.render(renderTemplates.index,context,partialTemplates));
     }).otherwise(function(err) {
         context.err = err;
@@ -346,6 +348,18 @@ app.get("/user/:id",function(req,res) {
     });
 });
 
+app.get("/tag/:id",function(req,res) {
+    var context = {};
+    context.sessionuser = req.session.user;
+    gister.getForTag(req.params.id).then(function(gists) {
+        context.tag = req.params.id;
+        context.gists = gists;
+        res.send(mustache.render(renderTemplates.tag,context,partialTemplates));
+    }).otherwise(function(err) {
+        console.log(err);
+        res.send(404,mustache.render(renderTemplates['404'],context,partialTemplates));
+    });
+});
 
 app.use(function(req, res) {
     res.send(404,mustache.render(renderTemplates['404'],{sessionuser:req.session.user},partialTemplates));

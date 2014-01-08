@@ -1,16 +1,43 @@
-
+.main-content {
+    min-height: 300px;
+}
 .toolbar {
     padding-top: 0 5px;
     background: #fff;
     color: #676767;
-    height: 42px;
+    min-height: 42px;
+}
+.toolbar>div>div {
+    padding-top: 3px;
+}
+.searchbox {
+    max-width: 350px;
+}
+.search a {
+    color: #999;
+    line-height: 36px;
+    padding: 2px;
+    position: relative;
+    left: -20px;
+    top:1px;
+    background: #fff;
+}
+.search input {
+    padding: 3px 6px;
+    height: 24px;
+    margin: 0;
+    width: 80%;
+}
+    
+.search a:hover {
+    color: #676767;
 }
 .login a {
     color: #676767;
     line-height: 36px;
     padding: 3px 6px;
 }
-.login a:hover {
+.login a:hover,.search a:hover {
     text-decoration: none;
 }
 .login a.signin {

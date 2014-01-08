@@ -361,6 +361,29 @@ app.get("/tag/:id",function(req,res) {
     });
 });
 
+app.get("/search",function(req,res) {
+    var search = req.query.s;
+    var context = {};
+
+    var si = require('search-index');
+    var q = {};
+    q['query'] = search.split(" ");
+    q['offset'] = 0;
+    q['pageSize'] = 25;
+    si.search(q,function(msg) {
+        if (msg.hits) {
+            context.gists = msg.hits.map(function(res) {
+                return {id:res.id,description:res.document.title};
+            });
+        }
+        context.search = search;
+        context.sessionuser = req.session.user;
+        res.send(mustache.render(renderTemplates.search,context,partialTemplates));
+    });
+
+    
+});
+
 app.use(function(req, res) {
     res.send(404,mustache.render(renderTemplates['404'],{sessionuser:req.session.user},partialTemplates));
 });

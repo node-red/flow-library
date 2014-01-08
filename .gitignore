@@ -2,4 +2,6 @@ bin
 gists
 node_modules
 settings.js
-
+matcher
+search-index.json
+si

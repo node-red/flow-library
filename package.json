@@ -8,6 +8,7 @@
     "mongojs":"0.9.x",
     "when":"~2.6.0",
     "oauth": "0.9.10",
-    "connect-mongo":"0.4.0"
+    "connect-mongo":"0.4.0",
+    "search-index":"0.2.x"
    }
 }

@@ -203,24 +203,28 @@ function formatDate(dateString) {
     
 }
 app.post("/flow", function(req,res) {
-    var gist_post = {
-        description: req.body.title,
-        public: false,
-        files: {
-            'flow.json': {
-                content: req.body.flow
-            },
-            'README.md': {
-                content: req.body.description
+    if (req.session.accessToken) {
+        var gist_post = {
+            description: req.body.title,
+            public: false,
+            files: {
+                'flow.json': {
+                    content: req.body.flow
+                },
+                'README.md': {
+                    content: req.body.description
+                }
             }
-        }
-    };
-    gister.create(req.session.accessToken,gist_post,req.body.tags).then(function(id) {
-        res.send("/flow/"+id);
-    }).otherwise(function(err) {
-        console.log("Error creating flow:",err);
-        res.send(err);
-    });
+        };
+        gister.create(req.session.accessToken,gist_post,req.body.tags||[]).then(function(id) {
+            res.send("/flow/"+id);
+        }).otherwise(function(err) {
+            console.log("Error creating flow:",err);
+            res.send(err);
+        });
+    } else {
+        res.send(403);
+    }
 });
 app.get("/flow/:id",function(req,res) {
 

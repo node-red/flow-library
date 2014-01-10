@@ -55,8 +55,8 @@
    </div>
    <div class="row-fluid" style="margin-top: 15px;">
        <div class="offset3 span8">
-            <a id="add-flow-create" href="#" class="btn-create">create flow</a>
-            <p class="create-toc">This will create a public gist, owned by you, on GitHub and add it to the Node-RED flow library on your behalf.</p>
+            <a id="add-flow-create" href="#" class="btn-create"><span id="add-flow-label">create flow</span><img id="add-flow-loader" class="loader" src="/images/loader.gif" /></a>
+            <p class="create-toc">This will create a private gist, owned by you, on GitHub and add it to the Node-RED flow library on your behalf.</p>
        </div>
    </div>
 
@@ -135,7 +135,6 @@ $(function() {
     });
     
     $("#addflow").click(function(event) {
-        $('#flowurl').popover('destroy');
         var r = /^https?:\/\/gist\.github\.com(\/.+)*\/([^\/]*)$/
         var match = r.exec($("#flowurl").val());
         if (match) {
@@ -153,6 +152,7 @@ $(function() {
             });
             
         } else {
+            $("#add-flow-loader").show();
             $('#flowurl').addClass('input-error');
             $('#flowerror').html('Invalid GitHub url');
         }
@@ -212,8 +212,17 @@ $(function() {
         e.preventDefault();
     });
     
+    var createSubmitted = false;
+    
     $('#add-flow-create').click(function(e) {
         e.preventDefault();
+        if (createSubmitted) {
+            return;
+        }
+        createSubmitted = true;
+        $("#add-flow-label").hide();
+        $("#add-flow-create").addClass("submitted");
+        $("#add-flow-loader").show();
         var flow = {
             title: $.trim($("#add-flow-title").val()),
             description: $("#add-flow-desc").val(),
@@ -246,9 +255,20 @@ $(function() {
             $.post("/flow",flow,function(data) {
                 window.location = data;
             }).fail(function(err) {
+                if (err.status == 403) {
+                    window.location.reload();
+                }
+                createSubmitted = false;
                 console.log("ERROR",err);
+                $("#add-flow-create").removeClass("submitted");
+                $("#add-flow-loader").hide();
+                $("#add-flow-label").show();
             });
         } else {
+            $("#add-flow-create").removeClass("submitted");
+            $("#add-flow-loader").hide();
+            $("#add-flow-label").show();
+            createSubmitted = false;
             window.scrollTo(0,0);
         }
     });

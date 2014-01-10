@@ -325,14 +325,23 @@ ul#add-flow-tags li i.icon {
 
 .header-image {
 }
+.btn-create.submitted {
+    background: #fff;
+}
+.btn-create.submitted:hover {
+    background: #fff;
+}
 
 .btn-create {
+    border: 2px solid #aa6767;
+    text-align: center;
     display: inline-block;
     border-radius: 4px;
     background: #aa6767;
     text-shadow: none;
     font-size: 16px;
     padding: 15px; 
+    width: 110px;
 }
 .btn-create {
     font-size: 14px;
@@ -342,6 +351,7 @@ ul#add-flow-tags li i.icon {
 .btn-create:hover {
     text-decoration: none;
     background: #7F4545;
+    border-color: #7F4545;
     text-shadow: none;
 }
 .create-toc {

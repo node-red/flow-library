@@ -1,5 +1,5 @@
 {{>_header}}
-  <div class="container main-content add-form">
+  <div class="grid main-content add-form">
   <!--
     <div class="row-fluid">
       <div class="offset3 span2">
@@ -10,51 +10,52 @@
       </div>
     </div>
    -->
-{{#sessionuser}}   
-   <div class="row-fluid">
-       <div class="span3 add-help">
-           <h3 class="add-flow-label">Title</h3>
+{{#sessionuser}}
+   <div class="add-form-row">
+       <div class="col-3-12 add-help">
+           <h4 class="add-flow-label"><label for="add-flow-title">Title</label></h4>
            <P>Give your flow a short, descriptive title. </p>
        </div>
-       <div class="span8" style="padding-top: 10px;">
+       <div class="col-9-12" style="padding-top: 10px;">
            <input id="add-flow-title" type="text"></input>
        </div>
    </div>
-   <div class="row-fluid" style="margin-top: 15px;">
-       <div class="span3 add-help">
-           <h3 class="add-flow-label">Description</h3>
+   
+   <div class="add-form-row">
+       <div class="col-3-12 add-help">
+           <h4 class="add-flow-label"><label for="add-flow-desc">Description</label></h4>
            <p>Describe what the flow does and how it is used.</p>
            <p>This uses <a href="http://github.github.com/github-flavored-markdown/">GitHub Flavoured Markdown</a>
            for formatting. Use the <i>preview</i> tab to see how it looks.</p> 
        </div>
-       <div class="span8" style="border: 1px solid #fff; position: relative;">
+       <div class="col-9-12" style="padding-top: 10px;border: 1px solid #fff; position: relative;">
            <textarea id="add-flow-desc"></textarea>
            <div id="add-flow-desc-md"></div>
            <div class="add-flow-desc-buttons"><a href="#" class="active" id="add-flow-desc-edit">edit</a><a href="#" class="inactive" id="add-flow-desc-preview">preview</a></div>
        </div>
    </div>
-   <div class="row-fluid" style="margin-top: 15px;">
-       <div class="span3 add-help">
-           <h3 class="add-flow-label">Flow</h3>
+   <div class="add-form-row">
+       <div class="col-3-12 add-help">
+           <h4 class="add-flow-label"><label for="add-flow-flow">Flow</label></h4>
            <p>In Node-RED, select the flow you want to export. Select <i>Export to 
            &gt; Clipboard</i> from the menu (Ctrl-E), copy the JSON from
            the dialog and paste here.</p>
        </div>
-       <div class="span8" style="padding-top: 10px;">
+       <div class="col-9-12" style="padding-top: 10px;">
            <textarea id="add-flow-flow"></textarea>
        </div>
    </div>
-   <div class="row-fluid" style="margin-top: 15px;">
-       <div class="span3 add-help">
-           <h3 class="add-flow-label">Tags</h3>
+   <div class="add-form-row">
+       <div class="col-3-12 add-help">
+           <h4 class="add-flow-label"><label for="add-flow-tags">Tags</label></h4>
            <p>Add some tags to your flow that will help others find it. Comma- or space-separate the tags.</p>
        </div>
-       <div class="span8" style="padding-top: 10px;">
+       <div class="col-9-12" style="padding-top: 10px;">
            <ul class="flow-tags" id="add-flow-tags"></ul>
        </div>
    </div>
-   <div class="row-fluid" style="margin-top: 15px;">
-       <div class="offset3 span8">
+   <div class="add-form-row">
+       <div class="col-8-12 add-help">
             <a id="add-flow-create" href="#" class="btn-create"><span id="add-flow-label">create flow</span><img id="add-flow-loader" class="loader" src="/images/loader.gif" /></a>
             <p class="create-toc">This will create a private gist, owned by you, on GitHub and add it to the Node-RED flow library on your behalf.</p>
        </div>
@@ -65,7 +66,7 @@
    <div class="row-fluid add-step">
       <div class="offset1 span1 add-index">1.</div>
       <div class="span9">
-          <h3>Export your flow from Node-RED</h3>
+          <h4>Export your flow from Node-RED</h4>
           <ul>
             <li>Select the flow you want to export</li>
             <li>Select <i>Export to &gt; Clipboard</i> from the menu, or press Ctrl-E</li>
@@ -76,7 +77,7 @@
     <div class="row-fluid add-step">
       <div class="offset1 span1 add-index">2.</div>
       <div class="span9">
-          <h3>Create your flow as a GitHub Gist</h3>
+          <h4>Create your flow as a GitHub Gist</h4>
           <ul>
             <li>Go to <a target="_new" href="https://gist.github.com">https://gist.github.com</a></li>
             <li>Give your flow a one-line description</li>
@@ -90,7 +91,7 @@
     <div class="row-fluid add-step">
       <div class="offset1 span1 add-index">3.</div>
       <div class="span9">
-        <h3>Paste the gist's url here</h3>
+        <h4>Paste the gist's url here</h4>
          <input id="flowurl" type="text" placeholder="https://gist.github.com/your/gist"></input>
          <div class="text-warning" id="flowerror">&nbsp;</div>
       </div>
@@ -99,7 +100,7 @@
     <div class="row-fluid add-step">
       <div class="offset1 span1 add-index">4.</div>
       <div class="span9">
-         <h3>Click <a href="#" id="addflow" class="addButton">here</a> to add to the library</h3>
+         <h4>Click <a href="#" id="addflow" class="addButton">here</a> to add to the library</h4>
       </div>
     </div>
   -->
@@ -278,13 +279,11 @@ $(function() {
 </script>
 {{/sessionuser}}
 {{^sessionuser}}   
-    <div class="row-fluid" style="min-height: 400px">
-      <div class="offset1 span8">
+    <div class="grid main-content">
         <h2 class="pagetitle">Add a flow</h2>
         <p class="lead">You need to <a href="/login?return=/add">sign in with GitHub</a> before you can add a flow.</p>
         <h3>Why?</h3>
         <p class="lead">We save the flow as a Gist under your GitHub account.</p>
-      </div>
     </div>
 
 {{/sessionuser}}

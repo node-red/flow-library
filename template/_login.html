@@ -1,16 +1,8 @@
-  <div class="container toolbar">
-    <div class="row-fluid">
-      <div class="span6 search">
-        <div class="searchbox">
-        <form id="searchform" action="/search"><input type="text" name="s" placeholder="search" {{#search}}value="{{.}}"{{/search}}><a id="dosearch" href="#"><i class="icon icon-search"></i></a></form>
-        <script>$("#dosearch").on('click',function(e){e.preventDefault(); $("#searchform").submit();});</script>
-        </div>
-      </div>
-      <div class="span6 login">
+  <div class="grid toolbar">
+    <div class="col-1-1 login">
         {{^sessionuser}}<a class="signin" href="/login"><i class="icon-github"></i> sign in with <b>GitHub</b></a>
         <script>$(function() { $(".signin").attr('href','/login?return='+window.location.pathname);});</script>
         {{/sessionuser}}
         {{#sessionuser}}<a href="/user/{{login}}"><b>{{login}}</b></a> <img src="{{avatar_url}}"/>{{/sessionuser}}  
-      </div>
     </div>
   </div>

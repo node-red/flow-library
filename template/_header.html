@@ -3,42 +3,38 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Node-RED</title>
-	<link href='http://fonts.googleapis.com/css?family=Roboto+Slab:400,700,300,100' rel='stylesheet' type='text/css'>
-    <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
-	<link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
-	<link href="/bootstrap/css/bootstrap.slate.min.css" rel="stylesheet" media="screen">
-	<link href="/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet" media="screen">
-    <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
-
-	<link href="/css/style.css" rel="stylesheet" media="screen">
-	<link href="/css/library.css" rel="stylesheet" media="screen">
+	<title>Node-RED - Flow Library</title>
 	
-    <script src="/jquery/js/jquery-1.9.1.js"></script>
-    <script src="/bootstrap/js/bootstrap.min.js"></script>
+	<link href='http://fonts.googleapis.com/css?family=Roboto+Slab:400,700,300,100' rel='stylesheet' type='text/css'>
+	<link href='http://fonts.googleapis.com/css?family=Ubuntu+Mono' rel='stylesheet' type='text/css'>
+	<link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
 
+    <script src="/jquery/js/jquery-1.9.1.js"></script>
+	<link href="/css/simplegrid.css" rel="stylesheet" media="screen">
+	<link href="/css/style.css" rel="stylesheet" media="screen">
+	<link href="/css/front.css" rel="stylesheet" media="screen">
+	<link href="/css/docs.css" rel="stylesheet" media="screen">
+	<link href="/css/blog.css" rel="stylesheet" media="screen">
+	<link href="/css/syntax.css" rel="stylesheet" media="screen">
+	<link href="/css/library.css" rel="stylesheet" media="screen">
 </head>
-  <div class="navbar navbar-inverse navbar-fixed-top shadow">
-    <div class="navbar-inner">
-      <div class="container">
-        <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-        </button>
-        <a class="brand" href="/"><img src="/node-red.png"> Node-RED</a>
-        <div class="nav-collapse collapse pull-right">
-          <ul class="nav">
-            <li><a href="http://nodered.org">home</a></li>
-            <li><a href="http://blog.nodered.org">blog</a></li>
-            <li><a href="http://nodered.org/docs/">documentation</a></li>
-            <li class="current"><a href="http://flows.nodered.org">flows</a></li>
+<body>
+
+<div class="header">
+    <div class="header-content">
+        <div class="brand"><a href="/"><img class="logo" src="/node-red.png" /> Node-RED</a></div>
+        <ul class="navigation">
+            <li><a href="/">home</a></li>
+            <li><a href="http://blog.nodered.org/">blog</a></li>
+            <li><a href="/docs/">documentation</a></li>
+            <li class="current"><a href="http://flows.nodered.org/">flows</a></li>
             <li><a href="http://github.com/node-red/node-red">github</a></li>
-          </ul>
-        </div>
-      </div>
+        </ul>
+        <a href="#" class="menu"><i class="icon-reorder icon-2x"></i></a>
     </div>
-  </div>
-  <div class="banner">
-  {{>_login}}
+</div>
+
+
+<div class="library">
+{{>_login}}
 

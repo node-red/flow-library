@@ -1,14 +1,16 @@
 {{>_header}}
-  <div class="container main-content">
-    <div class="row-fluid">
-      <div class="offset1 span8">
-        <h3 class="pagetitle">{{ description }}</h3>
+
+<div class="grid main-content">
+    <div class="col-9-12 docs-content">
+        <h1 class="flow-title">{{ description }}</h3>
           {{{ readme }}}
           <pre id="flow" class="highlight language-javascript">{{ flow }}</pre>
-      </div>
-      <div class="span3">
+    </div>
+    <div class="col-3-12">
           <div class="flowmeta">
-            <span class="flowuser"><a href="/user/{{ owner.login }}"><img src="{{ owner.avatar_url }}"/> {{ owner.login }}</a></span>
+            <span class="flowuser">
+              <a href="/user/{{ owner.login }}"><img src="{{ owner.avatar_url }}"/></a>
+              <a href="/user/{{ owner.login }}">{{ owner.login }}</a></span>
           </div>
           <div class="flowmeta">
             <h4>Flow Info</h4>
@@ -43,9 +45,8 @@
           <div class="flowmeta">
             Copy this flow JSON to your clipboard and then import into Node-RED using the <i>Import From &gt; Clipboard</i> (Ctrl-I) menu option
           </div>
-      </div>
     </div>
-  </div>
+</div>
 <script src="/js/tags.js"></script>
 <script>
 $(function() {
@@ -65,12 +66,6 @@ $(function() {
     });
 
 {{#owned}}
-    $('#refresh-flow').popover({
-        placement:'bottom',
-        html: true,
-        trigger: 'hover',
-        content: "This flow was last refreshed <b>{{refreshed_at_since}}</b>.<br/> Click here and we'll go grab the latest version in the background"
-    });
     $('#refresh-flow').click(function(event) {
         $("#refresh-flow-loader").show();
         $.post("/flow/{{ id }}/refresh",function(data,textStatus,jqXHR) {
@@ -84,13 +79,6 @@ $(function() {
         event.preventDefault();
     });
     
-    $('#remove-flow').popover({
-        placement:'bottom',
-        html: true,
-        trigger: 'hover',
-        content: "This will remove the flow from the library, but it will remain on GitHub."
-    });
-
     $('#remove-flow').click(function(event) {
         $.post("/flow/{{ id }}/delete",function(data,textStatus,jqXHR) {
             if (jqXHR.status != 304) {
@@ -100,12 +88,6 @@ $(function() {
         event.preventDefault();
     });
             
-    $('#edit-tags').popover({
-        placement:'bottom',
-        html: true,
-        trigger: 'hover',
-        content: "Add or remove tags for this flow."
-    });
     
     var tagEditor = null;
     $('#edit-tags').click(function(event) {
@@ -123,8 +105,10 @@ $(function() {
             $('#edit-tags-cancel').hide();
             $('#edit-tags-done').hide();
             tagEditor.cancel();
+            $('ul.flow-tags').attr('id',"");
             $('#edit-tags').show();
         }
+        event.preventDefault();
     });
         
     
@@ -145,6 +129,7 @@ $(function() {
                 $("#edit-tags-done-loader").hide();
             });
         }
+        event.preventDefault();
     });
 {{/owned}}
             

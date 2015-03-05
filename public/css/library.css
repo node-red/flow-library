@@ -1,5 +1,27 @@
-.main-content {
-    min-height: 300px;
+[class*='col-'] {
+    aborder: 1px solid red;
+}
+.library {
+    background: #eee;
+    font-size: 16px;
+}
+.library .grid {
+    background: #fff;
+    padding: 0 100px;
+}
+.library .grid.toolbar {
+    padding: 0 20px;
+}
+.library .grid.main-content {
+    min-height: 600px;
+    background: #fff;
+    padding-top: 25px;
+    padding-bottom: 25px;
+    color: #676767;
+}
+
+.main-content a {
+    color: #aa6767;
 }
 .toolbar {
     padding-top: 0 5px;
@@ -7,9 +29,7 @@
     color: #676767;
     min-height: 42px;
 }
-.toolbar>div>div {
-    padding-top: 3px;
-}
+
 .searchbox {
     max-width: 350px;
 }
@@ -32,6 +52,7 @@
 .search a:hover {
     color: #676767;
 }
+
 .login a {
     color: #676767;
     line-height: 36px;
@@ -59,6 +80,7 @@
     height: 32px;
     margin: 3px;
     border-radius: 5px;
+    vertical-align: middle;
 }
 
 #flow {
@@ -81,6 +103,7 @@
 .flowuser img {
     width:32px;
     border-radius: 5px;
+    vertical-align:middle;
 }
 .pagetitle {
     vertical-align:middle;
@@ -91,16 +114,17 @@
     border-radius: 5px;
 }
 
-.flowinfo a:hover, .flowuser a:hover {
-    text-decoration: none;
-}
 .flowmeta {
-    dbackground: #FFF7D8;
+    font-size: 0.9em;
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 4px;
     margin-bottom: 10px;
 }
+.flowmeta  h4 {
+    margin: auto;
+}
+
 .flowmeta img {
     dborder: 1px solid #ccc;
 }
@@ -140,6 +164,10 @@
     border-right-color:#FDFFC2;
 }
 
+.grid.add-form {
+    padding-left: 50px;
+    padding-right: 50px;
+}
 .add-help {
     -border: 1px solid #ccc;
     -border-radius: 3px;
@@ -147,19 +175,43 @@
 }
 .add-help p {
     margin-bottom: 10px;
+    font-size: 14px;
 }
-
 .add-form input[type=text] {
     margin-bottom: 0;
     height: 40px;
     font-size: 20px;
     width: 100%;
+    padding: 8px;
+    border-radius: 3px;
+    border: 1px solid #999;
 }
 .add-form textarea {
+    border: 1px solid #999;
     font-size: 14px;
     width: 100%;
     resize: none;
     padding: 10px;
+    border-radius: 3px
+}
+.add-form textarea,
+.add-form input {
+    outline: none;
+}
+.add-form textarea:focus,
+.add-form input:focus {
+    outline: none;
+    box-shadow: 0 0 8px #fbb;
+}
+
+.add-form-row {
+    clear: both;
+}
+.add-form-row [class*='col-'] {
+    margin-top: 20px;
+}
+.add-form-row:first-child [class*='col-'] {
+    margin-top: 0;
 }
 #add-flow-title {
     font-family: 'Roboto Slab', serif;
@@ -174,21 +226,22 @@
 }
 #add-flow-desc {
     height: 350px;
-    margin-top: 29px;
+    margin-top: 19px;
 }
 #add-flow-desc-md {
     min-height: 350px;
-    margin-top: 29px;
+    margin-top: 19px;
     border: 1px solid #ccc;
-    border-radius: 5px;
+    border-radius: 3px;
     display: none;
     padding: 10px;
     background: #fff;
 }
 
 
-h3.add-flow-label {
+.add-flow-label {
     margin-top: 5px;
+    
 }
 .add-flow-desc-buttons {
     position: absolute;
@@ -234,14 +287,13 @@ ul.flow-tags {
     padding: 2px 4px;
 }
 ul#add-flow-tags {
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    min-height: 40px;
+    border: 1px solid #999;
+    border-radius: 3px;
+    min-height: 45px;
 }
 
 ul#add-flow-tags.active {
-    border-color: rgba(82, 168, 236, 0.8);
-    box-shadow: rgba(0, 0, 0, 0.0745098) 0px 1px 1px 0px inset, rgba(82, 168, 236, 0.6) 0px 0px 8px 0px;
+    box-shadow: 0 0 8px #fbb;
 }    
 
 ul.flow-tags li {
@@ -256,6 +308,7 @@ ul.flow-tags li {
     background: #f5f5f5;
     margin: 3px 3px 3px 1px;
     cursor: default;
+    font-size: 14px;
 }
 
 ul.flow-tags li:hover {
@@ -266,14 +319,20 @@ ul#add-flow-tags li.tag-input {
     border: none;
     background: none;
     padding:0;
+    height: 28px;
+    vertical-align: middle
+
 }
-ul#add-flow-tags li.tag-input input {
+li.tag-input input {
     border: none !important;
     box-shadow: none !important;
     font-size: 14px;
-    padding: 2px 5px 2px 4px;
-    height: 24px;
-    margin-bottom: 2px;
+    vertical-align: middle;
+    padding: 0;
+    height: auto;
+}
+li.tag-input input:focus {
+    outline: none;
 }
 
 ul#add-flow-tags li i.icon {
@@ -325,6 +384,7 @@ ul#add-flow-tags li i.icon {
 
 .header-image {
 }
+
 .btn-create.submitted {
     background: #fff;
 }
@@ -365,3 +425,124 @@ ul#add-flow-tags li i.icon {
 .loader {
     display: none;
 }
+
+.btn-download {
+    background: #aa6767;
+    border:none;
+    text-shadow: none;
+    font-size: 16px;
+    color: #fff !important;
+    padding: 12px; 
+    border-radius: 3px;
+    vertical-align: middle;
+}
+.btn-download .download-link {
+    letter-spacing: 1px;
+    font-family: 'Roboto Slab', serif;
+}
+.btn-download .download-version {
+    font-size: 14px;
+    color:  #eee;
+    margin-top: 5px;
+}
+.btn-download:hover {
+    background: #7F4545;
+    border:none;
+    text-decoration: none;
+    text-shadow: none;
+}
+
+h1.flow-title {
+    border-bottom: 2px solid #B68181;
+    padding-bottom: 10px;
+    margin-bottom: 40px;
+    margin-top: 10px;
+    font-weight: normal;
+
+}
+
+
+.gist-filter {
+    font-size: 16px;
+    padding: 10px;
+    width: 100%;
+    max-width: 500px;
+    -webkit-appearance: none;
+    vertical-align: middle;
+    border: 2px solid #999;
+    border-radius: 2px;
+}
+.gist-count {
+    width: 100%;
+    max-width: 500px;
+    display: inline-block;
+    text-align: right;
+    font-size: 14px;
+}
+
+ul.gistlist {
+    margin: 20px 0;
+    padding: 0;
+    list-style-type: none;
+    min-height: 800px;
+}
+
+
+li.gistbox {
+    display: inline-block;
+    background: #fff;
+    float: left;
+    width: 31%;
+    height: 175px;
+    margin: 10px;
+    overflow: hidden;
+    
+    transition-duration: 250ms;
+    transition-timing-function: ease;
+    transition-property: margin width padding height opacity;
+}
+.gistbox a {
+    padding: 10px;
+    border: 2px solid #CD9494;
+    border-radius: 3px;
+    display: block;
+    width: 100%;
+    height: 100%;
+    color: #666;
+    overflow: hidden;
+    position:relative;
+}
+.gistbox a:hover {
+    text-decoration: none;
+    border-color: #7F4545;
+}
+.gistbox h1 {
+    font-size: 16px;
+    margin: 0;
+    font-weight: normal;
+}
+.gistbox-footer {
+    position: absolute;
+    left:0;
+    bottom:0;
+    width: 100%;
+    padding: 0px;
+    font-size: 14px;
+    text-align: right;
+}
+.gistbox a:hover .gistbox-owner {
+    background:  #7F4545;
+}
+
+.gistbox-tags {
+    padding: 0 10px;
+    font-size: 11px;
+    line-height: 12px;
+}
+
+.gistbox-owner {
+    color: #fff;
+    padding: 3px 10px;
+    background: #CD9494;
+}
+

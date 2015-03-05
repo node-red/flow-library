@@ -125,16 +125,16 @@ app.get("/login/callback",function(req,res) {
 app.get("/",function(req,res) {
     var context = {};
     context.sessionuser = req.session.user;
-    when.all([
-        gister.getAll(),
-        gister.getAllTags()
-    ]).then(function(results) {
-        context.recentGists = results[0];
-        context.popularTags = results[1];
+    gister.getAll().then(function(gists) {
+        context.gists = gists;
+        var n = context.gists.length;
+        for (var i = context.gists.length - 1; i >=0; i--) {
+            context.gists[i].refreshed_at_since = formatDate(context.gists[i].refreshed_at);
+        }
         res.send(mustache.render(renderTemplates.index,context,partialTemplates));
     }).otherwise(function(err) {
         context.err = err;
-        context.recentGists = [];
+        context.gists = [];
         res.send(mustache.render(renderTemplates.index,context,partialTemplates));
     });
 });
@@ -226,8 +226,16 @@ app.post("/flow", function(req,res) {
         res.send(403);
     }
 });
-app.get("/flow/:id",function(req,res) {
 
+function mapPath(file) {
+    if (file.indexOf(settings.gistDir) == -1) {
+        var m = /^.*\/gists\/(.*)$/.exec(file);
+        return path.join(settings.gistDir,m[1]);
+    }
+    return file;
+}
+
+app.get("/flow/:id",function(req,res) {
     gister.get(req.params.id).then(function(gist) {
         gist.sessionuser = req.session.user;
         gist.flow = "";
@@ -243,7 +251,7 @@ app.get("/flow/:id",function(req,res) {
         
         gist.nodeTypes = [];
         if (gist.files['flow-json']) {
-            gist.flow = fs.readFileSync(gist.files['flow-json'],'utf-8');
+            gist.flow = fs.readFileSync(mapPath(gist.files['flow-json']),'utf-8');
             var nodes = JSON.parse(gist.flow);
             var nodeTypes = {};
             for (var n in nodes) {
@@ -260,7 +268,7 @@ app.get("/flow/:id",function(req,res) {
                 return 0;
             });
         }
-        fs.readFile(gist.files['README-md'],'utf-8',function(err,data) {
+        fs.readFile(mapPath(gist.files['README-md']),'utf-8',function(err,data) {
             marked(data,{},function(err,content) {
                 gist.readme = content;
                 res.send(mustache.render(renderTemplates.gist,gist,partialTemplates));
@@ -324,7 +332,7 @@ app.post("/flow/:id/delete",function(req,res) {
 app.get("/flow/:id/flow",function(req,res) {
     gister.get(req.params.id).then(function(gist) {
         if (gist.files['flow.json']) {
-            res.sendfile(gist.files['flow.json'].local_path,'utf-8');
+            res.sendfile(mapPath(gist.files['flow.json'].local_path),'utf-8');
         } else {
             res.send(404,mustache.render(renderTemplates['404'],{sessionuser:req.session.user},partialTemplates));
         }
@@ -352,18 +360,18 @@ app.get("/user/:id",function(req,res) {
     });
 });
 
-app.get("/tag/:id",function(req,res) {
-    var context = {};
-    context.sessionuser = req.session.user;
-    gister.getForTag(req.params.id).then(function(gists) {
-        context.tag = req.params.id;
-        context.gists = gists;
-        res.send(mustache.render(renderTemplates.tag,context,partialTemplates));
-    }).otherwise(function(err) {
-        console.log(err);
-        res.send(404,mustache.render(renderTemplates['404'],context,partialTemplates));
-    });
-});
+//app.get("/tag/:id",function(req,res) {
+//    var context = {};
+//    context.sessionuser = req.session.user;
+//    gister.getForTag(req.params.id).then(function(gists) {
+//        context.tag = req.params.id;
+//        context.gists = gists;
+//        res.send(mustache.render(renderTemplates.tag,context,partialTemplates));
+//    }).otherwise(function(err) {
+//        console.log(err);
+//        res.send(404,mustache.render(renderTemplates['404'],context,partialTemplates));
+//    });
+//});
 
 app.get("/search",function(req,res) {
     var search = req.query.s;
@@ -392,5 +400,5 @@ app.use(function(req, res) {
     res.send(404,mustache.render(renderTemplates['404'],{sessionuser:req.session.user},partialTemplates));
 });
 
-app.listen(20982);
-console.log('Listening on port 20982');
+app.listen(settings.port||20982);
+console.log('Listening on port',settings.port||20982);

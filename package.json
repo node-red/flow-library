@@ -5,10 +5,13 @@
     "express": "3.x",
     "marked": "*",
     "mustache":"*",
-    "mongojs":"0.9.x",
-    "when":"~2.6.0",
-    "oauth": "0.9.10",
-    "connect-mongo":"0.4.0",
-    "search-index":"0.2.x"
+    "mongojs":"0.18.x",
+    "when":"3.7.x",
+    "oauth": "0.9.12",
+    "connect-mongo":"0.7.0",
+    "search-index":"0.2.x",
+    "request":"2.53.0",
+    "tar":"1.0.3",
+    "fs-extra":"0.16.4"
    }
 }

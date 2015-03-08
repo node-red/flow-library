@@ -472,6 +472,30 @@ h1.flow-title {
     border: 2px solid #999;
     border-radius: 2px;
 }
+.gist-sort-options {
+}
+.gist-sort-btn {
+    border: 2px solid #aa6767;
+    text-align: center;
+    display: inline-block;
+    border-radius: 4px;
+    background: #aa6767;
+    text-shadow: none;
+    font-size: 16px;
+    padding: 6px; 
+    width: 110px;
+}
+.gist-sort-btn {
+    font-size: 14px;
+    color:  #eee !important;
+}
+.gist-sort-btn:hover {
+    text-decoration: none;
+    background: #7F4545;
+    border-color: #7F4545;
+    text-shadow: none;
+}
+
 .gist-count {
     width: 100%;
     max-width: 500px;
@@ -504,7 +528,6 @@ li.gistbox {
 .gistbox a {
     padding: 10px;
     border: 2px solid #CD9494;
-    border-radius: 3px;
     display: block;
     width: 100%;
     height: 100%;
@@ -529,20 +552,29 @@ li.gistbox {
     padding: 0px;
     font-size: 14px;
     text-align: right;
+    background: #CD9494;
+    color: #fff;
 }
-.gistbox a:hover .gistbox-owner {
-    background:  #7F4545;
-}
+
 
 .gistbox-tags {
     padding: 0 10px;
     font-size: 11px;
     line-height: 12px;
 }
-
+.gistbox-type {
+    margin: 7px 0 3px 7px;
+    padding: 2px;
+    float: left;
+    font-size: 0.8em;
+    border: 1px solid #fff;
+    border-radius: 5px;
+    line-height: 1.1em;
+}
 .gistbox-owner {
-    color: #fff;
     padding: 3px 10px;
-    background: #CD9494;
+}
+a:hover .gistbox-footer {
+    background:  #7F4545;
 }
 

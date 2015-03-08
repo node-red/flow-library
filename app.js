@@ -61,16 +61,6 @@ fs.readdir(path.join(__dirname,"template"),function(err,files) {
 
 app.use("/",express.static(path.join(__dirname,'public')));
 
-app.use(function(req, res, next) {
-    var start = Date.now();
-    res.on('header', function() {
-        var duration = Date.now() - start;
-        //console.log(req.path,duration);
-    });
-    next();
-});
-
-
 app.get("/login",function(req,res) {
     if (!req.session.accessToken) {
         if (req.query.return) {

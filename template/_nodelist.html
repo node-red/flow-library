@@ -1,0 +1,56 @@
+
+<div class="grid">
+    <div class="col-1-1">
+        <div>
+            <input class="gist-filter" type="text" placeholder="Search flows"/>
+        </div>
+        <div>
+            <span class="gist-count"></span>
+        </div>
+    </div>
+</div>
+<div class="grid main-content">
+    <div class="col-1-1">
+        <ul class="gistlist">{{#nodes}}{{>_nodebox}}{{/nodes}}
+        </ul>
+    </div>
+</div>
+
+<script>
+var gistCount = 0;
+
+function updateCount(n) {
+    if (n == gistCount) {
+        $(".gist-count").text(gistCount+" nodes");
+    } else {
+        $(".gist-count").text(n+" of "+gistCount+" nodes");
+    }
+}
+function filterGists(term) {
+    term = term.toLowerCase();
+    var c = 0;
+    $(".gistbox").each(function(e) {
+        if ($(this).data("info").indexOf(term) > -1) {
+            c++;
+            $(this).css({width:"31%",height:"125px",margin:"10px"});
+        } else {
+            $(this).css({width:0,height:0,margin:0})
+        }
+    });
+    updateCount(c);
+}
+
+$(function() {
+    $(".gistbox").each(function(e) {
+        var d = ($(this).find("h1").text()+" "+$(this).data("tags")+" "+$(this).data("owner")).toLowerCase();
+        $(this).data("info", d);
+        gistCount++;
+    });
+    
+    updateCount(gistCount);
+    
+    $(".gist-filter").keyup(function() {
+        filterGists($(this).val());
+    });
+});
+</script>

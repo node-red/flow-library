@@ -297,10 +297,9 @@ ul#add-flow-tags.active {
 }    
 
 ul.flow-tags li {
-    transition: all 500ms ease; 
-    -webkit-transition: all 500ms ease; 
-    -moz-transition: all 500ms ease;
-    -o-transition: all 500ms ease;      
+    transition-property: background;
+    transition-duration: 500ms;
+    transition-timing-function: ease; 
     display: inline-block;
     padding: 3px 5px 3px 5px ;
     border: 1px solid #ccc;
@@ -315,21 +314,25 @@ ul.flow-tags li:hover {
     background: #f0f0f0;
     
 }
+ul#add-flow-tags li.tag-input:not(:first-child) {
+    padding: 0;
+}
+
 ul#add-flow-tags li.tag-input {
     border: none;
     background: none;
-    padding:0;
     height: 28px;
-    vertical-align: middle
+    vertical-align: middle;
 
 }
-li.tag-input input {
+li.tag-input input[type=text] {
     border: none !important;
     box-shadow: none !important;
     font-size: 14px;
+    color: #666;
     vertical-align: middle;
-    padding: 0;
     height: auto;
+    padding: 0;
 }
 li.tag-input input:focus {
     outline: none;
@@ -465,8 +468,8 @@ h1.flow-title {
 .gist-filter {
     font-size: 16px;
     padding: 10px;
+    color: #666;
     width: 100%;
-    max-width: 500px;
     -webkit-appearance: none;
     vertical-align: middle;
     border: 2px solid #999;
@@ -497,13 +500,17 @@ h1.flow-title {
 }
 
 .gist-count {
-    width: 100%;
-    max-width: 500px;
     display: inline-block;
     text-align: right;
+    float: right;
     font-size: 14px;
 }
-
+.gistlist-empty {
+    text-align: center;
+    font-size: 24px;
+    margin: 0;
+    color: #777;
+}
 ul.gistlist {
     margin: 20px 0;
     padding: 0;
@@ -517,6 +524,7 @@ li.gistbox {
     background: #fff;
     float: left;
     width: 31%;
+    min-width: 200px;
     height: 125px;
     margin: 10px;
     overflow: hidden;
@@ -537,12 +545,18 @@ li.gistbox {
 }
 .gistbox a:hover {
     text-decoration: none;
-    border-color: #7F4545;
+    border-color: #AD6868;
 }
-.gistbox h1 {
+h1.gisttitle {
     font-size: 16px;
     margin: 0;
     font-weight: normal;
+    color: #444;
+}
+p.gistdescription {
+    font-size: 13px;
+    color: #999;
+    margin: 0;
 }
 .gistbox-footer {
     position: absolute;
@@ -550,7 +564,7 @@ li.gistbox {
     bottom:0;
     width: 100%;
     padding: 0px;
-    font-size: 14px;
+    font-size: 0.8em;
     text-align: right;
     background: #CD9494;
     color: #fff;
@@ -566,15 +580,89 @@ li.gistbox {
     margin: 7px 0 3px 7px;
     padding: 2px;
     float: left;
-    font-size: 0.8em;
-    border: 1px solid #fff;
-    border-radius: 5px;
     line-height: 1.1em;
 }
 .gistbox-owner {
     padding: 3px 10px;
 }
 a:hover .gistbox-footer {
-    background:  #7F4545;
+    background:  #AD6868;
 }
+
+.gistbox-official {
+    float: left;
+}
+
+.gistbox-flow a {
+    border-color: #799191;
+}
+.gistbox-flow a:hover {
+    border-color: #3E6868;
+}
+.gistbox-flow a .gistbox-footer {
+    background: #799191;
+}
+.gistbox-flow a:hover .gistbox-footer {
+    background: #3E6868;
+}
+
+
+.gistbox-filter-options {
+    list-style-type: none;
+    font-size: 14px;
+    padding: 0;
+    margin: 0;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+
+.gistbox-filter-options li {
+    display: inline-block;
+    margin-left: 5px;
+    margin-right: 10px;
+    height: 30px;
+}
+.gistbox-filter-label {
+    cursor: pointer;
+    color: #999;
+}
+.gistbox-filter-option {
+    display: none;
+}
+.gistbox-filter-label:before {
+    content:" ";
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border-width: 2px;
+    border-style: solid;
+    border-color: #aaa;
+    margin-right: 4px;
+    vertical-align: middle;
+    margin-top: -2px;
+    text-align: center;
+    font-size: 12px;
+    line-height: 12px;
+}
+
+.gistbox-filter-option:checked + label {
+    color: #666;
+}
+.gistbox-filter-option:checked + label:before {
+    content: '\2713'
+}
+#gistbox-filter-option-nodes:checked + label:before {
+    border-color: #CD9494;
+    abackground: #F2CACA;
+}
+#gistbox-filter-option-flows:checked + label:before {
+    border-color: #799191;
+    abackground: #AEBCBC;
+}
+
+
+
+
+/* http://paletton.com/#uid=7000u0k8UpJ2nG55nurcJlGfPgZ */
 

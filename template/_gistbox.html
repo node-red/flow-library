@@ -1,6 +1,7 @@
-<li class="gistbox gistbox-flow" data-tags="{{tags}}" data-owner="{{owner.login}}"><a href="/flow/{{id}}">
-<h1>{{description}}</h1>
+<li class="gistbox gistbox-{{type}}" data-tags="{{tags}}" data-owner="{{owner.login}}"><a href="/flow/{{_id}}">
+<h1 class="gisttitle">{{description}}</h1>
+<p class="gistdescription">by {{owner.login}}</p>
 <div class="gistbox-footer">
-    <div class="gistbox-owner">{{owner.login}}</div>
+    <div class="gistbox-owner">{{type}}</div>
 </div>
-</a><li>
+</a></li>

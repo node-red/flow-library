@@ -1,5 +1,8 @@
 var settings = require('./settings');
 var gister = require("./lib/gists");
+var viewster = require("./lib/view");
+
+var npmNodes = require("./lib/nodes");
 var github = require("./lib/github");
 
 var fs = require("fs");
@@ -115,16 +118,13 @@ app.get("/login/callback",function(req,res) {
 app.get("/",function(req,res) {
     var context = {};
     context.sessionuser = req.session.user;
-    gister.getAll().then(function(gists) {
-        context.gists = gists;
-        var n = context.gists.length;
-        for (var i = context.gists.length - 1; i >=0; i--) {
-            context.gists[i].refreshed_at_since = formatDate(context.gists[i].refreshed_at);
-        }
+    viewster.get().then(function(things) {
+        context.things = things;
         res.send(mustache.render(renderTemplates.index,context,partialTemplates));
     }).otherwise(function(err) {
+        console.log(err);
         context.err = err;
-        context.gists = [];
+        context.things = [];
         res.send(mustache.render(renderTemplates.index,context,partialTemplates));
     });
 });
@@ -337,18 +337,18 @@ app.get("/add",function(req,res) {
     res.send(mustache.render(renderTemplates['add'],context,partialTemplates));
 });
 
-app.get("/user/:id",function(req,res) {
-    var context = {};
-    context.sessionuser = req.session.user;
-    when.join(gister.getUser(req.params.id),gister.getForUser(req.params.id)).then(function(values) {
-        context.user = values[0];
-        context.gists = values[1];
-        res.send(mustache.render(renderTemplates.user,context,partialTemplates));
-    }).otherwise(function(err) {
-        console.log(err);
-        res.send(404,mustache.render(renderTemplates['404'],context,partialTemplates));
-    });
-});
+//app.get("/user/:id",function(req,res) {
+//    var context = {};
+//    context.sessionuser = req.session.user;
+//    when.join(gister.getUser(req.params.id),gister.getForUser(req.params.id)).then(function(values) {
+//        context.user = values[0];
+//        context.gists = values[1];
+//        res.send(mustache.render(renderTemplates.user,context,partialTemplates));
+//    }).otherwise(function(err) {
+//        console.log(err);
+//        res.send(404,mustache.render(renderTemplates['404'],context,partialTemplates));
+//    });
+//});
 
 //app.get("/tag/:id",function(req,res) {
 //    var context = {};
@@ -363,28 +363,44 @@ app.get("/user/:id",function(req,res) {
 //    });
 //});
 
-app.get("/search",function(req,res) {
-    var search = req.query.s;
-    var context = {};
+//app.get("/search",function(req,res) {
+//    var search = req.query.s;
+//    var context = {};
+//
+//    var si = require('search-index');
+//    var q = {};
+//    q['query'] = search.split(" ");
+//    q['offset'] = 0;
+//    q['pageSize'] = 25;
+//    si.search(q,function(msg) {
+//        if (msg.hits) {
+//            context.gists = msg.hits.map(function(res) {
+//                return {id:res.id,description:res.document.title};
+//            });
+//        }
+//        context.search = search;
+//        context.sessionuser = req.session.user;
+//        res.send(mustache.render(renderTemplates.search,context,partialTemplates));
+//    });
+//
+//    
+//});
 
-    var si = require('search-index');
-    var q = {};
-    q['query'] = search.split(" ");
-    q['offset'] = 0;
-    q['pageSize'] = 25;
-    si.search(q,function(msg) {
-        if (msg.hits) {
-            context.gists = msg.hits.map(function(res) {
-                return {id:res.id,description:res.document.title};
-            });
-        }
-        context.search = search;
-        context.sessionuser = req.session.user;
-        res.send(mustache.render(renderTemplates.search,context,partialTemplates));
-    });
 
-    
-});
+
+//app.get("/nodes",function(req,res) {
+//    var context = {};
+//    context.sessionuser = req.session.user;
+//    npmNodes.get().then(function(nodes) {
+//        context.nodes = nodes;
+//        res.send(mustache.render(renderTemplates.nodes,context,partialTemplates));
+//    }).otherwise(function(err) {
+//        context.err = err;
+//        context.nodes = [];
+//        res.send(mustache.render(renderTemplates.nodes,context,partialTemplates));
+//    });
+//});
+
 
 app.use(function(req, res) {
     res.send(404,mustache.render(renderTemplates['404'],{sessionuser:req.session.user},partialTemplates));

@@ -9,7 +9,6 @@
     "when":"3.7.x",
     "oauth": "0.9.12",
     "connect-mongo":"0.7.0",
-    "search-index":"0.2.x",
     "request":"2.53.0",
     "tar":"1.0.3",
     "fs-extra":"0.16.4"

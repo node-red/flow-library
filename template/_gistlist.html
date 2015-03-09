@@ -1,33 +1,46 @@
 
-<div class="grid main-content">
-    <div class="col-1-1">
-        <div>
-            <input class="gist-filter" type="text" placeholder="Search flows"/>
-        </div>
-        <div>
+<div class="grid"  style="padding-top: 10px;">
+    <div class="col-8-12">
+        <div style="max-width: 500px;">
+            <input class="gist-filter" type="text" placeholder="Search library"/>
+            <ul class="gistbox-filter-options">
+                <li><input id="gistbox-filter-option-flows" data-filter="flows" class="gistbox-filter-option" checked type="checkbox" /><label class="gistbox-filter-label" for="gistbox-filter-option-flows">flows</label></li>
+                <li><input id="gistbox-filter-option-nodes" data-filter="nodes" class="gistbox-filter-option" checked type="checkbox" /><label class="gistbox-filter-label" for="gistbox-filter-option-nodes">nodes</label></li>
+            </ul>
             <span class="gist-count"></span>
         </div>
+    </div>
     
-        <ul class="gistlist">{{#gists}}{{>_gistbox}}{{/gists}}
+</div>
+<div class="grid main-content">
+    <div class="col-1-1">
+        <ul class="gistlist">{{#things}}
+            {{#_rev}}{{>_nodebox}}{{/_rev}}
+            {{^_rev}}{{>_gistbox}}{{/_rev}}
+        {{/things}}
         </ul>
     </div>
 </div>
 
 <script>
 var gistCount = 0;
+var currentTerm = "";
+var filters = {
+    "nodes": true,
+    "flows": true
+}
 
 function updateCount(n) {
     if (n == gistCount) {
-        $(".gist-count").text(gistCount+" flows");
+        $(".gist-count").text(gistCount+" things");
     } else {
-        $(".gist-count").text(n+" of "+gistCount+" flows");
+        $(".gist-count").text(n+" of "+gistCount+" things");
     }
 }
-function filterGists(term) {
-    term = term.toLowerCase();
+function filterGists() {
     var c = 0;
     $(".gistbox").each(function(e) {
-        if ($(this).data("info").indexOf(term) > -1) {
+        if (((filters.nodes && $(this).hasClass("gistbox-node")) || (filters.flows && $(this).hasClass("gistbox-flow"))) && $(this).data("info").indexOf(currentTerm) > -1) {
             c++;
             $(this).css({width:"31%",height:"125px",margin:"10px"});
         } else {
@@ -47,7 +60,15 @@ $(function() {
     updateCount(gistCount);
     
     $(".gist-filter").keyup(function() {
-        filterGists($(this).val());
+        currentTerm = $(this).val().toLowerCase();
+        filterGists();
     });
+    
+    $(".gistbox-filter-option").change(function() {
+        filters[$(this).data("filter")] = this.checked;
+        filterGists();
+    });
+    
+    
 });
 </script>

@@ -9,8 +9,8 @@
     <div class="col-3-12">
           <div class="flowmeta">
             <span class="flowuser">
-              <a href="/user/{{ owner.login }}"><img src="{{ owner.avatar_url }}"/></a>
-              <a href="/user/{{ owner.login }}">{{ owner.login }}</a></span>
+              <img src="{{ owner.avatar_url }}"/>
+              {{ owner.login }}</span>
           </div>
           <div class="flowmeta">
             <h4>Flow Info</h4>
@@ -34,7 +34,7 @@
             <h4>Tags</h4>
             <ul class="flow-tags">
             {{#tags}}
-            <li tag="{{.}}"><a href="/tag/{{.}}">{{.}}</a></li>
+            <li tag="{{.}}">{{.}}</li>
             {{/tags}}
             </ul>
             {{#owned}}
@@ -93,7 +93,7 @@ $(function() {
     $('#edit-tags').click(function(event) {
         event.preventDefault();
         $('ul.flow-tags').attr('id',"add-flow-tags");
-        tagEditor = tagger({lipre:'<a href="/tag/@@TAG@@">',lipost:'</a>'});
+        tagEditor = tagger({lipre:'',lipost:''});
         $('#edit-tags').hide();
         $('#edit-tags-cancel').show();
         $('#edit-tags-done').show();

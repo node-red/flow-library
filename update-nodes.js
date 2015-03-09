@@ -7,8 +7,6 @@ npmNodes.refreshAll().then(function(results) {
             console.log("Failed:",res.reason);
         } else if (res.value) {
             console.log("Updated:",res.value);
-        } else {
-            console.log("Skipped one");
         }
     });
 });

@@ -632,6 +632,7 @@ a:hover .gistbox-footer {
 }
 .gistbox-filter-label:before {
     content:" ";
+    font-weight: bold;
     display: inline-block;
     width: 16px;
     height: 16px;

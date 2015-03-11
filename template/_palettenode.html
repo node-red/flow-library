@@ -1,0 +1,8 @@
+<li style="margin-bottom: 5px;">
+    <div class="palette_node palette_node_{{category}}" style="background-color:{{color}};">
+    {{#iconUrl}}<div class="palette_icon" style="background-image: url({{iconUrl}})"></div>{{/iconUrl}}
+    <div class="palette_label" {{#iconUrl}}style="margin-left: 28px"{{/iconUrl}}>{{name}}</div>
+    {{#hasOutputs}}<div class="palette_port palette_port_output"></div>{{/hasOutputs}}
+    {{#hasInputs}}<div class="palette_port palette_port_input"></div>{{/hasInputs}}
+    </div>
+</li>

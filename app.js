@@ -247,6 +247,7 @@ var coreNodes = ["sentiment", "inject", "debug", "exec", "function", "template",
       o[v] = 1;
       return o;
     }, {});
+
 app.get("/flow/:id",function(req,res) {
     gister.get(req.params.id).then(function(gist) {
         gist.sessionuser = req.session.user;
@@ -259,7 +260,11 @@ app.get("/flow/:id",function(req,res) {
         if (gist.created_at_since == gist.updated_at_since) {
             delete gist.updated_at_since;
         }
-        gist.owned = (gist.sessionuser && gist.owner.login == gist.sessionuser.login);
+        gist.owned = (gist.sessionuser &&
+            (
+                (gist.owner.login == gist.sessionuser.login) ||
+                (settings.admins.indexOf(req.session.user.login) != -1)
+            ));
         
         gist.nodeTypes = [];
         if (gist.files['flow-json']) {
@@ -324,7 +329,27 @@ app.get("/flow/:id",function(req,res) {
     });
 });
 
-app.post("/flow/:id/tags",function(req,res) {
+function verifyOwner(req,res,next) {
+    if (!req.session.user) {
+        res.send(403);
+    } else if (settings.admins.indexOf(req.session.user.login) != -1) {
+        next();
+    } else {
+        gister.get(req.params.id).then(function(gist) {
+            console.log(gist);
+            if (gist.owner.login == req.session.user.login) {
+                next();
+            } else {
+                res.send(403);
+            }
+        }).otherwise(function() {
+            console.log("NONONO");
+            res.send(403);
+        });
+    }
+}
+
+app.post("/flow/:id/tags",verifyOwner,function(req,res) {
     // TODO: verify req.session.user == gist owner
     gister.updateTags(req.params.id,req.body.tags).then(function() {
         res.send(200);
@@ -335,7 +360,7 @@ app.post("/flow/:id/tags",function(req,res) {
     
 });
 
-app.post("/flow/:id/refresh",function(req,res) {
+app.post("/flow/:id/refresh",verifyOwner,function(req,res) {
     gister.refresh(req.params.id).then(function () {
         res.send("/flow/"+req.params.id);
     }).otherwise(function(exists) {
@@ -347,21 +372,21 @@ app.post("/flow/:id/refresh",function(req,res) {
     })
 });
 
-app.post("/flow/:id/add",function(req,res) {
-    gister.add(req.params.id).then(function () {
-        res.send("/flow/"+req.params.id);
-    }).otherwise(function(err) {
-        if (err.errno == 47) {
-            res.send("/flow/"+req.params.id);
-        } else if (err.code == 404) {
-            res.send(404,mustache.render(renderTemplates['404'],{sessionuser:req.session.user},partialTemplates));
-        } else {
-            res.send(406,err);
-        }
-    })
-});
+//app.post("/flow/:id/add",function(req,res) {
+//    gister.add(req.params.id).then(function () {
+//        res.send("/flow/"+req.params.id);
+//    }).otherwise(function(err) {
+//        if (err.errno == 47) {
+//            res.send("/flow/"+req.params.id);
+//        } else if (err.code == 404) {
+//            res.send(404,mustache.render(renderTemplates['404'],{sessionuser:req.session.user},partialTemplates));
+//        } else {
+//            res.send(406,err);
+//        }
+//    })
+//});
 
-app.post("/flow/:id/delete",function(req,res) {
+app.post("/flow/:id/delete",verifyOwner,function(req,res) {
     gister.remove(req.params.id).then(function() {
         res.send(200);
     }).otherwise(function(err) {

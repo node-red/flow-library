@@ -1,5 +1,6 @@
 h1 {
     font-weight: normal;
+    line-height: 1.1em;
 }
 [class*='col-'] {
     aborder: 1px solid red;

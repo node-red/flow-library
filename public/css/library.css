@@ -1,3 +1,6 @@
+h1 {
+    font-weight: normal;
+}
 [class*='col-'] {
     aborder: 1px solid red;
 }
@@ -135,6 +138,12 @@
 .flowuser {
     font-family: 'Roboto Slab', serif;
     font-size: 18px;
+}
+.flow-stat {
+    display: inline-block;
+    min-width: 30px;
+    text-align: right;
+    font-weight: bold;
 }
 .pagetitle .flowuser {
     color: #aaa;
@@ -461,7 +470,16 @@ h1.flow-title {
     margin-bottom: 40px;
     margin-top: 10px;
     font-weight: normal;
-
+}
+.flow-version {
+    padding-left: 5px;
+    color: #aaa;
+    font-size: 20px;
+}
+p.flow-description {
+    color:#aaa;
+    font-size: 20px;
+    font-weight: normal;
 }
 
 
@@ -667,3 +685,57 @@ a:hover .gistbox-footer {
 
 /* http://paletton.com/#uid=7000u0k8UpJ2nG55nurcJlGfPgZ */
 
+
+.palette_label {
+    margin: 4px 0;
+    color: #333;
+    line-height: 20px;
+    text-align: center;
+    overflow: hidden;
+}
+.palette_node {
+   font-size:13px;
+   background: #ddd;
+   border-radius: 6px;
+   border: 2px solid #999;
+   min-width: 90px;
+   display: inline-block;
+   padding: 0;
+   position: relative;
+}
+.palette_icon {
+    position: absolute;
+    top:0;
+    bottom:0;
+    left:0;
+    width: 30px;
+    border-right: 2px solid rgba(0,0,0,0.1);
+    background-color: rgba(0,0,0,0.05);
+    background-position: 50% 50%;
+    background-repeat: no-repeat;
+}
+.palette_label {
+    padding: 0 10px;
+    min-width: 90px;
+}
+.palette_node_config {
+    border-color: #aaa;
+    border-style: dashed;
+    background: #eee;
+}
+.palette_port {
+   position: absolute;
+   top:33%;
+   left: -6px;
+   box-sizing: border-box;
+    -moz-box-sizing: border-box;
+   background:#d9d9d9;
+   border-radius: 3px;
+   width: 10px;
+   height: 10px;
+   border: 1px solid #999;
+}
+.palette_port_output {
+    right:-6px;
+    left: auto;
+}

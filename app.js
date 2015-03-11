@@ -217,14 +217,23 @@ app.post("/flow", function(req,res) {
     }
 });
 
-function mapPath(file) {
+function mapGistPath(file) {
     if (file.indexOf(settings.gistDir) == -1) {
         var m = /^.*\/gists\/(.*)$/.exec(file);
         return path.join(settings.gistDir,m[1]);
     }
     return file;
 }
-
+function mapNodePath(file) {
+    if (!file) {
+        return;
+    }
+    if (file.indexOf(settings.nodeDir) == -1) {
+        var m = /^.*\/nodes\/(.*)$/.exec(file);
+        return path.join(settings.nodeDir,m[1]);
+    }
+    return file;
+}
 app.get("/flow/:id",function(req,res) {
     gister.get(req.params.id).then(function(gist) {
         gist.sessionuser = req.session.user;
@@ -241,7 +250,7 @@ app.get("/flow/:id",function(req,res) {
         
         gist.nodeTypes = [];
         if (gist.files['flow-json']) {
-            gist.flow = fs.readFileSync(mapPath(gist.files['flow-json']),'utf-8');
+            gist.flow = fs.readFileSync(mapGistPath(gist.files['flow-json']),'utf-8');
             var nodes = JSON.parse(gist.flow);
             var nodeTypes = {};
             for (var n in nodes) {
@@ -258,10 +267,22 @@ app.get("/flow/:id",function(req,res) {
                 return 0;
             });
         }
-        fs.readFile(mapPath(gist.files['README-md']),'utf-8',function(err,data) {
-            marked(data,{},function(err,content) {
-                gist.readme = content;
-                res.send(mustache.render(renderTemplates.gist,gist,partialTemplates));
+        npmNodes.findTypes(gist.nodeTypes.map(function(t) { return t.type })).then(function(typeMap) {
+            gist.nodeTypes.forEach(function(t) {
+                var type = typeMap[t.type];
+                if (type) {
+                    if (type.length == 1) {
+                        t.module = type[0];
+                    } else if (type.length > 1) {
+                        t.moduleAlternatives = type;
+                    }
+                }
+            });
+            fs.readFile(mapGistPath(gist.files['README-md']),'utf-8',function(err,data) {
+                marked(data,{},function(err,content) {
+                    gist.readme = content;
+                    res.send(mustache.render(renderTemplates.gist,gist,partialTemplates));
+                });
             });
         });
     }).otherwise(function(err) {
@@ -322,7 +343,7 @@ app.post("/flow/:id/delete",function(req,res) {
 app.get("/flow/:id/flow",function(req,res) {
     gister.get(req.params.id).then(function(gist) {
         if (gist.files['flow.json']) {
-            res.sendfile(mapPath(gist.files['flow.json'].local_path),'utf-8');
+            res.sendfile(mapGistPath(gist.files['flow.json'].local_path),'utf-8');
         } else {
             res.send(404,mustache.render(renderTemplates['404'],{sessionuser:req.session.user},partialTemplates));
         }
@@ -336,6 +357,88 @@ app.get("/add",function(req,res) {
     context.sessionuser = req.session.user;
     res.send(mustache.render(renderTemplates['add'],context,partialTemplates));
 });
+
+var iconCache = {};
+
+app.get("/node/:id",function(req,res) {
+    npmNodes.get(req.params.id).then(function(node) {
+        //console.log(node);
+        node.updated_at_since = formatDate(node.updated_at);
+        iconCache[req.params.id] = {};
+        node.types = [];
+        for (var n in node.versions.latest["node-red"].nodes) {
+            var def = node.versions.latest["node-red"].nodes[n];
+            //console.log(n);
+            for (var t in def.types) {
+                //console.log("-",n);
+                def.types[t].name = t;
+                if (def.types[t].icon) {
+                    if (fs.existsSync(__dirname+"/public/icons/"+def.types[t].icon)) {
+                        def.types[t].iconUrl = "/icons/"+def.types[t].icon;
+                    } else {
+                        def.types[t].iconUrl = "/node/"+req.params.id+"/icons/"+def.types[t].icon;
+                    }
+                }
+                def.types[t].hasInputs = (def.types[t].inputs > 0);
+                def.types[t].hasOutputs = (def.types[t].outputs > 0);
+                if (def.types[t].category == "config") {
+                    delete def.types[t].color;
+                }
+                
+                node.types.push(def.types[t]);
+                //console.log(def.types[t]);
+                iconCache[req.params.id][def.types[t].icon] = mapNodePath(def.types[t].iconPath);
+            }
+        }
+        //console.log(node);
+        node.readme = node.readme||"";
+        
+        marked(node.readme,{},function(err,content) {
+            node.readme = content.replace(/^<h1 .*?<\/h1>/gi,"");
+            if (node.repository && node.repository.url && /github\.com/.test(node.repository.url)) {
+                var m;
+                var repo = node.repository.url;
+                var baseUrl;
+                
+                if ((m=/git@github.com:(.*)\.git$/.exec(repo))) {
+                    baseUrl = "https://github.com/"+m[1]+"/raw/master/";
+                    m = null;
+                } else {
+                    baseUrl = repo.replace(/\.git$/,"/raw/master/");
+                }
+                
+                
+                var re = /(<img .*?src="(.*?)")/gi;
+                
+                while((m=re.exec(node.readme)) !== null) {
+                    if (!/^https?:/.test(m[2])) {
+                        var newImage = m[1].replace('"'+m[2]+'"','"'+baseUrl+m[2]+'"');
+                        node.readme = node.readme.substring(0,m.index) +
+                                        newImage +
+                                      node.readme.substring(m.index+m[1].length);
+                    }
+                }
+            }
+            
+            res.send(mustache.render(renderTemplates.node,node,partialTemplates));
+        });
+
+    }).otherwise(function(err) {
+        if (err) {
+            console.log("error loading node:",err);
+        }
+        res.send(404,mustache.render(renderTemplates['404'],{sessionuser:req.session.user},partialTemplates));
+    });
+});
+
+app.get("/node/:id/icons/:icon", function(req,res) {
+    if (iconCache[req.params.id] && iconCache[req.params.id][req.params.icon]) {
+        res.sendfile(iconCache[req.params.id][req.params.icon]);
+    } else {
+        res.sendfile(__dirname+"/public/icons/arrow-in.png");
+    }
+});
+
 
 //app.get("/user/:id",function(req,res) {
 //    var context = {};

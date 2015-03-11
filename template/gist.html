@@ -2,7 +2,7 @@
 
 <div class="grid main-content">
     <div class="col-9-12 docs-content">
-        <h1 class="flow-title">{{ description }}</h3>
+        <h1 class="flow-title">{{ description }}</h1>
           {{{ readme }}}
           <pre id="flow" class="highlight language-javascript">{{ flow }}</pre>
     </div>
@@ -26,7 +26,7 @@
             <h4>Node Types</h4>
             <ul class="nodeTypeList">
               {{#nodeTypes}}
-              <li>{{type}} <span class="small">(x{{count}})</span></li>
+              <li>{{#module}}<a href="/node/{{module}}">{{/module}}{{type}}{{#module}}</a>{{/module}} <span class="small">(x{{count}})</span></li>
               {{/nodeTypes}}
             </ul>
           </div>

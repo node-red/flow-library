@@ -1,0 +1,72 @@
+{{>_header}}
+
+<div class="grid main-content">
+    <div class="col-9-12 docs-content">
+        <h1 class="flow-title" style="margin-bottom: 10px;">{{ name }} <span class="flow-version">{{ versions.latest.version }}</span></h1>
+        <p class="flow-description">{{ description }}</p>
+          {{{ readme }}}
+    </div>
+    <div class="col-3-12">
+          <div class="flowmeta">
+            <h4>Node Info</h4>
+            <div class="flowinfo"> Version: {{ versions.latest.version }}</div>
+            {{#updated_at_since}}<div class="flowinfo">  Updated {{ updated_at_since }}</div>{{/updated_at_since}}
+            {{#license}}<div class="flowinfo">License: {{ license }}</div>{{/license}}
+            <div class="flowinfo"><a href="https://npmjs.org/package/{{ name }}">view on npm</a></div>
+          </div>
+          <div class="flowmeta">
+            <h4>Downloads</h4>
+            <div class="flowinfo"><span class="flow-stat flow-stat-day">-</span> in the last day</div>
+            <div class="flowinfo"><span class="flow-stat flow-stat-week">-</span> in the last week</div>
+            <div class="flowinfo"><span class="flow-stat flow-stat-month">-</span> in the last month</div>
+          </div>
+          {{#types.length}}
+              <div class="flowmeta">
+                <h4>Nodes</h4>
+                 <ul style="list-style-type: none; padding:0; margin: 10px 20px;">
+                  {{#types}}
+                  <li style="margin-bottom: 5px;"><div class="palette_node palette_node_{{category}}" style="background-color:{{color}};">{{#iconUrl}}<div class="palette_icon" style="background-image: url({{iconUrl}})"></div>{{/iconUrl}}<div class="palette_label" {{#iconUrl}}style="margin-left: 28px"{{/iconUrl}}>{{name}}</div>{{#hasOutputs}}<div class="palette_port palette_port_output"></div>{{/hasOutputs}}{{#hasInputs}}<div class="palette_port palette_port_input"></div>{{/hasInputs}}</div></li>
+                  {{/types}}
+                  </ul>
+              </div>
+          {{/types.length}}
+          <div class="flowmeta">
+            <h4>Keywords</h4>
+            <ul class="flow-tags">
+            {{#keywords}}
+            <li>{{.}}</li>
+            {{/keywords}}
+            </ul>
+          </div>
+          <div class="flowmeta">
+            <h4>Maintainers</h4>
+            <ul>
+            {{#maintainers}}
+            <li>{{name}}</li>
+            {{/maintainers}}
+            </ul>
+            {{#contributors.length}}
+            <h4>Contributors</h4>
+            <ul>
+            {{#contributors}}
+            <li>{{name}}</li>
+            {{/contributors}}
+            {{/contributors.length}}
+          </div>
+      </div>
+</div>
+<script>
+$(function() {
+    $.getJSON("https://api.npmjs.org/downloads/point/last-day/{{name}}",function(data) {
+        $(".flow-stat-day").html(data.downloads);
+    });
+    $.getJSON("https://api.npmjs.org/downloads/point/last-week/{{name}}",function(data) {
+        $(".flow-stat-week").html(data.downloads);
+    });
+    $.getJSON("https://api.npmjs.org/downloads/point/last-month/{{name}}",function(data) {
+        $(".flow-stat-month").html(data.downloads);
+    });
+});
+
+</script>
+{{>_footer}}

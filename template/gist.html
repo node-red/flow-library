@@ -96,7 +96,7 @@ $(function() {
     $('#remove-flow').click(function(event) {
         $.post("/flow/{{ id }}/delete",function(data,textStatus,jqXHR) {
             if (jqXHR.status != 304) {
-                window.location = "/user/{{sessionuser.login}}";
+                window.location = "/";
             }
         });
         event.preventDefault();

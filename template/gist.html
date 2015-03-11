@@ -24,11 +24,25 @@
           </div>
           <div class="flowmeta">
             <h4>Node Types</h4>
+           {{#nodeTypes}}
+            {{#core.length}}
+             <h5>Core</h5>
             <ul class="nodeTypeList">
-              {{#nodeTypes}}
-              <li>{{#module}}<a href="/node/{{module}}">{{/module}}{{type}}{{#module}}</a>{{/module}} <span class="small">(x{{count}})</span></li>
-              {{/nodeTypes}}
+              {{#core}}
+              <li>{{type}} <span class="small">(x{{count}})</span></li>
+              {{/core}}
             </ul>
+            {{/core.length}}
+            {{#other.length}}
+             <h5>Other</h5>
+            <ul class="nodeTypeList">
+              {{#other}}
+              <li>{{#module}}<a href="/node/{{module}}">{{/module}}{{type}}{{#module}}</a>{{/module}} <span class="small">(x{{count}})</span></li>
+              {{/other}}
+            </ul>
+            {{/other.length}}
+           {{/nodeTypes}}
+            
           </div>
           <div class="flowmeta">
             <h4>Tags</h4>

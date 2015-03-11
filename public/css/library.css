@@ -127,6 +127,9 @@ h1 {
 .flowmeta  h4 {
     margin: auto;
 }
+.flowmeta  h5 {
+    margin: 5px 10px 0 10px;
+}
 
 .flowmeta img {
     dborder: 1px solid #ccc;
@@ -144,6 +147,9 @@ h1 {
     min-width: 30px;
     text-align: right;
     font-weight: bold;
+}
+.nodeTypeList {
+    margin: 0;
 }
 .pagetitle .flowuser {
     color: #aaa;

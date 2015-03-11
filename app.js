@@ -234,6 +234,19 @@ function mapNodePath(file) {
     }
     return file;
 }
+var coreNodes = ["sentiment", "inject", "debug", "exec", "function", "template",
+    "delay", "trigger", "comment", "unknown", "arduino in", "arduino out", "arduino-board",
+    "rpi-gpio in", "rpi-gpio out", "rpi-mouse", "mqtt in", "mqtt out", "mqtt-broker",
+    "http in", "http response", "http request", "websocket in", "websocket out",
+    "websocket-listener", "websocket-client", "watch", "serial in", "serial out",
+    "serial-port", "tcp in", "tcp out", "tcp request", "udp in", "udp out", "switch",
+    "change", "range", "csv", "html", "json", "xml", "twitter-credentials",
+    "twitter in", "twitter out", "feedparse", "e-mail", "e-mail in", "irc in", 
+    "irc out", "irc-server", "tail", "file", "file in", "redis out", "mongodb",
+    "mongodb out", "mongodb in", "catch"].reduce(function(o, v, i) {
+      o[v] = 1;
+      return o;
+    }, {});
 app.get("/flow/:id",function(req,res) {
     gister.get(req.params.id).then(function(gist) {
         gist.sessionuser = req.session.user;
@@ -262,13 +275,22 @@ app.get("/flow/:id",function(req,res) {
                 gist.nodeTypes.push({type:nt,count:nodeTypes[nt]});
             }
             gist.nodeTypes.sort(function(a,b) {
+                if (a.type in coreNodes && !(b.type in coreNodes)) {
+                    return -1;
+                }
+                if (!(a.type in coreNodes) && b.type in coreNodes) {
+                    return 1;
+                }
                 if (a.type>b.type) return 1;
                 if (a.type<b.type) return -1;
                 return 0;
             });
         }
         npmNodes.findTypes(gist.nodeTypes.map(function(t) { return t.type })).then(function(typeMap) {
-            gist.nodeTypes.forEach(function(t) {
+            var nodeTypes = gist.nodeTypes;
+            gist.nodeTypes = {core:[], other:[]};
+            
+            nodeTypes.forEach(function(t) {
                 var type = typeMap[t.type];
                 if (type) {
                     if (type.length == 1) {
@@ -277,6 +299,13 @@ app.get("/flow/:id",function(req,res) {
                         t.moduleAlternatives = type;
                     }
                 }
+                if (t.type in coreNodes) {
+                    delete t.module;
+                    gist.nodeTypes.core.push(t);
+                } else {
+                    gist.nodeTypes.other.push(t);
+                }
+                
             });
             fs.readFile(mapGistPath(gist.files['README-md']),'utf-8',function(err,data) {
                 marked(data,{},function(err,content) {

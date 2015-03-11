@@ -580,8 +580,9 @@ h1.gisttitle {
 }
 p.gistdescription {
     font-size: 13px;
+    line-height: 1.5em; 
     color: #999;
-    margin: 0;
+    margin: 5px 0 0 0;
 }
 .gistbox-footer {
     position: absolute;

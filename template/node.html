@@ -4,6 +4,10 @@
     <div class="col-9-12 docs-content">
         <h1 class="flow-title" style="margin-bottom: 10px;">{{ name }} <span class="flow-version">{{ versions.latest.version }}</span></h1>
         <p class="flow-description">{{ description }}</p>
+        <p class="flowmeta flow-install">
+            <i class="icon-download-alt"></i> <code>npm install {{name}}</code>
+            <span class="flow-install-help"><a target="_blank" href="http://nodered.org/docs/getting-started/adding-nodes.html"><i class="icon-question-sign"></i></a></span>
+        </p>
           {{{ readme }}}
     </div>
     <div class="col-3-12">

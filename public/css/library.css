@@ -488,8 +488,24 @@ p.flow-description {
     font-size: 20px;
     font-weight: normal;
 }
-
-
+p.flow-install {
+    font-size: 16px;
+    color: #aaa;
+}
+p.flow-install code {
+    background: none;
+    color: inherit;
+}
+.flow-install-help {
+    float: right;
+}
+.flow-install-help a {
+    color: inherit;
+}
+.flow-install-help a:hover{
+    color: #aa6767;
+    text-decoration: none;
+}
 .gist-filter {
     font-size: 16px;
     padding: 10px;

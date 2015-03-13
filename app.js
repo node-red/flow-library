@@ -416,6 +416,8 @@ var iconCache = {};
 
 app.get("/node/:id",function(req,res) {
     npmNodes.get(req.params.id).then(function(node) {
+        node.sessionuser = req.session.user;
+
         //console.log(node);
         node.updated_at_since = formatDate(node.updated_at);
         iconCache[req.params.id] = {};

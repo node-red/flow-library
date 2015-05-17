@@ -455,12 +455,15 @@ app.get("/node/:id",function(req,res) {
                 var m;
                 var repo = node.repository.url;
                 var baseUrl;
-                
                 if ((m=/git@github.com:(.*)\.git$/.exec(repo))) {
-                    baseUrl = "https://github.com/"+m[1]+"/raw/master/";
+                    baseUrl = "https://raw.githubusercontent.com/"+m[1]+"/master/";
                     m = null;
-                } else {
-                    baseUrl = repo.replace(/\.git$/,"/raw/master/");
+                } else if ((m=/^https:\/\/github.com\/(.*)\.git/.exec(repo))) {
+                    baseUrl = "https://raw.githubusercontent.com/"+m[1]+"/master/";
+                    m = null;
+                } else if ((m=/^https:\/\/github.com\/(.*)/.exec(repo))) {
+                    baseUrl = "https://raw.githubusercontent.com/"+m[1]+"/master/";
+                    m = null;
                 }
                 
                 

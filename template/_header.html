@@ -3,9 +3,23 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+{{#versions}}
+	<meta name="twitter:card" content="summary" />
+	<meta name="twitter:site" content="@nodered" />
+	<meta name="twitter:title" content="{{name}}" />
+	<meta name="twitter:description" content="{{description}}" />
+	<meta name="twitter:label1" value="Latest version" />
+	<meta name="twitter:data1" value="{{versions.latest.version}}" />
+	<meta name="twitter:image" content="http://nodered.org/node-red-icon.png" />
+	<meta property="og:type" content="website" />
+	<meta property="og:url" content="http://http://flows.nodered.org/node/{{name}}" />
+	<meta property="og:title" content="{{name}}" />
+	<meta property="og:description" content="{{description}}" />
+	<meta property="og:image" content="http://nodered.org/node-red-icon.png" />
+{{/versions}}
 	<link rel="icon" type="image/x-icon" href="/favicon.ico"/>
 	<title>Library - Node-RED</title>
-	
+
 	<link href='http://fonts.googleapis.com/css?family=Roboto+Slab:400,700,300,100' rel='stylesheet' type='text/css'>
 	<link href='http://fonts.googleapis.com/css?family=Ubuntu+Mono' rel='stylesheet' type='text/css'>
 	<link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
@@ -38,4 +52,3 @@
 
 <div class="library">
 {{>_login}}
-

@@ -7,7 +7,18 @@ var npmModules = require("./lib/modules");
 // }).otherwise(function(err) {
 //     console.log(err.stack);
 // })
-npmModules.refreshUpdatedSince(Date.now()-600000000).then(function(results) {
+// npmModules.refreshUpdatedSince(Date.now()-600000000).then(function(results) {
+//     results.forEach(function(res) {
+//         if (res.state === 'rejected') {
+//             console.log("Failed:",res.reason);
+//         } else if (res.value) {
+//             console.log("Updated:",res.value);
+//         }
+//     });
+//     npmNodes.close();
+// })
+
+npmModules.refreshUpdated().then(function(results) {
     results.forEach(function(res) {
         if (res.state === 'rejected') {
             console.log("Failed:",res.reason);
@@ -15,10 +26,11 @@ npmModules.refreshUpdatedSince(Date.now()-600000000).then(function(results) {
             console.log("Updated:",res.value);
         }
     });
-    npmNodes.close();
-})
 
-// npmModules.refreshUpdated().then(function(results) {
+    npmNodes.close();
+});
+
+// npmModules.refreshModule('node-red-contrib-mopidy').then(function(results) {
 //     results.forEach(function(res) {
 //         if (res.state === 'rejected') {
 //             console.log("Failed:",res.reason);

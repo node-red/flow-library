@@ -17,6 +17,12 @@ var settings = {
     session: {
         key: 'xxx',
         secret: 'xxx'
+    },
+    twitter: {
+        consumer_key: '',
+        consumer_secret: '',
+        access_token_key: '',
+        access_token_secret: ''
     }
 }
 process.env.ENV = "PRODUCTION";
@@ -37,9 +43,13 @@ if (process.env.HOME == "/home/nol" ) {
         secret: "xxx",
         authCallback: "http://localhost:20982/login/callback",
         accessToken: "xxx"
-    }
+    };
+    settings.twitter = {
+        consumer_key: '',
+        consumer_secret: '',
+        access_token_key: '',
+        access_token_secret: ''
+    };
 }
 
 module.exports = settings;
-
-

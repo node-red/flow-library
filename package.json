@@ -11,6 +11,8 @@
     "connect-mongo":"0.7.0",
     "request":"2.53.0",
     "tar":"1.0.3",
-    "fs-extra":"0.16.4"
+    "fs-extra":"0.16.4",
+    "twitter":"1.2.5"
+
    }
 }

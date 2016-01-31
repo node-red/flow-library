@@ -10,7 +10,7 @@
             <span class="gist-count"></span>
         </div>
     </div>
-    
+
 </div>
 <div class="grid main-content">
     <div class="col-1-1">
@@ -42,9 +42,9 @@ function filterGists() {
     $(".gistbox").each(function(e) {
         if (((filters.nodes && $(this).hasClass("gistbox-node")) || (filters.flows && $(this).hasClass("gistbox-flow"))) && $(this).data("info").indexOf(currentTerm) > -1) {
             c++;
-            $(this).css({width:"31%",height:"125px",margin:"10px"});
+            $(this).removeClass('filtered');
         } else {
-            $(this).css({width:0,height:0,margin:0})
+            $(this).addClass('filtered');
         }
     });
     updateCount(c);
@@ -56,32 +56,32 @@ $(function() {
         $(this).data("info", d);
         gistCount++;
     });
-    
+
     updateCount(gistCount);
-    
+
     $(".gist-filter").keyup(function() {
         currentTerm = $(this).val().toLowerCase();
         filterGists();
     });
-    
+
     $(".gistbox-filter-option").change(function() {
         filters[$(this).data("filter")] = this.checked;
         filterGists();
     });
-    
+
     setTimeout(function() {
         currentTerm = $(".gist-filter").val().toLowerCase();
-        
+
         $(".gistbox-filter-option").each(function() {
             filters[$(this).data("filter")] = this.checked;
         });
-        
+
         if (currentTerm != "" || !filters.nodes || !filters.flows) {
             filterGists();
         }
     },200);
-    
-    
-    
+
+
+
 });
 </script>

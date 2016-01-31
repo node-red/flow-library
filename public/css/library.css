@@ -772,6 +772,11 @@ a:hover .gistbox-footer {
     left: auto;
 }
 
+.gistbox.filtered {
+    width: 0;
+    height: 0;
+    margin: 0;
+}
 @media handheld, only screen and (max-width: 470px) {
     li.gistbox {
         display: block;

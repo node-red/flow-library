@@ -59,7 +59,7 @@ h1 {
     margin: 0;
     width: 80%;
 }
-    
+
 .search a:hover {
     color: #676767;
 }
@@ -245,7 +245,7 @@ h1 {
     font-size: 12px;
     line-height: 22px;
     font-family: monospace;
-    
+
 }
 #add-flow-desc {
     height: 350px;
@@ -264,7 +264,7 @@ h1 {
 
 .add-flow-label {
     margin-top: 5px;
-    
+
 }
 .add-flow-desc-buttons {
     position: absolute;
@@ -284,7 +284,7 @@ h1 {
     display: inline-block;
     height: 30px;
     text-align: center;
-    
+
 }
 .add-flow-desc-buttons a.active {
     border-bottom: #fff;
@@ -317,12 +317,12 @@ ul#add-flow-tags {
 
 ul#add-flow-tags.active {
     box-shadow: 0 0 8px #fbb;
-}    
+}
 
 ul.flow-tags li {
     transition-property: background;
     transition-duration: 500ms;
-    transition-timing-function: ease; 
+    transition-timing-function: ease;
     display: inline-block;
     padding: 3px 5px 3px 5px ;
     border: 1px solid #ccc;
@@ -335,7 +335,7 @@ ul.flow-tags li {
 
 ul.flow-tags li:hover {
     background: #f0f0f0;
-    
+
 }
 ul#add-flow-tags li.tag-input:not(:first-child) {
     padding: 0;
@@ -404,7 +404,7 @@ ul#add-flow-tags li i.icon {
     border-color: rgb(214, 97, 95) !important;
 }
 .input-error:focus {
-    box-shadow: rgba(0, 0, 0, 0.0745098) 0px 1px 1px 0px inset, 
+    box-shadow: rgba(0, 0, 0, 0.0745098) 0px 1px 1px 0px inset,
                 rgba(236, 168, 82, 0.6) 0px 0px 12px 0px !important
 }
 
@@ -426,7 +426,7 @@ ul#add-flow-tags li i.icon {
     background: #aa6767;
     text-shadow: none;
     font-size: 16px;
-    padding: 15px; 
+    padding: 15px;
     width: 110px;
 }
 .btn-create {
@@ -458,7 +458,7 @@ ul#add-flow-tags li i.icon {
     text-shadow: none;
     font-size: 16px;
     color: #fff !important;
-    padding: 12px; 
+    padding: 12px;
     border-radius: 3px;
     vertical-align: middle;
 }
@@ -533,7 +533,7 @@ p.flow-install code {
     background: #aa6767;
     text-shadow: none;
     font-size: 16px;
-    padding: 6px; 
+    padding: 6px;
     width: 110px;
 }
 .gist-sort-btn {
@@ -566,7 +566,6 @@ ul.gistlist {
     min-height: 800px;
 }
 
-
 li.gistbox {
     display: inline-block;
     background: #fff;
@@ -577,7 +576,7 @@ li.gistbox {
     margin-bottom: 15px;
     margin-right: 15px;
     overflow: hidden;
-    
+
     transition-duration: 250ms;
     transition-timing-function: ease;
     transition-property: margin width padding height opacity;
@@ -604,7 +603,7 @@ h1.gisttitle {
 }
 p.gistdescription {
     font-size: 13px;
-    line-height: 1.5em; 
+    line-height: 1.5em;
     color: #999;
     margin: 5px 0 0 0;
 }
@@ -771,4 +770,12 @@ a:hover .gistbox-footer {
 .palette_port_output {
     right:-6px;
     left: auto;
+}
+
+@media handheld, only screen and (max-width: 470px) {
+    li.gistbox {
+        display: block;
+        width: 100%;
+        float: none;
+    }
 }

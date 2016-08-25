@@ -20,13 +20,12 @@ viewster.get({type:'node'},null,{
         t.url = "http://flows.nodered.org/node/"+t.id;
     })
 
-    var catalogue = {
-        name: "Node-RED Community catalogue",
-        updated_at:(new Date()).toISOString(),
-        modules: things
-    };
-
-    console.log(JSON.stringify(catalogue));
+    console.log('{');
+    console.log('   "name": "Node-RED Community catalogue",');
+    console.log('   "updated_at": "'+(new Date()).toISOString()+'",');
+    console.log('   "modules":');
+    console.log(JSON.stringify(things));
+    console.log('}');
     db.close();
 }).otherwise(function(err) {
     console.error(err);

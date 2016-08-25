@@ -1,6 +1,6 @@
 var settings = require('./settings');
 var viewster = require("./lib/view");
-
+var db = require("./lib/db");
 
 viewster.get({type:'node'},null,{
     _id: 1,
@@ -20,6 +20,8 @@ viewster.get({type:'node'},null,{
         t.url = "http://flows.nodered.org/node/"+t.id;
     })
     console.log(JSON.stringify(things));
+    db.close();
 }).otherwise(function(err) {
-    console.log(err);
+    console.error(err);
+    process.exit(1);
 });

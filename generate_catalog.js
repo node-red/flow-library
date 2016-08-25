@@ -19,7 +19,14 @@ viewster.get({type:'node'},null,{
         delete t['dist-tags'];
         t.url = "http://flows.nodered.org/node/"+t.id;
     })
-    console.log(JSON.stringify(things));
+
+    var catalogue = {
+        name: "Node-RED Community catalogue",
+        updated_at:(new Date()).toISOString(),
+        modules: things
+    };
+
+    console.log(JSON.stringify(catalogue));
     db.close();
 }).otherwise(function(err) {
     console.error(err);

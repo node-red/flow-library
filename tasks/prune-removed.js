@@ -1,6 +1,6 @@
-var settings = require("./settings");
-var npmNodes = require("./lib/nodes");
-var npmModules = require("./lib/modules");
+var settings = require("../settings");
+var npmNodes = require("../lib/nodes");
+var npmModules = require("../lib/modules");
 
 npmModules.pruneRemoved().then(function(results) {
     results.forEach(function(res) {

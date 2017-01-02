@@ -1,9 +1,9 @@
 // One off script to remove entries that are missing their README files
 
-var settings = require("./settings");
-var npmNodes = require("./lib/nodes");
-var npmModules = require("./lib/modules");
-var db = require('./lib/db');
+var settings = require("../settings");
+var npmNodes = require("../lib/nodes");
+var npmModules = require("../lib/modules");
+var db = require('../lib/db');
 var when = require("when");
 
 db.flows.find({$query:{readme:{$regex:/^ERROR: No README data found!/}}},{_id:1}).toArray(function(err,docs) {

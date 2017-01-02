@@ -1,6 +1,6 @@
-var settings = require('./settings');
-var viewster = require("./lib/view");
-var db = require("./lib/db");
+var settings = require('../settings');
+var viewster = require("../lib/view");
+var db = require("../lib/db");
 
 viewster.get({type:'node'},null,{
     _id: 1,

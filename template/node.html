@@ -20,9 +20,9 @@
           </div>
           <div class="flowmeta">
             <h4>Downloads</h4>
-            <div class="flowinfo"><span class="flow-stat flow-stat-day">-</span> in the last day</div>
-            <div class="flowinfo"><span class="flow-stat flow-stat-week">-</span> in the last week</div>
-            <div class="flowinfo"><span class="flow-stat flow-stat-month">-</span> in the last month</div>
+            <div class="flowinfo"><span class="flow-stat flow-stat-day">{{ downloads.day }}</span> in the last day</div>
+            <div class="flowinfo"><span class="flow-stat flow-stat-week">{{ downloads.week }}</span> in the last week</div>
+            <div class="flowinfo"><span class="flow-stat flow-stat-month">{{ downloads.month }}</span> in the last month</div>
           </div>
           {{#types.length}}
               <div class="flowmeta">
@@ -59,18 +59,4 @@
           </div>
       </div>
 </div>
-<script>
-$(function() {
-    $.getJSON("https://api.npmjs.org/downloads/point/last-day/{{name}}",function(data) {
-        $(".flow-stat-day").html(data.downloads);
-    });
-    $.getJSON("https://api.npmjs.org/downloads/point/last-week/{{name}}",function(data) {
-        $(".flow-stat-week").html(data.downloads);
-    });
-    $.getJSON("https://api.npmjs.org/downloads/point/last-month/{{name}}",function(data) {
-        $(".flow-stat-month").html(data.downloads);
-    });
-});
-
-</script>
 {{>_footer}}

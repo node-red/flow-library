@@ -17,6 +17,7 @@
             {{#updated_at_since}}<div class="flowinfo">  Updated {{ updated_at_since }}</div>{{/updated_at_since}}
             {{#license}}<div class="flowinfo">License: {{ license }}</div>{{/license}}
             <div class="flowinfo"><a href="https://npmjs.org/package/{{ name }}">view on npm</a></div>
+            {{#githubUrl}}<div class="flowinfo"><a href="{{githubUrl}}">view on GitHub</a></div>{{/githubUrl}}
           </div>
           <div class="flowmeta">
             <h4>Downloads</h4>

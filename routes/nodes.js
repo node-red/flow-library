@@ -75,6 +75,10 @@ app.get("/node/:id",function(req,res) {
                                       node.readme.substring(m.index+m[1].length);
                     }
                 }
+
+                if ((m=/(github.com\/.*?\/.*?)($|\.git$|\/.*$)/.exec(repo))) {
+                    node.githubUrl = "https://"+m[1];
+                }
             }
 
             res.send(mustache.render(templates.node,node,templates.partials));

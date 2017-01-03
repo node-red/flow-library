@@ -23,6 +23,7 @@
 </div>
 
 <script>
+var items = [];
 var gistCount = 0;
 var currentTerm = "";
 var filters = {
@@ -50,11 +51,28 @@ function filterGists() {
     updateCount(c);
 }
 
+function sortByDownload() {
+    var list = $("ul.gistlist");
+    list.empty();
+    items.sort(function(A,B) { return B.downloads - A.downloads;})
+    items.forEach(function(i) { i.li.appendTo(list)});
+}
+function sortByUpdated() {
+    var list = $("ul.gistlist");
+    list.empty();
+    items.sort(function(A,B) { return B.updated.localeCompare(B.updated);})
+    items.forEach(function(i) { i.li.appendTo(list)});
+
+}
+
 $(function() {
+
+
     $(".gistbox").each(function(e) {
         var d = ($(this).find("h1").text()+" "+$(this).data("tags")+" "+$(this).data("owner")).toLowerCase();
         $(this).data("info", d);
         gistCount++;
+        items.push({li:$(this), downloads:$(this).data('downloads'), updated:$(this).data('updated_at')});
     });
 
     updateCount(gistCount);

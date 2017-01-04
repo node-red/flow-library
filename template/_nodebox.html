@@ -4,8 +4,9 @@
 <div class="gistbox-footer">
     <div class="gistbox-type">
         <!-- {{#official}}<img alt="maintained by the Node-RED project" title="maintained by the Node-RED project" src="/node-red-white.png" class="gistbox-official" />{{/official}} -->
-        {{#dist-tags.latest}} v {{.}} &nbsp;&nbsp;{{/dist-tags.latest}}
-        {{#downloads}} <i class="fa fa-cloud-download"></i> {{week}} {{/downloads}}
+        {{#dist-tags.latest}} v{{.}} &nbsp;&nbsp;{{/dist-tags.latest}}
+        {{#downloads}} <i class="fa fa-cloud-download"></i> {{week}} &nbsp;&nbsp;{{/downloads}}
+        <!-- {{#updated_formatted}} <i class="fa fa-clock-o"></i> {{updated_formatted}} {{/updated_formatted}} -->
     </div>
     <div class="gistbox-owner">{{type}}</div>
     <!--<div class="gistbox-owner">v{{ dist-tags.latest }}</div>-->

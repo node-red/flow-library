@@ -13,12 +13,6 @@ h1 {
     background: #fff;
     padding: 0 100px;
 }
-@media handheld, only screen and (max-width: 767px) {
-	.library .grid {
-	    padding: 0;
-	}
-}
-
 
 .library .grid.toolbar {
     padding: 0 20px;
@@ -794,7 +788,13 @@ a:hover .gistbox-footer {
     height: 0;
     margin: 0;
 }
-@media handheld, only screen and (max-width: 470px) {
+
+@media handheld, only screen and (max-width: 767px) {
+    .library .grid {
+        padding: 0;
+    }
+}
+@media handheld, only screen and (max-width: 767px) {
     li.gistbox {
         display: block;
         width: 100%;

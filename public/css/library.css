@@ -513,7 +513,7 @@ p.flow-install code {
     color: #aa6767;
     text-decoration: none;
 }
-.gist-filter {
+.gist-filter-input {
     font-size: 16px;
     padding: 10px;
     color: #666;
@@ -523,29 +523,48 @@ p.flow-install code {
     border: 2px solid #999;
     border-radius: 2px;
 }
-.gist-sort-options {
-}
-.gist-sort-btn {
-    border: 2px solid #aa6767;
-    text-align: center;
+.gist-filter {
+    max-width: 500px;
     display: inline-block;
-    border-radius: 4px;
-    background: #aa6767;
-    text-shadow: none;
-    font-size: 16px;
-    padding: 6px;
-    width: 110px;
+    width: 100%;
 }
-.gist-sort-btn {
+.gist-sort {
+    max-width: 500px;
     font-size: 14px;
-    color:  #eee !important;
+    display:inline-block;
+    vertical-align:top;
+    margin-left: 30px;
 }
-.gist-sort-btn:hover {
-    text-decoration: none;
-    background: #7F4545;
-    border-color: #7F4545;
-    text-shadow: none;
+
+.gistbox-sort-option {
+    display: none;
 }
+.gistbox-sort-label {
+    cursor: pointer;
+}
+.gistbox-sort-label:before {
+    content:" ";
+    font-weight: bold;
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border-radius: 8px;
+    border-width: 2px;
+    border-style: solid;
+    border-color: #666;
+    margin-right: 4px;
+    vertical-align: middle;
+    margin-top: -2px;
+    text-align: center;
+    font-size: 12px;
+    line-height: 12px;
+}
+
+.gistbox-sort-option:checked + label:before {
+    background: #999;
+}
+
+
 
 .gist-count {
     display: inline-block;
@@ -704,11 +723,9 @@ a:hover .gistbox-footer {
 }
 #gistbox-filter-option-nodes:checked + label:before {
     border-color: #CD9494;
-    abackground: #F2CACA;
 }
 #gistbox-filter-option-flows:checked + label:before {
     border-color: #799191;
-    abackground: #AEBCBC;
 }
 
 
@@ -782,5 +799,14 @@ a:hover .gistbox-footer {
         display: block;
         width: 100%;
         float: none;
+    }
+}
+@media handheld, only screen and (max-width: 900px) {
+    .gist-sort {
+        margin-left:0;
+        display: block;
+    }
+    .gist-sort div {
+        display: inline-block;
     }
 }

@@ -789,6 +789,20 @@ a:hover .gistbox-footer {
     margin: 0;
 }
 
+.events {
+    width: 100%;
+    font-size: 11px;
+    border-collapse: collapse;
+}
+.events td {
+    border-width: 1px;
+    border-color: #999;
+    border-style: solid;
+    padding: 3px 5px;
+}
+.events tr:nth-child(even) {
+    background: #f3f3f3
+}
 @media handheld, only screen and (max-width: 767px) {
     .library .grid {
         padding: 0;

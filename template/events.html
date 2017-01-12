@@ -1,0 +1,16 @@
+{{>_header}}
+<div class="grid main-content">
+    <div class="col-1-1">
+        <table class="events">
+            <tr>
+                <th>Time</th>
+                <th>Event</th>
+                <th>Message</th>
+                <th>Module</th>
+                <th>Version</th>
+            </tr>
+            {{#events}}{{>_event}}{{/events}}
+        </table>
+    </div>
+</div>
+{{>_footer}}

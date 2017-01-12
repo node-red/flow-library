@@ -12,6 +12,19 @@ var app = express();
 
 var iconCache = {};
 
+app.get("/nodes",function(req,res) {
+    var context = {};
+    context.sessionuser = req.session.user;
+    npmNodes.getPopularByDownloads().then(function(nodes) {
+        context.nodes = nodes;
+        res.send(mustache.render(templates.nodes,context,templates.partials));
+    }).otherwise(function(err) {
+        if (err) {
+            console.log("error loading nodes:",err);
+        }
+        res.send(404,mustache.render(templates['404'],context,templates.partials));
+    });
+});
 app.get("/node/:id",function(req,res) {
     npmNodes.get(req.params.id).then(function(node) {
         node.sessionuser = req.session.user;

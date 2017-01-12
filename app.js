@@ -36,6 +36,7 @@ app.use(require("./routes/index"));
 app.use(require("./routes/auth"));
 app.use(require("./routes/flows"));
 app.use(require("./routes/nodes"));
+app.use(require("./routes/admin"));
 app.use(function(req, res) {
     res.send(404,mustache.render(templates['404'],{sessionuser:req.session.user},templates.partials));
 });

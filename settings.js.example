@@ -23,6 +23,9 @@ var settings = {
         consumer_secret: '',
         access_token_key: '',
         access_token_secret: ''
+    },
+    librariesIO: {
+        apiKey: 'xxx'
     }
 }
 process.env.ENV = "PRODUCTION";

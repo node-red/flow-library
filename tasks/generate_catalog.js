@@ -17,6 +17,7 @@ viewster.get({type:'node'},null,{
         delete t._id;
         t.version = t['dist-tags'].latest;
         delete t['dist-tags'];
+        delete t.updated_formatted;
         t.url = "http://flows.nodered.org/node/"+t.id;
     })
 

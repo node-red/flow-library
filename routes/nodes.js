@@ -6,6 +6,7 @@ var fs = require("fs");
 var appUtils = require("../lib/utils");
 var npmNodes = require("../lib/nodes");
 var templates = require("../lib/templates");
+var events = require("../lib/events");
 
 var app = express();
 
@@ -28,7 +29,6 @@ app.get("/nodes",function(req,res) {
 app.get("/node/:id",function(req,res) {
     npmNodes.get(req.params.id).then(function(node) {
         node.sessionuser = req.session.user;
-
         //console.log(node);
         node.updated_at_since = appUtils.formatDate(node.updated_at);
         iconCache[req.params.id] = {};
@@ -113,5 +113,18 @@ app.get("/node/:id/icons/:icon", function(req,res) {
     }
 });
 
-
+app.get("/node/:id/refresh", function(req,res) {
+    if (req.session.user) {
+        npmNodes.update(req.params.id,{refresh_requested:true});
+        events.add({
+            action:"refresh_requested",
+            module: req.params.id,
+            message:req.session.user.login
+        });
+    }
+    res.writeHead(303, {
+        Location: "/node/"+req.params.id
+    });
+    res.end();
+});
 module.exports = app;

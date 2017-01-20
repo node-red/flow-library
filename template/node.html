@@ -6,7 +6,7 @@
         <p class="flow-description">{{ description }}</p>
         <p class="flowmeta flow-install">
             <i class="icon-download-alt"></i> <code>npm install {{name}}</code>
-            <span class="flow-install-help"><a target="_blank" href="http://nodered.org/docs/getting-started/adding-nodes.html"><i class="icon-question-sign"></i></a></span>
+            <span class="flow-install-help"><a target="_blank" href="https://nodered.org/docs/getting-started/adding-nodes.html"><i class="icon-question-sign"></i></a></span>
         </p>
           {{{ readme }}}
     </div>
@@ -16,8 +16,11 @@
             <div class="flowinfo"> Version: {{ versions.latest.version }}</div>
             {{#updated_at_since}}<div class="flowinfo">  Updated {{ updated_at_since }}</div>{{/updated_at_since}}
             {{#license}}<div class="flowinfo">License: {{ license }}</div>{{/license}}
-            <div class="flowinfo"><a href="https://npmjs.org/package/{{ name }}">view on npm</a></div>
-            {{#githubUrl}}<div class="flowinfo"><a href="{{githubUrl}}">view on GitHub</a></div>{{/githubUrl}}
+            <div class="flowinfo"><a target="_blank" href="https://npmjs.org/package/{{ name }}">view on npm</a></div>
+            {{#githubUrl}}<div class="flowinfo"><a target="_blank" href="{{githubUrl}}">view on GitHub</a></div>{{/githubUrl}}
+            {{#sessionuser}}
+            {{^refresh_requested}}<div class="flowinfo"><a href="{{_id}}/refresh"><i class="fa fa-refresh"></i> request refresh</a></div>{{/refresh_requested}}
+            {{/sessionuser}}
           </div>
           <div class="flowmeta">
             <h4>Downloads</h4>

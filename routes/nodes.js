@@ -29,6 +29,7 @@ app.get("/nodes",function(req,res) {
 app.get("/node/:id",function(req,res) {
     npmNodes.get(req.params.id).then(function(node) {
         node.sessionuser = req.session.user;
+        node.pageTitle = req.params.id;
         //console.log(node);
         node.updated_at_since = appUtils.formatDate(node.updated_at);
         iconCache[req.params.id] = {};

@@ -18,7 +18,12 @@
 	<meta property="og:image" content="http://nodered.org/node-red-icon.png" />
 {{/versions}}
 	<link rel="icon" type="image/x-icon" href="/favicon.ico"/>
+{{#pageTitle}}
+	<title>{{.}} - Node-RED</title>
+{{/pageTitle}}
+{{^pageTitle}}
 	<title>Library - Node-RED</title>
+{{/pageTitle}}
 
 	<link href='//fonts.googleapis.com/css?family=Roboto+Slab:400,700,300,100' rel='stylesheet' type='text/css'>
 	<link href='//fonts.googleapis.com/css?family=Ubuntu+Mono' rel='stylesheet' type='text/css'>

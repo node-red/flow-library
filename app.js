@@ -20,12 +20,14 @@ if (process.env.ENV == "PRODUCTION") {
             db:settings.mongo.db
         }),
         key: settings.session.key,
-        secret: settings.session.secret
+        secret: settings.session.secret,
+        saveUninitialized: false
     }));
 } else {
     app.use(express.session({
         key: settings.session.key,
-        secret: settings.session.secret
+        secret: settings.session.secret,
+        saveUninitialized: false
     }));
 }
 app.use(express.json());

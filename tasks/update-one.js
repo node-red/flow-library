@@ -1,4 +1,4 @@
-var settings = require("../settings");
+var settings = require("../config");
 var npmNodes = require("../lib/nodes");
 var npmModules = require("../lib/modules");
 var name = process.argv[2];

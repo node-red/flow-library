@@ -1,17 +1,20 @@
 var path = require("path");
 var mustache = require('mustache');
 var express = require('express');
-var MongoStore = require('connect-mongo')(express);
-
-var settings = require('./settings');
+var session = require('express-session');
+var MongoStore = require('connect-mongo')(session);
+var cookieParser = require('cookie-parser');
+var bodyParser = require('body-parser');
+var serveStatic = require('serve-static');
+var settings = require('./config');
 var templates = require("./lib/templates");
 
 var app = express();
 
-app.use(express.cookieParser());
+app.use(cookieParser());
 
 if (process.env.ENV == "PRODUCTION") {
-    app.use(express.session({
+    app.use(session({
         store: new MongoStore({
             username: settings.mongo.user,
             password: settings.mongo.password,
@@ -21,19 +24,21 @@ if (process.env.ENV == "PRODUCTION") {
         }),
         key: settings.session.key,
         secret: settings.session.secret,
-        saveUninitialized: false
+        saveUninitialized: false,
+        resave: false
     }));
 } else {
-    app.use(express.session({
+    app.use(session({
         key: settings.session.key,
         secret: settings.session.secret,
-        saveUninitialized: false
+        saveUninitialized: false,
+        resave: false
     }));
 }
-app.use(express.json());
-app.use(express.urlencoded());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: true}));
 
-app.use("/",express.static(path.join(__dirname,'public')));
+app.use("/",serveStatic(path.join(__dirname,'public')));
 app.use(require("./routes/index"));
 app.use(require("./routes/auth"));
 app.use(require("./routes/flows"));

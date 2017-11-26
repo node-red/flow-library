@@ -1,8 +1,6 @@
 bin
-nodes
-gists
+data
 node_modules
-settings.js
-matcher
-search-index.json
-si
+settings*.js
+npm-debug.log
+package-lock.json

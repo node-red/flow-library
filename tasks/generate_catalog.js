@@ -1,4 +1,4 @@
-var settings = require('../settings');
+var settings = require('../config');
 var viewster = require("../lib/view");
 var db = require("../lib/db");
 

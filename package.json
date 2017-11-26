@@ -1,18 +1,31 @@
 {
-  "name": "node-red-flows",
-  "version": "0.1.0",
-  "dependencies": {
-    "express": "3.x",
-    "marked": "*",
-    "mustache":"*",
-    "mongojs":"2.4.0",
-    "when":"3.7.x",
-    "oauth": "0.9.12",
-    "connect-mongo":"0.7.0",
-    "request":"2.53.0",
-    "tar":"1.0.3",
-    "fs-extra":"0.16.4",
-    "twitter":"1.2.5"
-
-   }
+    "name": "node-red-flows",
+    "version": "0.1.0",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "start": "node app.js",
+        "nodemon": "nodemon --ignore data/",
+        "dev": "npm run nodemon",
+        "docker": "docker-compose -f docker-compose.yml up --build"
+    },
+    "dependencies": {
+        "express": "4.x",
+        "express-session":"1.15.6",
+        "cookie-parser": "1.4.3",
+        "body-parser": "1.18.2",
+        "serve-static":"1.13.1",
+        "marked": "*",
+        "mustache": "*",
+        "mongojs": "2.4.1",
+        "when": "3.7.x",
+        "oauth": "0.9.15",
+        "connect-mongo": "2.0.0",
+        "request": "2.83.0",
+        "tar": "1.0.3",
+        "fs-extra": "4.0.2",
+        "twitter": "1.2.5"
+    },
+    "devDependencies": {
+        "nodemon": "^1.12.1"
+    }
 }

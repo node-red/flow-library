@@ -1,5 +1,5 @@
 
-var settings = require("../settings");
+var settings = require("../config");
 var mongojs = require('mongojs');
 
 var db = mongojs(settings.mongo.url,["flows","users","tags"]);

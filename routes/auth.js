@@ -1,7 +1,7 @@
 var express = require("express");
 
 var github = require("../lib/github");
-var settings = require('../settings');
+var settings = require('../config');
 var OAuth2 = require("oauth").OAuth2;
 var oauth = new OAuth2(settings.github.clientId, settings.github.secret, "https://github.com/", "login/oauth/authorize", "login/oauth/access_token");
 

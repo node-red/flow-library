@@ -1,6 +1,6 @@
 // One off script to remove entries that are missing their README files
 
-var settings = require("../settings");
+var settings = require("../config");
 var npmNodes = require("../lib/nodes");
 var npmModules = require("../lib/modules");
 var db = require('../lib/db');

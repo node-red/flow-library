@@ -1,0 +1,22 @@
+version: '2'
+
+services:
+
+  node:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - /flow-library/node_modules # prevent them being overwritten by the above
+      - .:/flow-library
+    ports:
+      - "7000:7000"
+    links:
+      - mongo
+    environment:
+      NODE_ENV: development
+      FLOW_SETTINGS: ../settings-dev.js
+  mongo:
+    image: mongo
+    ports:
+      - '27017:27017'

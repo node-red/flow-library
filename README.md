@@ -1,12 +1,29 @@
 # Node-RED Library
 
-
-This is the source of <http://flows.nodered.org>.
+This is the source of the application behind <http://flows.nodered.org>.
 
 It provides a searchable index of user-contributed flows as well as node packages
 published to npm.
 
-The code is a bit of a mess as it has grown and been cobbled together. There is
-a lot of tidying up to do.
+## Running a development copy
 
-It isn't really intended for reuse at the moment.
+This repo comes with a docker-compose based development environment. To get started:
+
+1. Install docker
+
+2. Configure your flow-library settings.
+
+   The repository includes the file `default-settings.js`. You should copy that
+   to `settings.js` and update it with your various api keys.
+   **Do not** check this file back into git - it has already been added to `.gitignore` to prevent this.
+
+3. Run:
+
+        npm run docker
+
+   This first time you run this will take a while as it downloads various pieces.
+   When it completes, you will be able to access http://localhost:3000 to see
+   the flow library.
+
+The docker image uses `nodemon` to watch for changes to the source code and
+automatically restart the app when needed - without having to restart docker.

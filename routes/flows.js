@@ -3,7 +3,7 @@ var mustache = require('mustache');
 var marked = require('marked');
 var fs = require("fs");
 
-var settings = require("../settings");
+var settings = require("../config");
 var gister = require("../lib/gists");
 var appUtils = require("../lib/utils");
 var npmNodes = require("../lib/nodes");

@@ -4,7 +4,7 @@
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
         "start": "node app.js",
-        "nodemon": "nodemon --ignore data/",
+        "nodemon": "nodemon --inspect=0.0.0.0:5858 --ignore data/ ./app.js",
         "dev": "npm run nodemon",
         "docker": "docker-compose -f docker-compose.yml up --build"
     },

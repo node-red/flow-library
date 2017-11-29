@@ -11,6 +11,7 @@ services:
       - .:/flow-library
     ports:
       - "7000:7000"
+      - "5858:5858"
     links:
       - mongo
     environment:

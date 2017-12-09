@@ -37,6 +37,7 @@ app.get("/node/:id",function(req,res) {
         for (var n in node.versions.latest["node-red"].nodes) {
             var def = node.versions.latest["node-red"].nodes[n];
             //console.log(n);
+            delete def.types.__errors__;
             for (var t in def.types) {
                 //console.log("-",n);
                 def.types[t].name = t;

@@ -9,6 +9,7 @@
         "docker": "docker-compose -f docker-compose.yml up --build"
     },
     "dependencies": {
+        "acorn":"5.2.1",
         "express": "4.x",
         "express-session":"1.15.6",
         "cookie-parser": "1.4.3",

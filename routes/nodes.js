@@ -67,7 +67,6 @@ app.get("/node/:id",function(req,res) {
             if (node.repository && node.repository.url && /github\.com/.test(node.repository.url)) {
                 var m;
                 var repo = node.repository.url;
-                console.log("I HAVE REPO",repo);
                 var baseUrl;
                 if ((m=/git@github.com:(.*)\.git$/.exec(repo))) {
                     baseUrl = "https://raw.githubusercontent.com/"+m[1]+"/master/";
@@ -80,7 +79,6 @@ app.get("/node/:id",function(req,res) {
                     m = null;
                 }
 
-                console.log("SO I NOW HAVE baseURL=",baseUrl);
                 var re = /(<img .*?src="(.*?)")/gi;
 
                 while((m=re.exec(node.readme)) !== null) {

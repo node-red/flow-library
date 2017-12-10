@@ -45,7 +45,7 @@ app.use(require("./routes/flows"));
 app.use(require("./routes/nodes"));
 app.use(require("./routes/admin"));
 app.use(function(req, res) {
-    res.send(404,mustache.render(templates['404'],{sessionuser:req.session.user},templates.partials));
+    res.status(404).send(mustache.render(templates['404'],{sessionuser:req.session.user},templates.partials));
 });
 app.listen(settings.port||20982);
 console.log('Listening on port',settings.port||20982);

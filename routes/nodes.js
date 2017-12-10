@@ -2,6 +2,7 @@ var express = require("express");
 var mustache = require('mustache');
 var marked = require('marked');
 var fs = require("fs");
+var path = require("path");
 
 var appUtils = require("../lib/utils");
 var npmNodes = require("../lib/nodes");
@@ -23,7 +24,7 @@ app.get("/nodes",function(req,res) {
         if (err) {
             console.log("error loading nodes:",err);
         }
-        res.send(404,mustache.render(templates['404'],context,templates.partials));
+        res.status(404).send(mustache.render(templates['404'],context,templates.partials));
     });
 });
 app.get("/node/:id",function(req,res) {
@@ -102,7 +103,7 @@ app.get("/node/:id",function(req,res) {
         if (err) {
             console.log("error loading node:",err);
         }
-        res.send(404,mustache.render(templates['404'],{sessionuser:req.session.user},templates.partials));
+        res.status(404).send(mustache.render(templates['404'],{sessionuser:req.session.user},templates.partials));
     });
 });
 
@@ -110,7 +111,7 @@ app.get("/node/:id/icons/:icon", function(req,res) {
     if (iconCache[req.params.id] && iconCache[req.params.id][req.params.icon]) {
         res.sendfile(iconCache[req.params.id][req.params.icon]);
     } else {
-        res.sendfile(__dirname+"/../public/icons/arrow-in.png");
+        res.sendfile(path.resolve(__dirname+"/../public/icons/arrow-in.png"));
     }
 });
 

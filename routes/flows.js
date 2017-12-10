@@ -47,7 +47,7 @@ app.post("/flow", function(req,res) {
             res.send(err);
         });
     } else {
-        res.send(403);
+        res.status(403).end();
     }
 });
 
@@ -125,7 +125,7 @@ app.get("/flow/:id",function(req,res) {
     }).otherwise(function(err) {
         console.log("Error loading flow:",err);
         try {
-            res.send(404,mustache.render(templates['404'],{sessionuser:req.session.user},templates.partials));
+            res.status(404).send(mustache.render(templates['404'],{sessionuser:req.session.user},templates.partials));
         } catch(err2) {
             console.log(err2);
         }
@@ -134,7 +134,7 @@ app.get("/flow/:id",function(req,res) {
 
 function verifyOwner(req,res,next) {
     if (!req.session.user) {
-        res.send(403);
+        res.status(403).end();
     } else if (settings.admins.indexOf(req.session.user.login) != -1) {
         next();
     } else {
@@ -143,11 +143,11 @@ function verifyOwner(req,res,next) {
             if (gist.owner.login == req.session.user.login) {
                 next();
             } else {
-                res.send(403);
+                res.status(403).end();
             }
         }).otherwise(function() {
             console.log("NONONO");
-            res.send(403);
+            res.status(403).end();
         });
     }
 }
@@ -155,10 +155,10 @@ function verifyOwner(req,res,next) {
 app.post("/flow/:id/tags",verifyOwner,function(req,res) {
     // TODO: verify req.session.user == gist owner
     gister.updateTags(req.params.id,req.body.tags).then(function() {
-        res.send(200);
+        res.status(200).end();
     }).otherwise(function(err) {
         console.log("Error updating tags:",err);
-        res.send(200);
+        res.status(200).end();
     });
 
 });
@@ -168,9 +168,9 @@ app.post("/flow/:id/refresh",verifyOwner,function(req,res) {
         res.send("/flow/"+req.params.id);
     }).otherwise(function(exists) {
         if (exists) {
-            res.send(304);
+            res.status(304).end();
         } else {
-            res.send(404,mustache.render(templates['404'],{sessionuser:req.session.user},templates.partials));
+            res.status(404).send(mustache.render(templates['404'],{sessionuser:req.session.user},templates.partials));
         }
     });
 });
@@ -191,7 +191,7 @@ app.post("/flow/:id/refresh",verifyOwner,function(req,res) {
 
 app.post("/flow/:id/delete",verifyOwner,function(req,res) {
     gister.remove(req.params.id).then(function() {
-        res.send(200);
+        res.status(200).end();
     }).otherwise(function(err) {
         res.send(200,err);
     });
@@ -200,12 +200,12 @@ app.post("/flow/:id/delete",verifyOwner,function(req,res) {
 app.get("/flow/:id/flow",function(req,res) {
     gister.get(req.params.id).then(function(gist) {
         if (gist.files['flow.json']) {
-            res.sendfile(appUtils.mapGistPath(gist.files['flow.json'].local_path),'utf-8');
+            res.sendFile(appUtils.mapGistPath(gist.files['flow.json'].local_path),'utf-8');
         } else {
-            res.send(404,mustache.render(templates['404'],{sessionuser:req.session.user},templates.partials));
+            res.status(404).send(mustache.render(templates['404'],{sessionuser:req.session.user},templates.partials));
         }
     }).otherwise(function() {
-        res.send(404,mustache.render(templates['404'],{sessionuser:req.session.user},templates.partials));
+        res.status(404).send(mustache.render(templates['404'],{sessionuser:req.session.user},templates.partials));
     });
 });
 

@@ -109,9 +109,9 @@ app.get("/node/:id",function(req,res) {
 
 app.get("/node/:id/icons/:icon", function(req,res) {
     if (iconCache[req.params.id] && iconCache[req.params.id][req.params.icon]) {
-        res.sendfile(iconCache[req.params.id][req.params.icon]);
+        res.sendFile(iconCache[req.params.id][req.params.icon]);
     } else {
-        res.sendfile(path.resolve(__dirname+"/../public/icons/arrow-in.png"));
+        res.sendFile(path.resolve(__dirname+"/../public/icons/arrow-in.png"));
     }
 });
 

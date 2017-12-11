@@ -9,6 +9,8 @@ var serveStatic = require('serve-static');
 var settings = require('./config');
 var templates = require("./lib/templates");
 
+var events = require("./lib/events");
+
 var app = express();
 
 app.use(cookieParser());
@@ -49,3 +51,10 @@ app.use(function(req, res) {
 });
 app.listen(settings.port||20982);
 console.log('Listening on port',settings.port||20982);
+
+if (process.env.FLOW_ENV === 'PRODUCTION') {
+    events.add({
+        action:"started",
+        message:"Flow Library app started"
+    });
+}

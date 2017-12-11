@@ -3,6 +3,7 @@ var mustache = require('mustache');
 var marked = require('marked');
 var fs = require("fs");
 var path = require("path");
+var csrf = require('csurf');
 
 var appUtils = require("../lib/utils");
 var npmNodes = require("../lib/nodes");
@@ -13,6 +14,8 @@ var app = express();
 
 
 var iconCache = {};
+
+var csrfProtection = csrf({ cookie: true });
 
 app.get("/nodes",function(req,res) {
     var context = {};
@@ -27,14 +30,16 @@ app.get("/nodes",function(req,res) {
         res.status(404).send(mustache.render(templates['404'],context,templates.partials));
     });
 });
-app.get("/node/:id",function(req,res) {
+app.get("/node/:id",csrfProtection,function(req,res) {
     npmNodes.get(req.params.id).then(function(node) {
         node.sessionuser = req.session.user;
+        node.csrfToken = req.csrfToken();
         node.pageTitle = req.params.id;
         //console.log(node);
         node.updated_at_since = appUtils.formatDate(node.updated_at);
         iconCache[req.params.id] = {};
         node.types = [];
+
         for (var n in node.versions.latest["node-red"].nodes) {
             var def = node.versions.latest["node-red"].nodes[n];
             //console.log(n);
@@ -115,13 +120,13 @@ app.get("/node/:id/icons/:icon", function(req,res) {
     }
 });
 
-app.get("/node/:id/refresh", function(req,res) {
+app.get("/node/:id/refresh",function(req,res) {
     if (req.session.user) {
         npmNodes.update(req.params.id,{refresh_requested:true});
         events.add({
             action:"refresh_requested",
             module: req.params.id,
-            message:req.session.user.login
+            user:req.session.user.login
         });
     }
     res.writeHead(303, {
@@ -129,4 +134,22 @@ app.get("/node/:id/refresh", function(req,res) {
     });
     res.end();
 });
+
+app.post("/node/:id/report",csrfProtection,function(req,res) {
+    if (req.session.user) {
+        events.add({
+            action:"module_report",
+            module: req.params.id,
+            message:req.body.details,
+            user: req.session.user.login
+        });
+    }
+    res.writeHead(303, {
+        Location: "/node/"+req.params.id
+    });
+    res.end();
+});
+
+
+
 module.exports = app;

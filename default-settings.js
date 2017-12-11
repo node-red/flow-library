@@ -26,6 +26,9 @@ var settings = {
     },
     librariesIO: {
         apiKey: ''
+    },
+    slack: {
+        webhook: ''
     }
 };
 

@@ -16,12 +16,19 @@
             <div class="flowinfo"> Version: {{ versions.latest.version }}</div>
             {{#updated_at_since}}<div class="flowinfo">  Updated {{ updated_at_since }}</div>{{/updated_at_since}}
             {{#license}}<div class="flowinfo">License: {{ license }}</div>{{/license}}
-            <div class="flowinfo"><a target="_blank" href="https://npmjs.org/package/{{ name }}">view on npm</a></div>
-            {{#githubUrl}}<div class="flowinfo"><a target="_blank" href="{{githubUrl}}">view on GitHub</a></div>{{/githubUrl}}
-            {{#sessionuser}}
-            {{^refresh_requested}}<div class="flowinfo"><a href="{{_id}}/refresh"><i class="fa fa-refresh"></i> request refresh</a></div>{{/refresh_requested}}
-            {{/sessionuser}}
+            <div class="flowinfo"><a target="_blank" href="https://npmjs.org/package/{{ name }}">View on npm</a></div>
+            {{#githubUrl}}<div class="flowinfo"><a target="_blank" href="{{githubUrl}}">View on GitHub</a></div>{{/githubUrl}}
           </div>
+          {{#sessionuser}}
+          <div class="flowmeta">
+            <h4>Actions</h4>
+            {{^refresh_requested}}<div class="flowinfo"><a href="/node/{{_id}}/refresh">Request refresh</a></div>{{/refresh_requested}}
+            {{#refresh_requested}}<div class="flowinfo">Refresh requested</a></div>{{/refresh_requested}}
+            <div class="flowinfo"><a id="report-node" href="/node/{{_id}}/report">Report this module</a></div>
+          </div>
+          {{/sessionuser}}
+
+
           <div class="flowmeta">
             <h4>Downloads</h4>
             <div class="flowinfo"><span class="flow-stat flow-stat-day">{{ downloads.day }}</span> in the last day</div>
@@ -63,4 +70,43 @@
           </div>
       </div>
 </div>
+{{#sessionuser}}{{/sessionuser}}
+<div id="report-node-shade">
+    <div id="report-node-dialog">
+        <form action="/node/{{_id}}/report" method="POST">
+            <input name="_csrf" type="hidden" value="{{csrfToken}}">
+        <h4>Report this module</h4>
+        <p>The modules on this site are automatically indexed from npm. If you have a concern
+           about this module, please let us know. For example, if you believe it contains
+           unsuitable or inappropriate material.</p>
+        <p>This is <b>not</b> the place to seek help with the module - for that, please
+            contact its maintainers directly.</p>
+        <p>Please provide some details about the module:</p>
+        <div><textarea name="details" id="details"></textarea></div>
+        <div id="report-node-dialog-buttons">
+            <button type="button" onclick="return closeDialog();">Cancel</button> <button type="submit">Report</button>
+        </div>
+        </form>
+    </div>
+</div>
+<script>
+    function closeDialog() {
+        $("body").css({height:"",overflow:""});
+        $("#report-node-shade").hide();
+        return false;
+    }
+    $("#report-node").click(function(e) {
+        $("body").css({height:"100%",overflow:"hidden"});
+        e.preventDefault();
+        // var width = $("#report-node-shade").width();
+        // var height = $("#report-node-shade").height();
+
+
+        // $("#report-node-dialog").width(Math.min(width,400)).height(Math.min(height,500)).css({
+        // });
+        $("#report-node-shade").show();
+    });
+</script>
+
+{{#sessionuser}}{{/sessionuser}}
 {{>_footer}}

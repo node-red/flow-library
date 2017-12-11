@@ -803,6 +803,66 @@ a:hover .gistbox-footer {
 .events tr:nth-child(even) {
     background: #f3f3f3
 }
+
+
+#report-node-shade {
+    display: none;
+    position: fixed;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+    background: rgba(88,38,38,0.8);
+    text-align: center;
+}
+#report-node-shade:before {
+    content: '';
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle;
+}
+
+#report-node-dialog {
+    position: relative;
+    text-align: left;
+    vertical-align: middle;
+    display: inline-block;
+    overflow: auto;
+    width: 500px;
+    margin: auto;
+    background: white;
+    padding: 0px 40px;
+}
+#report-node-dialog textarea {
+    border: 1px solid #999;
+    font-size: 14px;
+    width: 100%;
+    height: 150px;
+    resize: none;
+    padding: 10px;
+    border-radius: 3px;
+    color: #333;
+}
+#report-node-dialog button {
+    border: 1px solid #aa6767;
+    text-align: center;
+    display: inline-block;
+    border-radius: 3px;
+    text-shadow: none;
+    font-size: 14px;
+    padding: 10px;
+    width: 110px;
+    cursor: pointer;
+    margin: 0 10px;
+}
+#report-node-dialog button[type="submit"] {
+    background: #aa6767;
+    color: #eee;
+}
+#report-node-dialog-buttons {
+    padding: 10px;
+    text-align: right;
+}
 @media handheld, only screen and (max-width: 767px) {
     .library .grid {
         padding: 0;

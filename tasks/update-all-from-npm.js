@@ -38,13 +38,13 @@ npmModules.getAllNpmModules().then(function(allModules) {
             if (!allKnownModules.hasOwnProperty(r._id)) {
                 console.log("-",r._id);
                 // this module has been removed from npm
-                // promises.push(npmNodes.remove(r._id).then(function() {
-                //     return events.add({
-                //         "action": "remove",
-                //         "module": r._id,
-                //         "message": "Module not found on npm"
-                //     });
-                // }));
+                promises.push(npmNodes.remove(r._id).then(function() {
+                    return events.add({
+                        "action": "remove",
+                        "module": r._id,
+                        "message": "Module not found on npm"
+                    });
+                }));
             } else if (allKnownModules[r._id] !== allKnownNodes[r._id]) {
                 // this module can be updated
                 console.log(" ",r._id,allKnownNodes[r._id],"->",allKnownModules[r._id]);

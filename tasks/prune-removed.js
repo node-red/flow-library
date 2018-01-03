@@ -1,3 +1,4 @@
+// This task is deprecated as update-all-from-npm.js does a better job of it
 var settings = require("../config");
 var npmNodes = require("../lib/nodes");
 var npmModules = require("../lib/modules");

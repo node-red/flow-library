@@ -30,14 +30,19 @@ app.get("/nodes",function(req,res) {
         res.status(404).send(mustache.render(templates['404'],context,templates.partials));
     });
 });
-app.get("/node/:id",csrfProtection,function(req,res) {
-    npmNodes.get(req.params.id).then(function(node) {
+
+app.get("/node/:scope(@[^\\/]{1,})?/:id([^@][^\\/]{1,})",csrfProtection,function(req,res) {
+    var id = req.params.id;
+    if (req.params.scope) {
+        id = req.params.scope+"/"+id;
+    }
+    npmNodes.get(id).then(function(node) {
         node.sessionuser = req.session.user;
         node.csrfToken = req.csrfToken();
         node.pageTitle = req.params.id;
         //console.log(node);
         node.updated_at_since = appUtils.formatDate(node.updated_at);
-        iconCache[req.params.id] = {};
+        iconCache[id] = {};
         node.types = [];
 
         for (var n in node.versions.latest["node-red"].nodes) {
@@ -51,7 +56,7 @@ app.get("/node/:id",csrfProtection,function(req,res) {
                     if (fs.existsSync(__dirname+"/../public/icons/"+def.types[t].icon)) {
                         def.types[t].iconUrl = "/icons/"+def.types[t].icon;
                     } else {
-                        def.types[t].iconUrl = "/node/"+req.params.id+"/icons/"+def.types[t].icon;
+                        def.types[t].iconUrl = "/node/"+id+"/icons/"+def.types[t].icon;
                     }
                 }
                 def.types[t].hasInputs = (def.types[t].inputs > 0);
@@ -62,7 +67,7 @@ app.get("/node/:id",csrfProtection,function(req,res) {
 
                 node.types.push(def.types[t]);
                 //console.log(def.types[t]);
-                iconCache[req.params.id][def.types[t].icon] = appUtils.mapNodePath(def.types[t].iconPath);
+                iconCache[id][def.types[t].icon] = appUtils.mapNodePath(def.types[t].iconPath);
             }
         }
         //console.log(node);
@@ -112,40 +117,52 @@ app.get("/node/:id",csrfProtection,function(req,res) {
     });
 });
 
-app.get("/node/:id/icons/:icon", function(req,res) {
-    if (iconCache[req.params.id] && iconCache[req.params.id][req.params.icon]) {
-        res.sendFile(iconCache[req.params.id][req.params.icon]);
+app.get("/node/:scope(@[^\\/]{1,})?/:id([^@][^\\/]{1,})/icons/:icon", function(req,res) {
+    var id = req.params.id;
+    if (req.params.scope) {
+        id = req.params.scope+"/"+id;
+    }
+    if (iconCache[id] && iconCache[id][req.params.icon]) {
+        res.sendFile(iconCache[id][req.params.icon]);
     } else {
         res.sendFile(path.resolve(__dirname+"/../public/icons/arrow-in.png"));
     }
 });
 
-app.get("/node/:id/refresh",function(req,res) {
+app.get("/node/:scope(@[^\\/]{1,})?/:id([^@][^\\/]{1,})/refresh",function(req,res) {
+    var id = req.params.id;
+    if (req.params.scope) {
+        id = req.params.scope+"/"+id;
+    }
     if (req.session.user) {
-        npmNodes.update(req.params.id,{refresh_requested:true});
+        npmNodes.update(id,{refresh_requested:true});
         events.add({
             action:"refresh_requested",
-            module: req.params.id,
+            module: id,
             user:req.session.user.login
         });
     }
     res.writeHead(303, {
-        Location: "/node/"+req.params.id
+        Location: "/node/"+id
     });
     res.end();
 });
 
-app.post("/node/:id/report",csrfProtection,function(req,res) {
+app.post("/node/:scope(@[^\\/]{1,})?/:id([^@][^\\/]{1,})/report",csrfProtection,function(req,res) {
+    var id = req.params.id;
+    if (req.params.scope) {
+        id = req.params.scope+"/"+id;
+    }
     if (req.session.user) {
         events.add({
             action:"module_report",
-            module: req.params.id,
+            module: id,
             message:req.body.details,
             user: req.session.user.login
         });
     }
     res.writeHead(303, {
-        Location: "/node/"+req.params.id
+        Location: "/node/"+id
     });
     res.end();
 });

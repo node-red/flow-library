@@ -60,9 +60,6 @@ npmModules.getAllNpmModules().then(function(allModules) {
             }
         });
 
-        if (toUpdate.length > 5) {
-            process.env.FLOW_ENV = "_DONT_TWEET_";
-        }
         processBatch().then(function() {
             npmNodes.close();
         });

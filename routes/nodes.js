@@ -215,7 +215,7 @@ app.post("/node/:scope(@[^\\/]{1,})?/:id([^@][^\\/]{1,})/rate", csrfProtection,f
         }
     }
     res.writeHead(303, {
-        Location: "/node/"+req.params.id
+        Location: "/node/"+id
     });
     res.end();
 });

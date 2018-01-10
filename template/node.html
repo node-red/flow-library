@@ -17,7 +17,7 @@
             {{#updated_at_since}}<div class="flowinfo">  Updated {{ updated_at_since }}</div>{{/updated_at_since}}
             {{#license}}<div class="flowinfo">License: {{ license }}</div>{{/license}}
             <div class="flowinfo">Rating: <span id="node-stars"></span>
-                {{#rating}} {{rating.rating}} ({{rating.count}} <i class="fa fa-user"></i>){{/rating}}</div>
+                {{#rating}} {{score}} ({{count}} <i class="fa fa-user"></i>){{/rating}}</div>
             <div class="flowinfo"><a target="_blank" href="https://npmjs.org/package/{{ name }}">View on npm</a></div>
             {{#githubUrl}}<div class="flowinfo"><a target="_blank" href="{{githubUrl}}">View on GitHub</a></div>{{/githubUrl}}
           </div>

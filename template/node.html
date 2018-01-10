@@ -17,7 +17,7 @@
             {{#updated_at_since}}<div class="flowinfo">  Updated {{ updated_at_since }}</div>{{/updated_at_since}}
             {{#license}}<div class="flowinfo">License: {{ license }}</div>{{/license}}
             <div class="flowinfo">Rating: <span id="node-stars"></span>
-                {{rating.rating}} ({{rating.count}} <i class="fa fa-user"></i>)</div>
+                {{#rating}} {{rating.rating}} ({{rating.count}} <i class="fa fa-user"></i>){{/rating}}</div>
             <div class="flowinfo"><a target="_blank" href="https://npmjs.org/package/{{ name }}">View on npm</a></div>
             {{#githubUrl}}<div class="flowinfo"><a target="_blank" href="{{githubUrl}}">View on GitHub</a></div>{{/githubUrl}}
           </div>
@@ -114,10 +114,12 @@
     });
     
     $("#node-stars").raty({
-        score: {{rating.rating}},
+        {{#rating}}
+        score: {{score}},
+        {{/rating}}
         space:false,
         readOnly: true});
-
+    
     function rate(e) {
         $("input[name=rating]").val(e);
         $("#form-rate").submit();
@@ -137,7 +139,9 @@
     };
 
     $("#set-stars").raty({
-        score: {{userRating.rating}},
+        {{#rating}}{{#userRating}}
+        score: {{rating}},
+        {{/userRating}}{{/rating}}
         space:false,
         cancel: true,
         click: debounce(rate, 1000)});

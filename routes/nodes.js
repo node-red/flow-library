@@ -7,6 +7,7 @@ var csrf = require('csurf');
 
 var appUtils = require("../lib/utils");
 var npmNodes = require("../lib/nodes");
+var ratings = require("../lib/ratings");
 var templates = require("../lib/templates");
 var events = require("../lib/events");
 
@@ -30,6 +31,7 @@ app.get("/nodes",function(req,res) {
         res.status(404).send(mustache.render(templates['404'],context,templates.partials));
     });
 });
+
 app.get("/node/:id",csrfProtection,function(req,res) {
     npmNodes.get(req.params.id).then(function(node) {
         node.sessionuser = req.session.user;
@@ -100,8 +102,23 @@ app.get("/node/:id",csrfProtection,function(req,res) {
                     node.githubUrl = "https://"+m[1];
                 }
             }
-
-            res.send(mustache.render(templates.node,node,templates.partials));
+            ratings.get(req.params.id).then(function(rating) {
+                node.rating = {
+                    rating: Math.round(rating.total/rating.count * 10) / 10,
+                    total: rating.total,
+                    count: rating.count
+                };
+                if (req.session.user) {
+                    return ratings.getForUser(req.params.id, req.session.user.login);
+                } else {
+                    return {
+                        rating: 0
+                    };
+                }
+            }).then(function(userRating) {
+                node.userRating = userRating;
+                res.send(mustache.render(templates.node,node,templates.partials));
+            });
         });
 
     }).otherwise(function(err) {
@@ -150,6 +167,47 @@ app.post("/node/:id/report",csrfProtection,function(req,res) {
     res.end();
 });
 
+app.post("/node/:id/rate", csrfProtection,function(req,res) {
+    if (req.session.user) {
+        var rating = {
+            user: req.session.user.login,
+            module: req.params.id
+        }
+        if (Number(req.body.rating) == 0) {
+            ratings.remove(rating).then(function() {
+                return events.add({
+                    action:"module_rating",
+                    module: req.params.id,
+                    message:"removed",
+                    user: req.session.user.login
+                });
+            });
+        } else {
+            var version = null;
+            npmNodes.get(req.params.id).then(function(node) {
+                version = node.versions.latest.version;
+                rating.rating = +req.body.rating;
+                rating.time = new Date();
+                rating.version = version;
+                return ratings.save(rating);
+            }).then(function() {
+                return events.add({
+                    action:"module_rating",
+                    module: req.params.id,
+                    message:req.body.rating,
+                    user: req.session.user.login,
+                    version: version
+                });
+            }).otherwise(function(err) {
+                console.log("error rating node module: "+req.params.id,err);
+            })
+        }
+    }
+    res.writeHead(303, {
+        Location: "/node/"+req.params.id
+    });
+    res.end();
+});
 
 
 module.exports = app;

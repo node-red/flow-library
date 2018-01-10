@@ -16,18 +16,24 @@
             <div class="flowinfo"> Version: {{ versions.latest.version }}</div>
             {{#updated_at_since}}<div class="flowinfo">  Updated {{ updated_at_since }}</div>{{/updated_at_since}}
             {{#license}}<div class="flowinfo">License: {{ license }}</div>{{/license}}
+            <div class="flowinfo">Rating: <span id="node-stars"></span>
+                {{rating.rating}} ({{rating.count}} <i class="fa fa-user"></i>)</div>
             <div class="flowinfo"><a target="_blank" href="https://npmjs.org/package/{{ name }}">View on npm</a></div>
             {{#githubUrl}}<div class="flowinfo"><a target="_blank" href="{{githubUrl}}">View on GitHub</a></div>{{/githubUrl}}
           </div>
           {{#sessionuser}}
           <div class="flowmeta">
             <h4>Actions</h4>
+            <form id="form-rate" action="/node/{{_id}}/rate" method="POST">
+                <input name="_csrf" type="hidden" value="{{csrfToken}}">
+                <input name="rating" type="hidden">
+                <div class="flowinfo">Rate: <span id="set-stars"></span></div>
+            </form>
             {{^refresh_requested}}<div class="flowinfo"><a href="/node/{{_id}}/refresh">Request refresh</a></div>{{/refresh_requested}}
             {{#refresh_requested}}<div class="flowinfo">Refresh requested</a></div>{{/refresh_requested}}
             <div class="flowinfo"><a id="report-node" href="/node/{{_id}}/report">Report this module</a></div>
           </div>
           {{/sessionuser}}
-
 
           <div class="flowmeta">
             <h4>Downloads</h4>
@@ -106,6 +112,36 @@
         // });
         $("#report-node-shade").show();
     });
+    
+    $("#node-stars").raty({
+        score: {{rating.rating}},
+        space:false,
+        readOnly: true});
+
+    function rate(e) {
+        $("input[name=rating]").val(e);
+        $("#form-rate").submit();
+    };
+
+    function debounce(func, wait) {
+        var timeout;
+        return function() {
+            var context = this, args = arguments;
+            var later = function() {
+                timeout = null;
+                func.apply(context, args);
+            };
+            clearTimeout(timeout);
+            timeout = setTimeout(later, wait);
+        };
+    };
+
+    $("#set-stars").raty({
+        score: {{userRating.rating}},
+        space:false,
+        cancel: true,
+        click: debounce(rate, 1000)});
+
 </script>
 
 {{#sessionuser}}{{/sessionuser}}

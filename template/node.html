@@ -16,8 +16,8 @@
             <div class="flowinfo"> Version: {{ versions.latest.version }}</div>
             {{#updated_at_since}}<div class="flowinfo">  Updated {{ updated_at_since }}</div>{{/updated_at_since}}
             {{#license}}<div class="flowinfo">License: {{ license }}</div>{{/license}}
-            <div class="flowinfo">Rating: <span id="node-stars"></span>
-                {{#rating}} {{score}} ({{count}} <i class="fa fa-user"></i>){{/rating}}</div>
+            <div class="flowinfo">Rating: <span id="node-stars"></span> {{#rating}} {{score}}</div>
+            <div class="flowinfo">({{count}} <i class="fa fa-user"></i>){{/rating}}</div>
             <div class="flowinfo"><a target="_blank" href="https://npmjs.org/package/{{ name }}">View on npm</a></div>
             {{#githubUrl}}<div class="flowinfo"><a target="_blank" href="{{githubUrl}}">View on GitHub</a></div>{{/githubUrl}}
           </div>
@@ -113,11 +113,13 @@
         $("#report-node-shade").show();
     });
     
+    $.fn.raty.defaults.hints = ['bad', 'poor', 'regular', 'good', 'awesome'];
+    $.fn.raty.defaults.space = false;
+
     $("#node-stars").raty({
         {{#rating}}
         score: {{score}},
         {{/rating}}
-        space:false,
         readOnly: true});
     
     function rate(e) {
@@ -142,7 +144,6 @@
         {{#rating}}{{#userRating}}
         score: {{rating}},
         {{/userRating}}{{/rating}}
-        space:false,
         cancel: true,
         click: debounce(rate, 1000)});
 

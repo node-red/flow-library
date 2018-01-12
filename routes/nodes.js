@@ -109,7 +109,7 @@ app.get("/node/:scope(@[^\\/]{1,})?/:id([^@][^\\/]{1,})",csrfProtection,function
             var userLogin = req.session.user ? req.session.user.login : null;
             ratings.get(id, userLogin).then(function(rating) {
                 if (rating) {
-                    rating.score = Math.round(rating.total/rating.count * 10) / 10
+                    rating.score = (rating.total/rating.count * 10 / 10).toFixed(1);
                     node.rating = rating;
                 }
                 res.send(mustache.render(templates.node,node,templates.partials));

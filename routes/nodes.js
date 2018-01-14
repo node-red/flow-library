@@ -7,6 +7,7 @@ var csrf = require('csurf');
 
 var appUtils = require("../lib/utils");
 var npmNodes = require("../lib/nodes");
+var ratings = require("../lib/ratings");
 var templates = require("../lib/templates");
 var events = require("../lib/events");
 
@@ -105,8 +106,14 @@ app.get("/node/:scope(@[^\\/]{1,})?/:id([^@][^\\/]{1,})",csrfProtection,function
                     node.githubUrl = "https://"+m[1];
                 }
             }
-
-            res.send(mustache.render(templates.node,node,templates.partials));
+            var userLogin = req.session.user ? req.session.user.login : null;
+            ratings.get(id, userLogin).then(function(rating) {
+                if (rating) {
+                    rating.score = (rating.total/rating.count * 10 / 10).toFixed(1);
+                    node.rating = rating;
+                }
+                res.send(mustache.render(templates.node,node,templates.partials));
+            });
         });
 
     }).otherwise(function(err) {
@@ -167,6 +174,51 @@ app.post("/node/:scope(@[^\\/]{1,})?/:id([^@][^\\/]{1,})/report",csrfProtection,
     res.end();
 });
 
+app.post("/node/:scope(@[^\\/]{1,})?/:id([^@][^\\/]{1,})/rate", csrfProtection,function(req,res) {
+    var id = req.params.id;
+    if (req.params.scope) {
+        id = req.params.scope+"/"+id;
+    }
+    if (req.session.user) {
+        var rating = {
+            user: req.session.user.login,
+            module: req.params.id
+        }
+        if (Number(req.body.rating) == 0) {
+            ratings.remove(rating).then(function() {
+                return events.add({
+                    action:"module_rating",
+                    module: id,
+                    message:"removed",
+                    user: req.session.user.login
+                });
+            });
+        } else {
+            var version = null;
+            npmNodes.get(id).then(function(node) {
+                version = node.versions.latest.version;
+                rating.rating = +req.body.rating;
+                rating.time = new Date();
+                rating.version = version;
+                return ratings.save(rating);
+            }).then(function() {
+                return events.add({
+                    action:"module_rating",
+                    module: id,
+                    message:req.body.rating,
+                    user: req.session.user.login,
+                    version: version
+                });
+            }).otherwise(function(err) {
+                console.log("error rating node module: "+id,err);
+            })
+        }
+    }
+    res.writeHead(303, {
+        Location: "/node/"+id
+    });
+    res.end();
+});
 
 
 module.exports = app;

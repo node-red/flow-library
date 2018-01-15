@@ -2,19 +2,19 @@
     "name": "node-red-flows",
     "version": "0.1.0",
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1",
+        "test": "mocha test/**/*_spec.js",
         "start": "node app.js",
         "nodemon": "nodemon --inspect=0.0.0.0:5858 --ignore data/ ./app.js",
         "dev": "npm run nodemon",
         "docker": "docker-compose -f docker-compose.yml up --build"
     },
     "dependencies": {
-        "acorn":"5.2.1",
+        "acorn": "5.2.1",
         "body-parser": "1.18.2",
         "connect-mongo": "2.0.0",
         "cookie-parser": "1.4.3",
         "csurf": "1.9.0",
-        "express-session":"1.15.6",
+        "express-session": "1.15.6",
         "express": "4.x",
         "fs-extra": "4.0.2",
         "marked": "*",
@@ -22,12 +22,15 @@
         "mustache": "*",
         "oauth": "0.9.15",
         "request": "2.83.0",
-        "serve-static":"1.13.1",
+        "serve-static": "1.13.1",
         "tar": "1.0.3",
         "twitter": "1.2.5",
         "when": "3.7.x"
     },
     "devDependencies": {
-        "nodemon": "^1.12.1"
+        "nodemon": "^1.12.1",
+        "mocha": "4.1.0",
+        "should": "13.2.1",
+        "sinon": "4.1.5"
     }
 }

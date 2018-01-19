@@ -528,6 +528,8 @@ p.flow-install code {
     display:inline-block;
     vertical-align:top;
     margin-left: 30px;
+    margin-top: -12px;
+    line-height: 1.5;
 }
 
 .gistbox-sort-option {
@@ -584,7 +586,7 @@ li.gistbox {
     background: #fff;
     float: left;
     width: 31%;
-    min-width: 200px;
+    min-width: 240px;
     height: 125px;
     margin-bottom: 15px;
     margin-right: 15px;
@@ -673,7 +675,7 @@ a:hover .gistbox-footer {
     list-style-type: none;
     font-size: 14px;
     padding: 0;
-    margin: 0;
+    margin: 5px 0;
     display: inline-block;
     vertical-align: middle;
 }
@@ -878,6 +880,7 @@ a:hover .gistbox-footer {
 @media handheld, only screen and (max-width: 900px) {
     .gist-sort {
         margin-left:0;
+        margin-top:0;
         display: block;
     }
     .gist-sort div {

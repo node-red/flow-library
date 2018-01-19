@@ -77,6 +77,10 @@ function sortByRating() {
     var list = $("ul.gistlist");
     list.children().detach();
     items.sort(function(A,B) {
+        B.score = B.score || 0;
+        A.score = A.score || 0;
+        B.count = B.count || 0;
+        A.count = A.count || 0;
         if (B.score!=A.score){
             return (B.score-A.score);
         } else {

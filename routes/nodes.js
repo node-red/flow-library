@@ -202,6 +202,14 @@ app.post("/node/:scope(@[^\\/]{1,})?/:id([^@][^\\/]{1,})/rate", csrfProtection,f
                 rating.version = version;
                 return ratings.save(rating);
             }).then(function() {
+                return ratings.get(id);
+            }).then(function(rating) {
+                var nodeRating = {
+                    score: rating.total/rating.count,
+                    count: rating.count
+                }
+                return npmNodes.update(id,{rating: nodeRating});
+            }).then(function() {
                 return events.add({
                     action:"module_rating",
                     module: id,

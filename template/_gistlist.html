@@ -11,9 +11,10 @@
         </div>
         <div class="gist-sort">
             <span>Sort by:</span>
-            <span style="display: inline-block; vertical-align: top">
+            <span>
                 <div><input class="gistbox-sort-option" id="gistbox-sort-option-recent" checked type="radio" name="sort-option" value="recent"> <label class="gistbox-sort-label" for="gistbox-sort-option-recent">recent</label></div>
                 <div><input class="gistbox-sort-option" id="gistbox-sort-option-downloads" type="radio" name="sort-option" value="downloads"> <label class="gistbox-sort-label" for="gistbox-sort-option-downloads">downloads</label></div>
+                <div><input class="gistbox-sort-option" id="gistbox-sort-option-rating" type="radio" name="sort-option" value="rating"> <label class="gistbox-sort-label" for="gistbox-sort-option-rating">rating</label></div>
             </span>
         </div>
     </div>
@@ -71,17 +72,40 @@ function sortByUpdated() {
         return B.updated.localeCompare(A.updated);
     })
     items.forEach(function(i) { i.li.appendTo(list)});
-
+}
+function sortByRating() {
+    var list = $("ul.gistlist");
+    list.children().detach();
+    items.sort(function(A,B) {
+        B.score = B.score || 0;
+        A.score = A.score || 0;
+        B.count = B.count || 0;
+        A.count = A.count || 0;
+        if (B.score!=A.score){
+            return (B.score-A.score);
+        } else {
+            return (B.count-A.count);
+        }
+    })
+    items.forEach(function(i) { i.li.appendTo(list)});
 }
 
 $(function() {
 
-
     $(".gistbox").each(function(e) {
         var d = ($(this).find("h1").text()+" "+$(this).data("tags")+" "+$(this).data("owner")).toLowerCase();
         $(this).data("info", d);
+        var scoreElem = $(this).find(".gistbox-score");
+        scoreElem.text(Number($(this).data("score")).toFixed(1));
         gistCount++;
-        items.push({li:$(this), info:$(this).data("info"), downloads:$(this).data('downloads'), updated:$(this).data('updated')});
+        items.push({
+            li:$(this),
+            info:$(this).data("info"),
+            downloads:$(this).data('downloads'),
+            updated:$(this).data('updated'),
+            score:$(this).data('score'),
+            count:$(this).data('count')
+        });
     });
 
     updateCount(gistCount);
@@ -109,13 +133,17 @@ $(function() {
     },200);
 
     $(".gistbox-sort-option").change(function() {
-        if ($(this).val() === "downloads") {
-            sortByDownload();
-        } else {
-            sortByUpdated();
+        switch ($(this).val()) {
+            case "downloads":
+                sortByDownload();
+                break;
+            case "updated":
+                sortByUpdated();
+                break;
+            case "rating":
+                sortByRating();
+                break;
         }
     });
-
-
 });
 </script>

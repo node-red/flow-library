@@ -27,3 +27,13 @@ This repo comes with a docker-compose based development environment. To get star
 
 The docker image uses `nodemon` to watch for changes to the source code and
 automatically restart the app when needed - without having to restart docker.
+
+## Add nodes
+
+To test you will want to add a few nodes to the database.  To do so, use the update-one task.  For example.
+
+    node tasks/update-one.js node-red-dashboard
+
+or in the docker container running the application
+
+    docker exec -it flowlibrary_node_1 node tasks/update-one.js node-red-dashboard

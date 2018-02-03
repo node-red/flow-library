@@ -1,11 +1,19 @@
-<li class="gistbox gistbox-{{type}}" data-tags="{{keywords}}" data-owner="{{author.name}}" data-updated="{{updated_at}}" data-downloads="{{downloads.week}}"><a href="/node/{{name}}">
+<li class="gistbox gistbox-{{type}}" 
+    data-tags="{{keywords}}"
+    data-owner="{{author.name}}"
+    data-updated="{{updated_at}}"
+    data-downloads="{{downloads.week}}"
+    data-score="{{rating.score}}"
+    data-count="{{rating.count}}"><a href="/node/{{name}}">
 <h1 class="gisttitle">{{name}}</h1>
 <p class="gistdescription">{{description}}</p>
 <div class="gistbox-footer">
     <div class="gistbox-type">
         <!-- {{#official}}<img alt="maintained by the Node-RED project" title="maintained by the Node-RED project" src="/node-red-white.png" class="gistbox-official" />{{/official}} -->
-        {{#dist-tags.latest}} v{{.}} &nbsp;&nbsp;{{/dist-tags.latest}}
-        {{#downloads}} <i class="fa fa-cloud-download"></i> {{week}} &nbsp;&nbsp;{{/downloads}}
+        {{#dist-tags.latest}} v{{.}} &nbsp;{{/dist-tags.latest}}
+        {{#downloads}} <i class="fa fa-cloud-download"></i> {{week}} &nbsp;{{/downloads}}
+        {{#rating}}<i class="fa fa-star"></i><span class="gistbox-score">{{score}}</span> ({{count}} <i class="fa fa-user"></i>){{/rating}}
+       
         <!-- {{#updated_formatted}} <i class="fa fa-clock-o"></i> {{updated_formatted}} {{/updated_formatted}} -->
     </div>
     <div class="gistbox-owner">{{type}}</div>

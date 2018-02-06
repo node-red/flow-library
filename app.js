@@ -18,11 +18,8 @@ app.use(cookieParser());
 if (process.env.FLOW_ENV == "PRODUCTION") {
     app.use(session({
         store: new MongoStore({
-            username: settings.mongo.user,
-            password: settings.mongo.password,
-            host:settings.mongo.host,
-            port:settings.mongo.port,
-            db:settings.mongo.db
+            url: settings.mongo.url,
+            touchAfter: 24 * 3600
         }),
         key: settings.session.key,
         secret: settings.session.secret,

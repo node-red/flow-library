@@ -15,7 +15,7 @@ var app = express();
 
 app.use(cookieParser());
 
-if (process.env.ENV == "PRODUCTION") {
+if (process.env.FLOW_ENV == "PRODUCTION") {
     app.use(session({
         store: new MongoStore({
             username: settings.mongo.user,

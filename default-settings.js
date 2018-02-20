@@ -9,7 +9,7 @@ var settings = {
         accessToken: ""
     },
     mongo: {
-        url: 'mongo/flows'
+        url: 'mongodb://mongo/flows'
     },
     session: {
         key: 'nr.sid',

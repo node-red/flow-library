@@ -77,19 +77,14 @@ var nextPage = currentUrl + "page="+{{nextPage}};
 
 $(function() {
 
-    // set filters
     $(".gistbox-filter-option").each(function(i, filterOption) {
         $(filterOption).prop('checked',filters[$(filterOption).data("filter")]);
     });
 
-    // set sort
     $("input[name=sort-option][value=" + sort + "]").attr('checked', 'checked');
 
-    // set paging links
     $(".page-prev").attr('href', prevPage);
     $(".page-next").attr('href', nextPage);
-
-    // TODO: generate new URL and go to the new page
 
     $(".gist-filter-input").keyup(utils.debounce(function() {
         currentTerm = $(".gist-filter-input").val().toLowerCase();

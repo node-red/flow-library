@@ -23,22 +23,18 @@
 <div class="grid main-content">
     <div class="col-1-1">
         <ul class="gistlist">
-        {{#things}}
-            {{#_rev}}{{>_nodebox}}{{/_rev}}
-            {{^_rev}}{{>_gistbox}}{{/_rev}}
-        {{/things}}
         </ul>
     </div>
-    {{#prevPage}}<a class="page-prev" href="#">&lt;&nbsp;Prev</a>{{/prevPage}}
-    &nbsp;{{query.page}}&nbsp;
-    {{#nextPage}}<a class="page-next" href="#">Next&nbsp;&gt;</a>{{/nextPage}}
+    <a class="page-prev" href="#">&lt;&nbsp;Prev</a>
+        &nbsp;<span class="cur-page">{{query.page}}</span>&nbsp;
+    <a class="page-next" href="#">Next&nbsp;&gt;</a>
 </div>
 
 <script>
 
 var items = [];
-var gistCount = {{total}};
 var currentTerm = "{{query.term}}";
+var page = {{query.page}};
 var filters = {
     "nodes": false,
     "flows": false
@@ -60,20 +56,41 @@ switch (filterType) {
 var sort = "{{query.sort}}";
 
 function generateQueryString() {
-    // get the value of each one
     var query = [];
-    newUrl = "";
     if (sort) query.push("sort="+sort);
     if (currentTerm) query.push("term="+currentTerm);
     if (filterType) query.push("type="+filterType);
-    newUrl = "?"+query.join('&');
-    return newUrl;
+    query.push("page="+page);
+    return "?"+query.join('&');
+}
+
+function setUrl() {
+    // set the current url
+}
+
+function loadPage() {
+    thingUrl = "things"+generateQueryString();
+    $.getJSON(thingUrl, function(data) {
+        $('.gist-count').text(data.count+' of '+data.total+' things');
+        $('.cur-page').text(data.query.page);
+        page = data.query.page;
+        if (data.prevPage) {
+            $('.page-prev').removeClass('hide');
+        } else {
+            $('.page-prev').addClass('hide');
+        }
+        if (data.nextPage) {
+            $('.page-next').removeClass('hide');
+        } else {
+            $('.page-next').addClass('hide');
+        }
+        $('.gistlist').html(data.html);
+    });
+    setUrl();
+    // update history for back button                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
 }
 
 var currentUrl = generateQueryString();
-if (currentUrl != '?') currentUrl += '&';
-var prevPage = currentUrl + "page="+{{prevPage}};
-var nextPage = currentUrl + "page="+{{nextPage}};
 
 $(function() {
 
@@ -83,12 +100,22 @@ $(function() {
 
     $("input[name=sort-option][value=" + sort + "]").attr('checked', 'checked');
 
-    $(".page-prev").attr('href', prevPage);
-    $(".page-next").attr('href', nextPage);
+    $(".page-prev").click(function(e) {
+        e.preventDefault();
+        page -= 1;
+        loadPage();
+    });
+
+    $(".page-next").click(function(e) {
+        e.preventDefault();
+        page += 1;
+        loadPage();
+    });
 
     $(".gist-filter-input").keyup(utils.debounce(function() {
         currentTerm = $(".gist-filter-input").val().toLowerCase();
-        window.location = generateQueryString();
+        page = 1;
+        loadPage();
     }, 1000));
 
     $(".gistbox-filter-option").change(function() {
@@ -101,12 +128,16 @@ $(function() {
         } else if (filters.flows) {
             filterType = "flow";
         }
-        window.location = generateQueryString();
+        page = 1;
+        loadPage();
     });
 
     $(".gistbox-sort-option").change(function() {
         sort = $(this).val();
-        window.location = generateQueryString();
+        page = 1;
+        loadPage();
     });
+
+    loadPage();
 });
 </script>

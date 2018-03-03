@@ -584,17 +584,21 @@ ul.gistlist {
 li.gistbox {
     display: inline-block;
     background: #fff;
-    float: left;
-    width: 31%;
-    min-width: 240px;
-    height: 125px;
-    margin-bottom: 15px;
-    margin-right: 15px;
+    height: 0px;
+    width: 0px;
+    margin:0px;
     overflow: hidden;
 
     transition-duration: 250ms;
     transition-timing-function: ease;
     transition-property: margin width padding height opacity;
+}
+li.gistbox.show {
+    height: 125px;
+    margin-bottom: 15px;
+    margin-right: 15px;
+    width: 31%;
+    min-width: 240px;
 }
 .gistbox a {
     padding: 10px;

@@ -85,6 +85,9 @@ function loadPage() {
             $('.page-next').addClass('hide');
         }
         $('.gistlist').html(data.html);
+        setTimeout(function() {
+            $('.gistbox').addClass('show');
+        }, 0);
     });
     setUrl();
     // update history for back button                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        

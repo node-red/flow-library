@@ -12,6 +12,7 @@ app.get("/", function (req, res) {
     context.sessionuser = req.session.user;
     var query = Object.assign({}, req.query);
     query.page = Number(query.page) || 1;
+    query.num_pages = Number(query.num_pages) || 1;
     query.view = "counts";
     context.query = query;
     context.prevPage = query.page - 1;
@@ -19,7 +20,7 @@ app.get("/", function (req, res) {
     viewster.getForQuery(query).then(function (result) {
         context.count = result.count || 0;
         context.total = result.total || 0;
-        context.nextPage = (context.count - viewster.DEFAULT_PER_PAGE * query.page) > 0 ? query.page+ 1 : 0;
+        context.nextPage = (context.count - viewster.DEFAULT_PER_PAGE * (query.page+query.num_pages-1)) > 0 ? query.page+1 : 0;
         res.send(mustache.render(templates.index, context, templates.partials));
     }).otherwise(function (err) {
         console.log(err);
@@ -32,13 +33,15 @@ app.get("/things", function (req, res) {
     var response = {};
     var query = Object.assign({}, req.query);
     query.page = Number(query.page) || 1;
+    query.num_pages = Number(query.num_pages) || 1;
     response.query = query;
     response.prevPage = query.page - 1;
 
     viewster.getForQuery(query).then(function (result) {
         response.count = result.count || 0;
         response.total = result.total || 0;
-        response.nextPage = (response.count - viewster.DEFAULT_PER_PAGE * query.page) > 0 ? query.page+ 1 : 0;
+        response.nextPage = (response.count - viewster.DEFAULT_PER_PAGE * (query.page+query.num_pages-1)) > 0 ? query.page+1 : 0;
+
         var context = {
             things: result.things
         };

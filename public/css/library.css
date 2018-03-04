@@ -434,6 +434,27 @@ ul#add-flow-tags li i.icon {
     border-color: #7F4545;
     text-shadow: none;
 }
+.btn-load-more {
+    border: 2px solid #aa6767;
+    display: inline-block;
+    text-align: center;
+    border-radius: 4px;
+    background: #aa6767;
+    text-shadow: none;
+    font-size: 16px;
+    padding: 5px;
+    width: 160px;
+    color:  #eee !important;
+    margin: 5px;
+}
+.btn-load-more:hover {
+    background: #7F4545;
+    text-decoration: none;
+    text-shadow: none;
+}
+.btn-load-more.hide {
+    display: none;
+}
 .create-toc {
     display: inline-block;
     max-width: 350px;
@@ -584,9 +605,9 @@ ul.gistlist {
 li.gistbox {
     display: inline-block;
     background: #fff;
-    height: 0px;
-    width: 0px;
-    margin:0px;
+    height: 0;
+    margin: 0;
+    width: 0;
     overflow: hidden;
 
     transition-duration: 250ms;
@@ -600,6 +621,7 @@ li.gistbox.show {
     width: 31%;
     min-width: 240px;
 }
+
 .gistbox a {
     padding: 10px;
     border: 2px solid #CD9494;

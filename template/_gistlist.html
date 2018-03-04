@@ -24,17 +24,17 @@
     <div class="col-1-1">
         <ul class="gistlist">
         </ul>
+        <div class="col-1-1" style="text-align:center">
+            <a href="#" class="btn btn-load-more">Load more...</a>
+        </div>
     </div>
-    <a class="page-prev" href="#">&lt;&nbsp;Prev</a>
-        &nbsp;<span class="cur-page">{{query.page}}</span>&nbsp;
-    <a class="page-next" href="#">Next&nbsp;&gt;</a>
+
 </div>
 
 <script>
 
-var items = [];
 var currentTerm = "{{query.term}}";
-var page = {{query.page}};
+var numPages = {{query.num_pages}};
 var filters = {
     "nodes": false,
     "flows": false
@@ -60,37 +60,31 @@ function generateQueryString() {
     if (sort) query.push("sort="+sort);
     if (currentTerm) query.push("term="+currentTerm);
     if (filterType) query.push("type="+filterType);
-    query.push("page="+page);
+    query.push("num_pages="+numPages);
     return "?"+query.join('&');
 }
 
 function setUrl() {
-    // set the current url
+    if (history.pushState) {
+        var newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + generateQueryString();
+        window.history.pushState({path:newurl},'',newurl);
+    }
 }
 
 function loadPage() {
     thingUrl = "things"+generateQueryString();
     $.getJSON(thingUrl, function(data) {
         $('.gist-count').text(data.count+' of '+data.total+' things');
-        $('.cur-page').text(data.query.page);
-        page = data.query.page;
-        if (data.prevPage) {
-            $('.page-prev').removeClass('hide');
-        } else {
-            $('.page-prev').addClass('hide');
-        }
+        numPages = data.query.num_pages;
         if (data.nextPage) {
-            $('.page-next').removeClass('hide');
+            $('.btn-load-more').removeClass('hide');
         } else {
-            $('.page-next').addClass('hide');
+            $('.btn-load-more').addClass('hide');
         }
         $('.gistlist').html(data.html);
-        setTimeout(function() {
-            $('.gistbox').addClass('show');
-        }, 0);
+        $('.gistbox').addClass('show');
+        setUrl();
     });
-    setUrl();
-    // update history for back button                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
 }
 
 var currentUrl = generateQueryString();
@@ -103,21 +97,15 @@ $(function() {
 
     $("input[name=sort-option][value=" + sort + "]").attr('checked', 'checked');
 
-    $(".page-prev").click(function(e) {
+    $(".btn-load-more").click(function(e) {
         e.preventDefault();
-        page -= 1;
-        loadPage();
-    });
-
-    $(".page-next").click(function(e) {
-        e.preventDefault();
-        page += 1;
+        numPages += 1;
         loadPage();
     });
 
     $(".gist-filter-input").keyup(utils.debounce(function() {
         currentTerm = $(".gist-filter-input").val().toLowerCase();
-        page = 1;
+        numPages = 1;
         loadPage();
     }, 1000));
 
@@ -131,13 +119,13 @@ $(function() {
         } else if (filters.flows) {
             filterType = "flow";
         }
-        page = 1;
+        numPages = 1;
         loadPage();
     });
 
     $(".gistbox-sort-option").change(function() {
         sort = $(this).val();
-        page = 1;
+        numPages = 1;
         loadPage();
     });
 

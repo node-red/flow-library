@@ -443,7 +443,7 @@ ul#add-flow-tags li i.icon {
     text-shadow: none;
     font-size: 16px;
     padding: 5px;
-    width: 160px;
+    width: 250px;
     color:  #eee !important;
     margin: 5px;
 }
@@ -605,9 +605,10 @@ ul.gistlist {
 li.gistbox {
     display: inline-block;
     background: #fff;
-    height: 0;
-    margin: 0;
-    width: 0;
+    margin-bottom: 15px;
+    margin-right: 15px;
+    width: 31%;
+    min-width: 240px;
     overflow: hidden;
 
     transition-duration: 250ms;
@@ -616,10 +617,6 @@ li.gistbox {
 }
 li.gistbox.show {
     height: 125px;
-    margin-bottom: 15px;
-    margin-right: 15px;
-    width: 31%;
-    min-width: 240px;
 }
 
 .gistbox a {

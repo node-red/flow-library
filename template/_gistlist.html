@@ -25,7 +25,7 @@
         <ul class="gistlist">
         </ul>
         <div class="col-1-1" style="text-align:center">
-            <a href="#" class="btn btn-load-more">Load more...</a>
+            <a href="#" class="btn btn-load-more"></a>
         </div>
     </div>
 
@@ -75,6 +75,10 @@ function loadPage() {
     thingUrl = "things"+generateQueryString();
     $.getJSON(thingUrl, function(data) {
         $('.gist-count').text(data.count+' of '+data.total+' things');
+        var query = data.query;
+        var remaining = data.count - (query.num_pages+query.page-1)*query.page_size;
+        var nextLoad = Math.min(remaining, query.page_size)
+        $('.btn-load-more').text("Load "+nextLoad+' of '+remaining+' more...');
         numPages = data.query.num_pages;
         if (data.nextPage) {
             $('.btn-load-more').removeClass('hide');

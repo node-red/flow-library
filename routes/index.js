@@ -14,6 +14,7 @@ app.get("/", function (req, res) {
     query.page = Number(query.page) || 1;
     query.num_pages = Number(query.num_pages) || 1;
     query.view = "counts";
+    query.page_size = Number(query.page_size) || viewster.DEFAULT_PER_PAGE;
     context.query = query;
     context.prevPage = query.page - 1;
 
@@ -34,6 +35,7 @@ app.get("/things", function (req, res) {
     var query = Object.assign({}, req.query);
     query.page = Number(query.page) || 1;
     query.num_pages = Number(query.num_pages) || 1;
+    query.page_size = Number(query.page_size) || viewster.DEFAULT_PER_PAGE;
     response.query = query;
     response.prevPage = query.page - 1;
 

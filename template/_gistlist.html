@@ -68,13 +68,6 @@ function generateQueryString(nextPage) {
     return "?"+query.join('&');
 }
 
-function setUrl() {
-    if (history.pushState) {
-        var newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + generateQueryString();
-        window.history.pushState({path:newurl},'',newurl);
-    }
-}
-
 function loadPage() {
     thingUrl = "things"+generateQueryString();
     $.getJSON(thingUrl, function(data) {
@@ -93,30 +86,30 @@ function loadPage() {
         setTimeout(function() {
             $('.gistbox').addClass('show');
         },0);
-        setUrl();
     });
 }
 
-function loadMore() {
-    $.getJSON(thingUrl, function(data) {
-        $('.gist-count').text(data.count+' of '+data.total+' things');
-        var query = data.query;
-        var remaining = data.count - (query.num_pages+query.page-1)*query.page_size;
-        var nextLoad = Math.min(remaining, query.page_size)
-        $('.btn-load-more').text("Load "+nextLoad+' of '+remaining+' more...');
-        numPages = data.query.num_pages;
-        if (data.nextPage) {
-            $('.btn-load-more').removeClass('hide');
-        } else {
-            $('.btn-load-more').addClass('hide');
-        }
-        $('.gistlist').html(data.html);
-        $('.gistbox').addClass('show');
-        setUrl();
-    });
+window.onpopstate = function(event) {
+    if (event.state) {
+        currentTerm = event.state.currentTerm;
+        numPages = event.state.numPages;
+        filterType = event.state.filterType;
+        sort = event.state.sort;
+        loadPage();
+    }
 }
 
-var currentUrl = generateQueryString();
+function setUrl() {
+    if (history.pushState) {
+        var newurl = generateQueryString();
+        window.history.pushState({
+            currentTerm:currentTerm,
+            numPages:numPages,
+            filterType: filterType,
+            sort: sort
+        },'',newurl);
+    }
+}
 
 $(function() {
 
@@ -152,6 +145,7 @@ $(function() {
         currentTerm = $(".gist-filter-input").val().toLowerCase();
         numPages = 1;
         loadPage();
+        setUrl();
     }, 1000));
 
     $(".gistbox-filter-option").change(function() {
@@ -166,14 +160,17 @@ $(function() {
         }
         numPages = 1;
         loadPage();
+        setUrl();
     });
 
     $(".gistbox-sort-option").change(function() {
         sort = $(this).val();
         numPages = 1;
         loadPage();
+        setUrl();
     });
 
     loadPage();
+    setUrl();
 });
 </script>

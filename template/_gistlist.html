@@ -55,12 +55,16 @@ switch (filterType) {
 }
 var sort = "{{query.sort}}";
 
-function generateQueryString() {
+function generateQueryString(nextPage) {
     var query = [];
     if (sort) query.push("sort="+sort);
     if (currentTerm) query.push("term="+currentTerm);
     if (filterType) query.push("type="+filterType);
-    query.push("num_pages="+numPages);
+    if (nextPage) {
+        query.push("page="+numPages);
+    } else {
+        query.push("num_pages="+numPages);
+    }
     return "?"+query.join('&');
 }
 
@@ -73,6 +77,27 @@ function setUrl() {
 
 function loadPage() {
     thingUrl = "things"+generateQueryString();
+    $.getJSON(thingUrl, function(data) {
+        $('.gist-count').text(data.count+' of '+data.total+' things');
+        var query = data.query;
+        var remaining = data.count - (query.num_pages+query.page-1)*query.page_size;
+        var nextLoad = Math.min(remaining, query.page_size)
+        $('.btn-load-more').text("Load "+nextLoad+' of '+remaining+' more...');
+        numPages = data.query.num_pages;
+        if (data.nextPage) {
+            $('.btn-load-more').removeClass('hide');
+        } else {
+            $('.btn-load-more').addClass('hide');
+        }
+        $('.gistlist').html(data.html);
+        setTimeout(function() {
+            $('.gistbox').addClass('show');
+        },0);
+        setUrl();
+    });
+}
+
+function loadMore() {
     $.getJSON(thingUrl, function(data) {
         $('.gist-count').text(data.count+' of '+data.total+' things');
         var query = data.query;
@@ -104,7 +129,23 @@ $(function() {
     $(".btn-load-more").click(function(e) {
         e.preventDefault();
         numPages += 1;
-        loadPage();
+        thingUrl = "things"+generateQueryString(numPages);
+        $.getJSON(thingUrl, function(data) {
+            var query = data.query;
+            var remaining = data.count - numPages*query.page_size;
+            var nextLoad = Math.min(remaining, query.page_size)
+            $('.btn-load-more').text("Load "+nextLoad+' of '+remaining+' more...');
+            if (data.nextPage) {
+                $('.btn-load-more').removeClass('hide');
+            } else {
+                $('.btn-load-more').addClass('hide');
+            }
+            $('.gistlist').append(data.html);
+            setTimeout(function() {
+                $('.gistbox').addClass('show');
+            },0);
+            setUrl();
+        });
     });
 
     $(".gist-filter-input").keyup(utils.debounce(function() {

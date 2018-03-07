@@ -605,6 +605,7 @@ ul.gistlist {
 li.gistbox {
     display: inline-block;
     background: #fff;
+    height: 0;
     margin-bottom: 15px;
     margin-right: 15px;
     width: 31%;
@@ -613,7 +614,7 @@ li.gistbox {
 
     transition-duration: 250ms;
     transition-timing-function: ease;
-    transition-property: margin width padding height opacity;
+    transition-property: margin,width,padding,height,opacity;
 }
 li.gistbox.show {
     height: 125px;

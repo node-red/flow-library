@@ -606,6 +606,7 @@ li.gistbox {
     display: inline-block;
     background: #fff;
     height: 0;
+    float: left;
     margin-bottom: 15px;
     margin-right: 15px;
     width: 31%;

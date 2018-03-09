@@ -24,8 +24,11 @@
     <div class="col-1-1">
         <ul class="gistlist">
         </ul>
-        <div class="col-1-1" style="text-align:center">
-            <a href="#" class="btn btn-load-more"></a>
+        <div style="height:20px">
+            <span class="load-counts" style="color: #aa6767; padding-right: 25px; float:right"></span>
+        </div>
+        <div style="text-align:center">
+            <a href="#" class="btn btn-load-more">Load More...</a>
         </div>
     </div>
 
@@ -73,9 +76,8 @@ function loadPage() {
     $.getJSON(thingUrl, function(data) {
         $('.gist-count').text(data.count+' of '+data.total+' things');
         var query = data.query;
-        var remaining = data.count - (query.num_pages+query.page-1)*query.page_size;
-        var nextLoad = Math.min(remaining, query.page_size)
-        $('.btn-load-more').text("Load "+nextLoad+' of '+remaining+' more...');
+        var loaded = Math.min(query.num_pages * query.page_size, data.count);
+        $('.load-counts').text(loaded+' of '+data.count);
         numPages = data.query.num_pages;
         if (data.nextPage) {
             $('.btn-load-more').removeClass('hide');
@@ -125,9 +127,8 @@ $(function() {
         thingUrl = "things"+generateQueryString(numPages);
         $.getJSON(thingUrl, function(data) {
             var query = data.query;
-            var remaining = data.count - numPages*query.page_size;
-            var nextLoad = Math.min(remaining, query.page_size)
-            $('.btn-load-more').text("Load "+nextLoad+' of '+remaining+' more...');
+            var loaded = Math.min(numPages * query.page_size, data.count);
+            $('.load-counts').text(loaded+' of '+data.count);
             if (data.nextPage) {
                 $('.btn-load-more').removeClass('hide');
             } else {

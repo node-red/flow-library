@@ -434,6 +434,27 @@ ul#add-flow-tags li i.icon {
     border-color: #7F4545;
     text-shadow: none;
 }
+.btn-load-more {
+    border: 2px solid #aa6767;
+    display: inline-block;
+    text-align: center;
+    border-radius: 4px;
+    background: #aa6767;
+    text-shadow: none;
+    font-size: 16px;
+    padding: 5px;
+    width: 250px;
+    color:  #eee !important;
+    margin: 5px;
+}
+.btn-load-more:hover {
+    background: #7F4545;
+    text-decoration: none;
+    text-shadow: none;
+}
+.btn-load-more.hide {
+    display: none;
+}
 .create-toc {
     display: inline-block;
     max-width: 350px;
@@ -575,7 +596,7 @@ p.flow-install code {
     color: #777;
 }
 ul.gistlist {
-    margin: 20px 0;
+    margin: 20px 0 0;
     padding: 0;
     list-style-type: none;
     min-height: 800px;
@@ -584,18 +605,22 @@ ul.gistlist {
 li.gistbox {
     display: inline-block;
     background: #fff;
+    height: 0;
     float: left;
-    width: 31%;
-    min-width: 240px;
-    height: 125px;
     margin-bottom: 15px;
     margin-right: 15px;
+    width: 31%;
+    min-width: 240px;
     overflow: hidden;
 
     transition-duration: 250ms;
     transition-timing-function: ease;
-    transition-property: margin width padding height opacity;
+    transition-property: margin,width,padding,height,opacity;
 }
+li.gistbox.show {
+    height: 125px;
+}
+
 .gistbox a {
     padding: 10px;
     border: 2px solid #CD9494;

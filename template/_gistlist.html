@@ -2,12 +2,12 @@
 <div class="grid"  style="padding-top: 10px;">
     <div class="col-1-1">
         <div class="gist-filter">
-            <input class="gist-filter-input" type="text" placeholder="Search library"/>
+            <input class="gist-filter-input" type="text" value="{{query.term}}" placeholder="Search library"/>
             <ul class="gistbox-filter-options">
                 <li><input id="gistbox-filter-option-flows" data-filter="flows" class="gistbox-filter-option" checked type="checkbox" /><label class="gistbox-filter-label" for="gistbox-filter-option-flows">flows</label></li>
                 <li><input id="gistbox-filter-option-nodes" data-filter="nodes" class="gistbox-filter-option" checked type="checkbox" /><label class="gistbox-filter-label" for="gistbox-filter-option-nodes">nodes</label></li>
             </ul>
-            <span class="gist-count"></span>
+            <span class="gist-count">{{count}} of {{total}} things</span>
         </div>
         <div class="gist-sort">
             <span>Sort by:</span>
@@ -18,132 +18,160 @@
             </span>
         </div>
     </div>
-
 </div>
+
 <div class="grid main-content">
     <div class="col-1-1">
-        <ul class="gistlist">{{#things}}
-            {{#_rev}}{{>_nodebox}}{{/_rev}}
-            {{^_rev}}{{>_gistbox}}{{/_rev}}
-        {{/things}}
+        <ul class="gistlist">
         </ul>
+        <div style="height:20px">
+            <span class="load-counts" style="color: #aa6767; padding-right: 25px; float:right"></span>
+        </div>
+        <div style="text-align:center">
+            <a href="#" class="btn btn-load-more">Load More...</a>
+        </div>
     </div>
+
 </div>
 
 <script>
-var items = [];
-var gistCount = 0;
-var currentTerm = "";
+
+var currentTerm = "{{query.term}}";
+var numPages = {{query.num_pages}};
 var filters = {
-    "nodes": true,
-    "flows": true
+    "nodes": false,
+    "flows": false
+}
+var filterType = "{{query.type}}";
+switch (filterType) {
+    case "all":
+    case "":
+        filters.flows = true;
+        filters.nodes = true;
+        break;
+    case "flow":
+        filters.flows = true;
+        break;
+    case "node":
+        filters.nodes = true;
+        break;
+}
+var sort = "{{query.sort}}";
+
+function generateQueryString(nextPage) {
+    var query = [];
+    if (sort) query.push("sort="+sort);
+    if (currentTerm) query.push("term="+currentTerm);
+    if (filterType) query.push("type="+filterType);
+    if (nextPage) {
+        query.push("page="+numPages);
+    } else {
+        query.push("num_pages="+numPages);
+    }
+    return "?"+query.join('&');
 }
 
-function updateCount(n) {
-    if (n == gistCount) {
-        $(".gist-count").text(gistCount+" things");
-    } else {
-        $(".gist-count").text(n+" of "+gistCount+" things");
+function loadPage() {
+    thingUrl = "things"+generateQueryString();
+    $.getJSON(thingUrl, function(data) {
+        $('.gist-count').text(data.count+' of '+data.total+' things');
+        var query = data.query;
+        var loaded = Math.min(query.num_pages * query.page_size, data.count);
+        $('.load-counts').text(loaded+' of '+data.count);
+        numPages = data.query.num_pages;
+        if (data.nextPage) {
+            $('.btn-load-more').removeClass('hide');
+        } else {
+            $('.btn-load-more').addClass('hide');
+        }
+        $('.gistlist').html(data.html);
+        setTimeout(function() {
+            $('.gistbox').addClass('show');
+        },0);
+    });
+}
+
+window.onpopstate = function(event) {
+    if (event.state) {
+        currentTerm = event.state.currentTerm;
+        numPages = event.state.numPages;
+        filterType = event.state.filterType;
+        sort = event.state.sort;
+        loadPage();
     }
 }
-function filterGists() {
-    var c = 0;
-    $("ul.gistlist").children().each(function(e) {
-        if (((filters.nodes && $(this).hasClass("gistbox-node")) || (filters.flows && $(this).hasClass("gistbox-flow"))) && $(this).data("info").indexOf(currentTerm) > -1) {
-            c++;
-            $(this).removeClass('filtered');
-        } else {
-            $(this).addClass('filtered');
-        }
-    });
-    updateCount(c);
-}
 
-function sortByDownload() {
-    var list = $("ul.gistlist");
-    list.children().detach();
-    items.sort(function(A,B) { return B.downloads - A.downloads;})
-    items.forEach(function(i) { i.li.appendTo(list)});
-}
-function sortByUpdated() {
-    var list = $("ul.gistlist");
-    list.children().detach();
-    items.sort(function(A,B) {
-        return B.updated.localeCompare(A.updated);
-    })
-    items.forEach(function(i) { i.li.appendTo(list)});
-}
-function sortByRating() {
-    var list = $("ul.gistlist");
-    list.children().detach();
-    items.sort(function(A,B) {
-        B.score = B.score || 0;
-        A.score = A.score || 0;
-        B.count = B.count || 0;
-        A.count = A.count || 0;
-        if (B.score!=A.score){
-            return (B.score-A.score);
-        } else {
-            return (B.count-A.count);
-        }
-    })
-    items.forEach(function(i) { i.li.appendTo(list)});
+function setUrl() {
+    if (history.pushState) {
+        var newurl = generateQueryString();
+        window.history.pushState({
+            currentTerm:currentTerm,
+            numPages:numPages,
+            filterType: filterType,
+            sort: sort
+        },'',newurl);
+    }
 }
 
 $(function() {
 
-    $(".gistbox").each(function(e) {
-        var d = ($(this).find("h1").text()+" "+$(this).data("tags")+" "+$(this).data("owner")).toLowerCase();
-        $(this).data("info", d);
-        var scoreElem = $(this).find(".gistbox-score");
-        scoreElem.text(Number($(this).data("score")).toFixed(1));
-        gistCount++;
-        items.push({
-            li:$(this),
-            info:$(this).data("info"),
-            downloads:$(this).data('downloads'),
-            updated:$(this).data('updated'),
-            score:$(this).data('score'),
-            count:$(this).data('count')
+    $(".gistbox-filter-option").each(function(i, filterOption) {
+        $(filterOption).prop('checked',filters[$(filterOption).data("filter")]);
+    });
+
+    $("input[name=sort-option][value=" + sort + "]").attr('checked', 'checked');
+
+    $(".btn-load-more").click(function(e) {
+        e.preventDefault();
+        numPages += 1;
+        thingUrl = "things"+generateQueryString(numPages);
+        $.getJSON(thingUrl, function(data) {
+            var query = data.query;
+            var loaded = Math.min(numPages * query.page_size, data.count);
+            $('.load-counts').text(loaded+' of '+data.count);
+            if (data.nextPage) {
+                $('.btn-load-more').removeClass('hide');
+            } else {
+                $('.btn-load-more').addClass('hide');
+            }
+            $('.gistlist').append(data.html);
+            setTimeout(function() {
+                $('.gistbox').addClass('show');
+            },0);
+            setUrl();
         });
     });
 
-    updateCount(gistCount);
-
-    $(".gist-filter-input").keyup(function() {
-        currentTerm = $(this).val().toLowerCase();
-        filterGists();
-    });
+    $(".gist-filter-input").keyup(utils.debounce(function() {
+        currentTerm = $(".gist-filter-input").val().toLowerCase();
+        numPages = 1;
+        loadPage();
+        setUrl();
+    }, 1000));
 
     $(".gistbox-filter-option").change(function() {
         filters[$(this).data("filter")] = this.checked;
-        filterGists();
-    });
-
-    setTimeout(function() {
-        currentTerm = $(".gist-filter-input").val().toLowerCase();
-
-        $(".gistbox-filter-option").each(function() {
-            filters[$(this).data("filter")] = this.checked;
-        });
-
-        if (currentTerm != "" || !filters.nodes || !filters.flows) {
-            filterGists();
+        filterType = "none";
+        if (filters.nodes && filters.flows) {
+            filterType = "all"
+        } else if (filters.nodes) {
+            filterType = "node";
+        } else if (filters.flows) {
+            filterType = "flow";
         }
-    },200);
+        numPages = 1;
+        loadPage();
+        setUrl();
+    });
 
     $(".gistbox-sort-option").change(function() {
-        switch ($(this).val()) {
-            case "downloads":
-                sortByDownload();
-                break;
-            case "updated":
-                sortByUpdated();
-                break;
-            case "rating":
-                sortByRating();
-                break;
-        }
+        sort = $(this).val();
+        numPages = 1;
+        loadPage();
+        setUrl();
     });
+
+    loadPage();
+    setUrl();
 });
 </script>

@@ -101,12 +101,12 @@
         $("#report-node-shade").hide();
         return false;
     }
+
     $("#report-node").click(function(e) {
         $("body").css({height:"100%",overflow:"hidden"});
         e.preventDefault();
         // var width = $("#report-node-shade").width();
         // var height = $("#report-node-shade").height();
-
 
         // $("#report-node-dialog").width(Math.min(width,400)).height(Math.min(height,500)).css({
         // });
@@ -127,25 +127,12 @@
         $("#form-rate").submit();
     };
 
-    function debounce(func, wait) {
-        var timeout;
-        return function() {
-            var context = this, args = arguments;
-            var later = function() {
-                timeout = null;
-                func.apply(context, args);
-            };
-            clearTimeout(timeout);
-            timeout = setTimeout(later, wait);
-        };
-    };
-
     $("#set-stars").raty({
         {{#rating}}{{#userRating}}
         score: {{rating}},
         {{/userRating}}{{/rating}}
         cancel: true,
-        click: debounce(rate, 1000)});
+        click: utils.debounce(rate, 1000)});
 
 </script>
 

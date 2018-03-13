@@ -50,7 +50,12 @@ app.get("/things", function (req, res) {
         response.total = result.total;
         response.nextPage = nextPage(response.count, query);
         var context = {
-            things: result.things
+            things: result.things,
+            toFixed: function() {
+                return function(num, render) {
+                    return parseFloat(render(num)).toFixed(1);
+                }
+            }
         };
         response.html = mustache.render(templates.partials._gistitems, context, templates.partials);
         res.json(response);

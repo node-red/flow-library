@@ -143,11 +143,13 @@ $(function() {
     });
 
     $(".gist-filter-input").keyup(utils.debounce(function() {
+        $('.gist-count').html('<i class="fa fa-spinner fa-pulse" style=""></i>&nbsp;Searching...');
+    }, function() {
         currentTerm = $(".gist-filter-input").val().toLowerCase();
         numPages = 1;
         loadPage();
         setUrl();
-    }, 1000));
+    }, 500));
 
     $(".gistbox-filter-option").change(function() {
         filters[$(this).data("filter")] = this.checked;

@@ -29,6 +29,9 @@ var settings = {
     },
     slack: {
         webhook: ''
+    },
+    modules: {
+        block: []
     }
 };
 

@@ -94,6 +94,9 @@ $(function() {
     });
     
     $('#remove-flow').click(function(event) {
+        if (!window.confirm("Do you really want to remove?")) { 
+            return;
+        }
         $.post("/flow/{{ id }}/delete",function(data,textStatus,jqXHR) {
             if (jqXHR.status != 304) {
                 window.location = "/";

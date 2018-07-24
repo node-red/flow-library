@@ -36,15 +36,20 @@ npmModules.getAllNpmModules().then(function(allModules) {
         knownNodes.forEach(function(r) {
             allKnownNodes[r._id] = r['dist-tags'].latest;
             if (!allKnownModules.hasOwnProperty(r._id)) {
-                console.log("-",r._id);
-                // this module has been removed from npm
-                promises.push(npmNodes.remove(r._id).then(function() {
-                    return events.add({
-                        "action": "remove",
-                        "module": r._id,
-                        "message": "Module not found on npm"
-                    });
+                promises.push(events.add({
+                    "action": "remove",
+                    "module": r._id,
+                    "message": "Module not found on npm - manual review/remove required"
                 }));
+                // console.log("-",r._id);
+                // // this module has been removed from npm
+                // promises.push(npmNodes.remove(r._id).then(function() {
+                //     return events.add({
+                //         "action": "remove",
+                //         "module": r._id,
+                //         "message": "Module not found on npm"
+                //     });
+                // }));
             } else if (allKnownModules[r._id] !== allKnownNodes[r._id]) {
                 // this module can be updated
                 console.log(" ",r._id,allKnownNodes[r._id],"->",allKnownModules[r._id]);

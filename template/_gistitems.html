@@ -1,4 +1,4 @@
 {{#things}}
-{{#_rev}}{{>_nodebox}}{{/_rev}}
-{{^_rev}}{{>_gistbox}}{{/_rev}}
+{{#isNode}}{{>_nodebox}}{{/isNode}}
+{{^isNode}}{{>_gistbox}}{{/isNode}}
 {{/things}}

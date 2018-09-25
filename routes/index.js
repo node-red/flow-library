@@ -46,6 +46,12 @@ app.get("/things", function (req, res) {
     response.prevPage = query.page - 1;
 
     viewster.getForQuery(query).then(function (result) {
+        result.things = result.things||[];
+        result.things.forEach(function(thing) {
+            if (thing.type === 'node') {
+                thing.isNode = true;
+            }
+        })
         response.count = result.count;
         response.total = result.total;
         response.nextPage = nextPage(response.count, query);

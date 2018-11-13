@@ -8,7 +8,8 @@ viewster.get({type:'node'},null,{
     "dist-tags.latest":1,
     official:1,
     description:1,
-    keywords:1
+    keywords:1,
+    types:1
 }
 
 ).then(function(things) {

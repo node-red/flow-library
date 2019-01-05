@@ -62,6 +62,10 @@ app.get("/node/:scope(@[^\\/]{1,})?/:id([^@][^\\/]{1,})",csrfProtection,function
                 }
                 def.types[t].hasInputs = (def.types[t].inputs > 0);
                 def.types[t].hasOutputs = (def.types[t].outputs > 0);
+
+                def.types[t].leftIconAlignment = (def.types[t].align !== 'right');
+                def.types[t].rightIconAlignment = (def.types[t].align === 'right');
+
                 if (def.types[t].category == "config") {
                     delete def.types[t].color;
                 }

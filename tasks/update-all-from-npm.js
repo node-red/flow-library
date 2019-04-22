@@ -3,11 +3,12 @@ var settings = require("../config");
 var npmNodes = require("../lib/nodes");
 var npmModules = require("../lib/modules");
 var events = require('../lib/events');
+var util = require('util');
 
 var toUpdate = [];
 
 function processBatch() {
-    console.log("processBatch",toUpdate.length,"to go");
+    util.log("processBatch",toUpdate.length,"to go");
     var handled = 0;
     var promises = [];
     while(promises.length < 10 && toUpdate.length > 0) {
@@ -15,6 +16,7 @@ function processBatch() {
         promises.push(npmModules.refreshModule(name));
     }
     return when.settle(promises).then(function() {
+        util.log(" completed batch")
         if (toUpdate.length > 0) {
             return when.promise(function(resolve) {
                 setTimeout(function() {
@@ -52,7 +54,7 @@ npmModules.getAllNpmModules().then(function(allModules) {
                 // }));
             } else if (allKnownModules[r._id] !== allKnownNodes[r._id]) {
                 // this module can be updated
-                console.log(" ",r._id,allKnownNodes[r._id],"->",allKnownModules[r._id]);
+                util.log(" ",r._id,allKnownNodes[r._id],"->",allKnownModules[r._id]);
                 toUpdate.push(r._id);
                 // promises.push(npmModules.refreshModule(r._id))
             }
@@ -60,12 +62,13 @@ npmModules.getAllNpmModules().then(function(allModules) {
         allModules.forEach(function(module) {
             if (!allKnownNodes.hasOwnProperty(module.name)) {
                 // new module to add
-                console.log("+",module.name);
+                util.log("+",module.name);
                 toUpdate.push(module.name);
             }
         });
 
         processBatch().then(function() {
+            util.log("finished");
             npmNodes.close();
         });
     });

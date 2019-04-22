@@ -5,6 +5,8 @@ var npmModules = require("../lib/modules");
 var events = require('../lib/events');
 var util = require('util');
 
+util.log("Start update-all");
+
 var toUpdate = [];
 
 function processBatch() {

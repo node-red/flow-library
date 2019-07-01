@@ -33,11 +33,21 @@ function logout(req,res) {
     res.redirect('/');
 }
 function loginCallback(req,res) {
+    if (!req.query.code) {
+        res.writeHead(403);
+        res.end();
+        return;
+    }
     oauth.getOAuthAccessToken(req.query.code, {}, function (err, access_token, refresh_token) {
         if (err) {
             console.log(err);
             res.writeHead(500);
             res.end(err + "");
+            return;
+        }
+        if (!access_token) {
+            res.writeHead(403);
+            res.end();
             return;
         }
         req.session.accessToken = access_token;

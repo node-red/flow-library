@@ -8,10 +8,18 @@ var bodyParser = require('body-parser');
 var serveStatic = require('serve-static');
 var settings = require('./config');
 var templates = require("./lib/templates");
+var morgan = require('morgan');
+var rfs = require('rotating-file-stream');
 
 var events = require("./lib/events");
 
 var app = express();
+
+var accessLogStream = rfs('access.log', {
+    interval: '1d', // rotate daily
+    path: path.join(__dirname, 'logs')
+})
+app.use(morgan('tiny', { stream: accessLogStream }))
 
 app.use(cookieParser());
 

@@ -1,4 +1,4 @@
-FROM node:6-alpine AS base
+FROM node:8-alpine AS base
 
 # set working directory
 WORKDIR /flow-library

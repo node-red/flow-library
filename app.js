@@ -19,7 +19,7 @@ var accessLogStream = rfs('access.log', {
     interval: '1d', // rotate daily
     path: path.join(__dirname, 'logs')
 })
-app.use(morgan('tiny', { stream: accessLogStream }))
+app.use(morgan(':date[iso] :method :url :status :res[content-length] - :response-time ms', { stream: accessLogStream }))
 
 app.use(cookieParser());
 

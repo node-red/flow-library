@@ -1,0 +1,16 @@
+{{>_header}}
+<div class="grid">
+    {{>_gistlist}}
+</div>
+{{>_footer}}
+<script>
+    $("#filter-term").keyup(utils.debounce(function() {
+        $(".filter-term-spinner").show();
+    }, function() {
+        $('input[name="page"]').val("");
+        $('input[name="term"]').val($("#filter-term").val());
+        utils.loadThingList($(".thing-list"),true).then(function() {
+            $(".filter-term-spinner").hide();
+        })
+    }, 500));
+</script>

@@ -10,7 +10,7 @@
           <div class="flowmeta">
             <span class="flowuser">
               <img src="{{ owner.avatar_url }}"/>
-              {{ owner.login }}</span>
+              <a href="/user/{{ owner.login }}">{{ owner.login }}</a></span>
           </div>
           <div class="flowmeta">
             <h4>Flow Info</h4>
@@ -42,7 +42,7 @@
             </ul>
             {{/other.length}}
            {{/nodeTypes}}
-            
+
           </div>
           <div class="flowmeta">
             <h4>Tags</h4>
@@ -92,7 +92,7 @@ $(function() {
         });
         event.preventDefault();
     });
-    
+
     $('#remove-flow').click(function(event) {
         $.post("/flow/{{ id }}/delete",function(data,textStatus,jqXHR) {
             if (jqXHR.status != 304) {
@@ -101,8 +101,8 @@ $(function() {
         });
         event.preventDefault();
     });
-            
-    
+
+
     var tagEditor = null;
     $('#edit-tags').click(function(event) {
         event.preventDefault();
@@ -113,7 +113,7 @@ $(function() {
         $('#edit-tags-done').show();
         $('ul.flow-tags').click();
     });
-    
+
     $('#edit-tags-cancel').click(function(event) {
         if (tagEditor) {
             $('#edit-tags-cancel').hide();
@@ -124,8 +124,8 @@ $(function() {
         }
         event.preventDefault();
     });
-        
-    
+
+
     $('#edit-tags-done').click(function(event) {
         $("#edit-tags-done-loader").show();
         if (tagEditor) {
@@ -146,7 +146,7 @@ $(function() {
         event.preventDefault();
     });
 {{/owned}}
-            
+
 
 });
 

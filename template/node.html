@@ -63,7 +63,7 @@
             <h4>Maintainers</h4>
             <ul>
             {{#maintainers}}
-            <li>{{name}}</li>
+            <li><a href="/user/{{name}}">{{name}}</a></li>
             {{/maintainers}}
             </ul>
             {{#contributors.length}}
@@ -95,6 +95,7 @@
         </form>
     </div>
 </div>
+<script src="/js/jquery.raty-fa.js"></script>
 <script>
     function closeDialog() {
         $("body").css({height:"",overflow:""});
@@ -112,7 +113,7 @@
         // });
         $("#report-node-shade").show();
     });
-    
+
     $.fn.raty.defaults.hints = ['bad', 'poor', 'regular', 'good', 'awesome'];
     $.fn.raty.defaults.space = false;
 
@@ -121,7 +122,7 @@
         score: {{score}},
         {{/rating}}
         readOnly: true});
-    
+
     function rate(e) {
         $("input[name=rating]").val(e);
         $("#form-rate").submit();

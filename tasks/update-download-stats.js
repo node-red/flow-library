@@ -10,8 +10,8 @@ npmModules.refreshDownloads().then(function(results) {
             console.log("Updated:",res.value);
         }
     });
-}).otherwise(function(err) {
+}).catch(function(err) {
     console.log(err);
-}).finally(function() {
+}).then(function() {
     npmNodes.close();
 });

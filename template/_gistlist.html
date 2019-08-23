@@ -1,179 +1,39 @@
-
-<div class="grid"  style="padding-top: 10px;">
-    <div class="col-1-1">
-        <div class="gist-filter">
-            <input class="gist-filter-input" type="text" value="{{query.term}}" placeholder="Search library"/>
-            <ul class="gistbox-filter-options">
-                <li><input id="gistbox-filter-option-flows" data-filter="flows" class="gistbox-filter-option" checked type="checkbox" /><label class="gistbox-filter-label" for="gistbox-filter-option-flows">flows</label></li>
-                <li><input id="gistbox-filter-option-nodes" data-filter="nodes" class="gistbox-filter-option" checked type="checkbox" /><label class="gistbox-filter-label" for="gistbox-filter-option-nodes">nodes</label></li>
+<div class="thing-list col-1-1 ">
+    <div class="filter-options"{{#hideOptions}} style="display: none"{{/hideOptions}}>
+        <input type="hidden" name="ignoreQueryParams" value="{{ignoreQueryParams}}">
+        <input type="hidden" name="seedType" value="{{type}}">
+        <input type="hidden" name="seedSort" value="{{type}}">
+        <form>
+            <input type="hidden" name="username" value="{{username}}">
+            <input type="hidden" name="term" value="">
+            <input type="hidden" name="page" value="">
+            <input type="hidden" name="per_page" value="{{per_page}}">
+            <ul class="filter-options-filter">
+                <li><input name="type" value="node" type="checkbox" id="thing-list-{{id}}-type-node"/><label class="gistbox-filter-label" for="thing-list-{{id}}-type-node">nodes</label></li>
+                <li><input name="type" value="flow" type="checkbox" id="thing-list-{{id}}-type-flow"/><label class="gistbox-filter-label" for="thing-list-{{id}}-type-flow">flows</label></li>
             </ul>
-            <span class="gist-count">{{count}} of {{total}} things</span>
-        </div>
-        <div class="gist-sort">
-            <span>Sort by:</span>
-            <span>
-                <div><input class="gistbox-sort-option" id="gistbox-sort-option-recent" checked type="radio" name="sort-option" value="recent"> <label class="gistbox-sort-label" for="gistbox-sort-option-recent">recent</label></div>
-                <div><input class="gistbox-sort-option" id="gistbox-sort-option-downloads" type="radio" name="sort-option" value="downloads"> <label class="gistbox-sort-label" for="gistbox-sort-option-downloads">downloads</label></div>
-                <div><input class="gistbox-sort-option" id="gistbox-sort-option-rating" type="radio" name="sort-option" value="rating"> <label class="gistbox-sort-label" for="gistbox-sort-option-rating">rating</label></div>
+            <span class="filter-sort">
+                <ul class="filter-options-filter">
+                    <li><input type="radio" name="sort" value="recent" id="thing-list-{{id}}-sort-recent"> <label class="gistbox-sort-label" for="thing-list-{{id}}-sort-recent">recent</label></li>
+                    <li><input type="radio" name="sort" value="downloads" id="thing-list-{{id}}-sort-downloads"> <label class="gistbox-sort-label" for="thing-list-{{id}}-sort-downloads">downloads</label></li>
+                    <li><input type="radio" name="sort" value="rating" id="thing-list-{{id}}-sort-rating"> <label class="gistbox-sort-label" for="thing-list-{{id}}-sort-rating">rating</label></li>
+                </ul>
             </span>
-        </div>
+        </form>
     </div>
-</div>
-
-<div class="grid main-content">
-    <div class="col-1-1">
-        <ul class="gistlist">
+    <div>
+        <ul class="gistlist" style=" clear: both;">
+            {{>_gistitems}}
         </ul>
-        <div style="height:20px">
-            <span class="load-counts" style="color: #aa6767; padding-right: 25px; float:right"></span>
+        {{^hideOptions}}
+        <div class="thing-list-nav">
+            <a href="#" class="thing-list-nav-link thing-list-nav-prev"><i class="fa fa-caret-left"></i> Prev</a>
+            <span class="thing-list-nav-page-info"></span>
+            <a href="#" class="thing-list-nav-link thing-list-nav-next">Next <i class="fa fa-caret-right"></i></a>
         </div>
-        <div style="text-align:center">
-            <a href="#" class="btn btn-load-more">Load More...</a>
-        </div>
+        {{/hideOptions}}
+        <!-- <div style="text-align:center;">
+        <a href="#" class="btn btn-load-more">Load More...</a>
+    </div> -->
     </div>
-
 </div>
-
-<script>
-
-var currentTerm = "{{query.term}}";
-var numPages = {{query.num_pages}};
-var filters = {
-    "nodes": false,
-    "flows": false
-}
-var filterType = "{{query.type}}";
-switch (filterType) {
-    case "all":
-    case "":
-        filters.flows = true;
-        filters.nodes = true;
-        break;
-    case "flow":
-        filters.flows = true;
-        break;
-    case "node":
-        filters.nodes = true;
-        break;
-}
-var sort = "{{query.sort}}";
-
-function generateQueryString(nextPage) {
-    var query = [];
-    if (sort) query.push("sort="+sort);
-    if (currentTerm) query.push("term="+currentTerm);
-    if (filterType) query.push("type="+filterType);
-    if (nextPage) {
-        query.push("page="+numPages);
-    } else {
-        query.push("num_pages="+numPages);
-    }
-    return "?"+query.join('&');
-}
-
-function loadPage() {
-    thingUrl = "things"+generateQueryString();
-    $.getJSON(thingUrl, function(data) {
-        $('.gist-count').text(data.count+' of '+data.total+' things');
-        var query = data.query;
-        var loaded = Math.min(query.num_pages * query.page_size, data.count);
-        $('.load-counts').text(loaded+' of '+data.count);
-        numPages = data.query.num_pages;
-        if (data.nextPage) {
-            $('.btn-load-more').removeClass('hide');
-        } else {
-            $('.btn-load-more').addClass('hide');
-        }
-        $('.gistlist').html(data.html);
-        setTimeout(function() {
-            $('.gistbox').addClass('show');
-        },0);
-    });
-}
-
-window.onpopstate = function(event) {
-    if (event.state) {
-        currentTerm = event.state.currentTerm;
-        numPages = event.state.numPages;
-        filterType = event.state.filterType;
-        sort = event.state.sort;
-        loadPage();
-    }
-}
-
-function setUrl() {
-    if (history.pushState) {
-        var newurl = generateQueryString();
-        window.history.pushState({
-            currentTerm:currentTerm,
-            numPages:numPages,
-            filterType: filterType,
-            sort: sort
-        },'',newurl);
-    }
-}
-
-$(function() {
-
-    $(".gistbox-filter-option").each(function(i, filterOption) {
-        $(filterOption).prop('checked',filters[$(filterOption).data("filter")]);
-    });
-
-    $("input[name=sort-option][value=" + sort + "]").attr('checked', 'checked');
-
-    $(".btn-load-more").click(function(e) {
-        e.preventDefault();
-        numPages += 1;
-        thingUrl = "things"+generateQueryString(numPages);
-        $.getJSON(thingUrl, function(data) {
-            var query = data.query;
-            var loaded = Math.min(numPages * query.page_size, data.count);
-            $('.load-counts').text(loaded+' of '+data.count);
-            if (data.nextPage) {
-                $('.btn-load-more').removeClass('hide');
-            } else {
-                $('.btn-load-more').addClass('hide');
-            }
-            $('.gistlist').append(data.html);
-            setTimeout(function() {
-                $('.gistbox').addClass('show');
-            },0);
-            setUrl();
-        });
-    });
-
-    $(".gist-filter-input").keyup(utils.debounce(function() {
-        $('.gist-count').html('<i class="fa fa-spinner fa-pulse" style=""></i>&nbsp;Searching...');
-    }, function() {
-        currentTerm = $(".gist-filter-input").val().toLowerCase();
-        numPages = 1;
-        loadPage();
-        setUrl();
-    }, 500));
-
-    $(".gistbox-filter-option").change(function() {
-        filters[$(this).data("filter")] = this.checked;
-        filterType = "none";
-        if (filters.nodes && filters.flows) {
-            filterType = "all"
-        } else if (filters.nodes) {
-            filterType = "node";
-        } else if (filters.flows) {
-            filterType = "flow";
-        }
-        numPages = 1;
-        loadPage();
-        setUrl();
-    });
-
-    $(".gistbox-sort-option").change(function() {
-        sort = $(this).val();
-        numPages = 1;
-        loadPage();
-        setUrl();
-    });
-
-    loadPage();
-    setUrl();
-});
-</script>

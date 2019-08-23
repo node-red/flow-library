@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 45 113" height="99" width="226.706">
+    <g fill="none" stroke="#ce9b99">
+        <path d="M114.642 12.429c40.61 2.074 3.072 47.264 43.455 49.464" />
+        <path d="M0 12.355h46.283"  />
+        <path d="M0 61.976h46.37"  />
+        <g transform="matrix(.62026 0 0 .62026 49.621 3.051)" >
+            <rect rx="5" ry="5" width="100" height="30" />
+            <path d="M30 0v30" />
+            <rect rx="3" ry="3" width="10" height="10"  transform="translate(-5 10)"/>
+            <rect rx="3" ry="3" width="10" height="10"  transform="translate(95 10)"/>
+        </g>
+        <g transform="matrix(.62026 0 0 .62026 161.268 52.672)" >
+            <rect height="30" width="100" ry="5" rx="5" />
+            <path d="M30 0v30"/>
+            <rect height="10" width="10" ry="3" rx="3"  transform="translate(-5 10)"/>
+            <rect height="10" width="10" ry="3" rx="3"  transform="translate(95 10)"/>
+        </g>
+        <g transform="matrix(.62026 0 0 .62026 161.268 3.05)" >
+            <rect rx="5" ry="5" width="100" height="30" />
+            <path d="M30 0v30"/>
+            <rect rx="3" ry="3" width="10" height="10"  transform="translate(95 10)"/>
+        </g>
+        <g transform="matrix(.62026 0 0 .62026 49.621 52.672)" >
+            <rect rx="5" ry="5" width="100" height="30" />
+            <path d="M30 0v30"/>
+            <rect rx="3" ry="3" width="10" height="10"  transform="translate(-5 10)"/>
+        </g>
+    </g>
+</svg>

@@ -24,7 +24,7 @@ app.get("/nodes",function(req,res) {
     npmNodes.getPopularByDownloads().then(function(nodes) {
         context.nodes = nodes;
         res.send(mustache.render(templates.nodes,context,templates.partials));
-    }).otherwise(function(err) {
+    }).catch(function(err) {
         if (err) {
             console.log("error loading nodes:",err);
         }
@@ -116,7 +116,7 @@ app.get("/node/:scope(@[^\\/]{1,})?/:id([^@][^\\/]{1,})",csrfProtection,function
             });
         });
 
-    }).otherwise(function(err) {
+    }).catch(function(err) {
         if (err) {
             console.log("error loading node:",err);
         }
@@ -217,7 +217,7 @@ app.post("/node/:scope(@[^\\/]{1,})?/:id([^@][^\\/]{1,})/rate", csrfProtection,f
                     user: req.session.user.login,
                     version: version
                 });
-            }).otherwise(function(err) {
+            }).catch(function(err) {
                 console.log("error rating node module: "+id,err);
             })
         }

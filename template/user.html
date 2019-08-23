@@ -1,6 +1,14 @@
 {{>_header}}
-<div class="grid" style="background: #fff;">
-    <h3 class="pagetitle"><img src="{{ user.avatar_url }}"/><div class="userinfo">{{ user.name }} <div class="flowuser">{{ user.login }}</div></div></h3>
+<div class="grid" style="text-align: center; padding-top: 30px;">
+    <div class="user-hero">
+        {{#user.avatar_url}}<img class="avatar" src="{{user.avatar_url}}" />{{/user.avatar_url}}
+        {{^user.avatar_url}}<div class="avatar avatar-placeholder"></div>{{/user.avatar_url}}
+        <div class="user-meta">
+            <span class="username"><a data-type="flow" href="/user/{{username}}">{{username}}</a></span>
+        </div>
+    </div>
 </div>
-{{>_gistlist}}
+<div class="grid">
+{{#query}}{{>_gistlist}}{{/query}}
+</div>
 {{>_footer}}

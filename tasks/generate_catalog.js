@@ -29,7 +29,7 @@ viewster.get({type:'node'},null,{
     console.log(JSON.stringify(things));
     console.log('}');
     db.close();
-}).otherwise(function(err) {
+}).catch(function(err) {
     console.error(err);
     process.exit(1);
 });

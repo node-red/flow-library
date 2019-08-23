@@ -1,0 +1,212 @@
+{{>_header}}
+  <div class="grid main-content add-form">
+   <div class="add-form-row">
+       <div class="col-3-12 add-help">
+           <h4 class="add-flow-label"><label for="add-flow-title">Title</label></h4>
+           <P>Give your flow a short, descriptive title. </p>
+       </div>
+       <div class="col-9-12" style="padding-top: 10px;">
+           <input id="add-flow-title" type="text"></input>
+       </div>
+   </div>
+
+   <div class="add-form-row">
+       <div class="col-3-12 add-help">
+           <h4 class="add-flow-label"><label for="add-flow-desc">Description</label></h4>
+           <p>Describe what the flow does and how it is used.</p>
+           <p>This uses <a href="http://github.github.com/github-flavored-markdown/">GitHub Flavoured Markdown</a>
+           for formatting. Use the <i>preview</i> tab to see how it looks.</p>
+       </div>
+       <div class="col-9-12" style="padding-top: 10px;border: 1px solid #fff; position: relative;">
+           <textarea id="add-flow-desc"></textarea>
+           <div id="add-flow-desc-md"></div>
+           <div class="add-flow-desc-buttons"><a href="#" class="active" id="add-flow-desc-edit">edit</a><a href="#" class="inactive" id="add-flow-desc-preview">preview</a></div>
+       </div>
+   </div>
+   <div class="add-form-row">
+       <div class="col-3-12 add-help">
+           <h4 class="add-flow-label"><label for="add-flow-flow">Flow</label></h4>
+           <p>In Node-RED, select the flow you want to export. Select <i>Export to
+           &gt; Clipboard</i> from the menu (Ctrl-E), copy the JSON from
+           the dialog and paste here.</p>
+       </div>
+       <div class="col-9-12" style="padding-top: 10px;">
+           <textarea id="add-flow-flow"></textarea>
+       </div>
+   </div>
+   <div class="add-form-row">
+       <div class="col-3-12 add-help">
+           <h4 class="add-flow-label"><label for="add-flow-tags">Tags</label></h4>
+           <p>Add some tags to your flow that will help others find it. Comma- or space-separate the tags.</p>
+       </div>
+       <div class="col-9-12" style="padding-top: 10px;">
+           <ul class="flow-tags" id="add-flow-tags"></ul>
+       </div>
+   </div>
+   <div class="add-form-row">
+       <div class="col-3-12 add-help">&nbsp;</div>
+       <div class="col-8-12 add-help">
+            <a id="add-flow-create" href="#" class="btn-create"><span id="add-flow-label">create flow</span><img id="add-flow-loader" class="loader" src="/images/loader.gif" /></a>
+            <p class="create-toc">This will create a private gist, owned by you, on GitHub and add it to the Node-RED flow library on your behalf.</p>
+       </div>
+   </div>
+
+<script src="/js/marked.js"></script>
+<script src="/js/tags.js"></script>
+<script>
+
+$(function() {
+
+    $("#flowurl").keydown(function(event){
+        if(event.keyCode == 13) {
+            event.preventDefault();
+            return false;
+        }
+    });
+
+    $("#addflow").click(function(event) {
+        var r = /^https?:\/\/gist\.github\.com(\/.+)*\/([^\/]*)$/
+        var match = r.exec($("#flowurl").val());
+        if (match) {
+            $('#flowurl').removeClass('input-error');
+            $('#flowerror').html('&nbsp;');
+            var id = match.pop();
+            //https://gist.github.com/knolleary/223cbbbedbfd383872a8
+
+            $.post("/add/"+id,function(data) {
+                window.location = data;
+            }).fail(function(data) {
+                $('#flowurl').addClass('input-error');
+                $('#flowerror').html(data.responseText);
+                $('#flowurl').focus();
+            });
+
+        } else {
+            $("#add-flow-loader").show();
+            $('#flowurl').addClass('input-error');
+            $('#flowerror').html('Invalid GitHub url');
+        }
+        event.preventDefault();
+    });
+
+    $("#add-flow-title").change(function(e) {
+        var title = $.trim($(this).val());
+        if (title == "") {
+            $(this).addClass("input-error");
+        } else {
+            $(this).removeClass("input-error");
+        }
+    });
+    $("#add-flow-desc").change(function(e) {
+        var desc = $.trim($(this).val());
+        if (desc == "") {
+            $(this).addClass("input-error");
+        } else {
+            $(this).removeClass("input-error");
+        }
+    });
+
+    $("#add-flow-flow").change(function(e) {
+        var flow = $(this).val();
+        if (flow == "") {
+            $("#add-flow-flow").removeClass("input-error");
+        } else {
+            try {
+                JSON.parse(flow);
+                $("#add-flow-flow").removeClass("input-error");
+            } catch(err) {
+                $("#add-flow-flow").addClass("input-error");
+            }
+        }
+    });
+
+    $('#add-flow-desc-preview').click(function(e) {
+        var desc = $("#add-flow-desc").val();
+        $("#add-flow-desc-md").html(marked(desc))
+        $("#add-flow-desc").hide();
+        $("#add-flow-desc-md").show();
+        $('#add-flow-desc-preview').removeClass('inactive');
+        $('#add-flow-desc-preview').addClass('active');
+        $('#add-flow-desc-edit').removeClass('active');
+        $('#add-flow-desc-edit').addClass('inactive');
+        e.preventDefault();
+    });
+    $('#add-flow-desc-edit').click(function(e) {
+        $("#add-flow-desc").show();
+        $("#add-flow-desc-md").hide();
+        $('#add-flow-desc-preview').removeClass('active');
+        $('#add-flow-desc-preview').addClass('inactive');
+        $('#add-flow-desc-edit').removeClass('inactive');
+        $('#add-flow-desc-edit').addClass('active');
+        $("#add-flow-desc").focus();
+        e.preventDefault();
+    });
+
+    var createSubmitted = false;
+
+    $('#add-flow-create').click(function(e) {
+        e.preventDefault();
+        if (createSubmitted) {
+            return;
+        }
+        createSubmitted = true;
+        $("#add-flow-label").hide();
+        $("#add-flow-create").addClass("submitted");
+        $("#add-flow-loader").show();
+        var flow = {
+            title: $.trim($("#add-flow-title").val()),
+            description: $("#add-flow-desc").val(),
+            flow: $("#add-flow-flow").val(),
+            tags: tags.get()
+        };
+        var errors = false;
+
+        if (flow.title == "") {
+            errors = true;
+            $("#add-flow-title").addClass("input-error");
+        }
+        if (flow.description == "") {
+            errors = true;
+            $("#add-flow-desc").addClass("input-error");
+        }
+        if (flow.flow == "") {
+            errors = true;
+            $("#add-flow-flow").addClass("input-error");
+        } else {
+            try {
+                JSON.parse(flow.flow);
+            } catch(err) {
+                errors = true;
+                $("#add-flow-flow").addClass("input-error");
+            }
+        }
+
+        if (!errors) {
+            $.post("/flow",flow,function(data) {
+                window.location = data;
+            }).fail(function(err) {
+                if (err.status == 403) {
+                    window.location.reload();
+                }
+                createSubmitted = false;
+                console.log("ERROR",err);
+                $("#add-flow-create").removeClass("submitted");
+                $("#add-flow-loader").hide();
+                $("#add-flow-label").show();
+            });
+        } else {
+            $("#add-flow-create").removeClass("submitted");
+            $("#add-flow-loader").hide();
+            $("#add-flow-label").show();
+            createSubmitted = false;
+            window.scrollTo(0,0);
+        }
+    });
+
+    var tags = tagger();
+});
+</script>
+
+  </div>
+
+{{>_footer}}

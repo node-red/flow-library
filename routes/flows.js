@@ -42,7 +42,7 @@ app.post("/flow", function(req,res) {
         };
         gister.create(req.session.accessToken,gist_post,req.body.tags||[]).then(function(id) {
             res.send("/flow/"+id);
-        }).otherwise(function(err) {
+        }).catch(function(err) {
             console.log("Error creating flow:",err);
             res.send(err);
         });
@@ -122,7 +122,7 @@ app.get("/flow/:id",function(req,res) {
                 });
             });
         });
-    }).otherwise(function(err) {
+    }).catch(function(err) {
         console.log("Error loading flow:",err);
         try {
             res.status(404).send(mustache.render(templates['404'],{sessionuser:req.session.user},templates.partials));
@@ -145,7 +145,7 @@ function verifyOwner(req,res,next) {
             } else {
                 res.status(403).end();
             }
-        }).otherwise(function() {
+        }).catch(function() {
             console.log("NONONO");
             res.status(403).end();
         });
@@ -156,7 +156,7 @@ app.post("/flow/:id/tags",verifyOwner,function(req,res) {
     // TODO: verify req.session.user == gist owner
     gister.updateTags(req.params.id,req.body.tags).then(function() {
         res.status(200).end();
-    }).otherwise(function(err) {
+    }).catch(function(err) {
         console.log("Error updating tags:",err);
         res.status(200).end();
     });
@@ -166,7 +166,7 @@ app.post("/flow/:id/tags",verifyOwner,function(req,res) {
 app.post("/flow/:id/refresh",verifyOwner,function(req,res) {
     gister.refresh(req.params.id).then(function () {
         res.send("/flow/"+req.params.id);
-    }).otherwise(function(exists) {
+    }).catch(function(exists) {
         if (exists) {
             res.status(304).end();
         } else {
@@ -178,7 +178,7 @@ app.post("/flow/:id/refresh",verifyOwner,function(req,res) {
 //app.post("/flow/:id/add",function(req,res) {
 //    gister.add(req.params.id).then(function () {
 //        res.send("/flow/"+req.params.id);
-//    }).otherwise(function(err) {
+//    }).catch(function(err) {
 //        if (err.errno == 47) {
 //            res.send("/flow/"+req.params.id);
 //        } else if (err.code == 404) {
@@ -192,7 +192,7 @@ app.post("/flow/:id/refresh",verifyOwner,function(req,res) {
 app.post("/flow/:id/delete",verifyOwner,function(req,res) {
     gister.remove(req.params.id).then(function() {
         res.status(200).end();
-    }).otherwise(function(err) {
+    }).catch(function(err) {
         res.send(200,err);
     });
 });
@@ -204,16 +204,19 @@ app.get("/flow/:id/flow",function(req,res) {
         } else {
             res.status(404).send(mustache.render(templates['404'],{sessionuser:req.session.user},templates.partials));
         }
-    }).otherwise(function() {
+    }).catch(function() {
         res.status(404).send(mustache.render(templates['404'],{sessionuser:req.session.user},templates.partials));
     });
 });
 
-app.get("/add",function(req,res) {
+
+app.get("/add/flow",function(req,res) {
+    if (!req.session.user) {
+        return res.redirect("/add")
+    }
     var context = {};
     context.sessionuser = req.session.user;
-    res.send(mustache.render(templates.add,context,templates.partials));
+    res.send(mustache.render(templates.addFlow,context,templates.partials));
 });
-
 
 module.exports = app;

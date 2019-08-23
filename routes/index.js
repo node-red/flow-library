@@ -108,8 +108,14 @@ app.get("/things", function (req, res) {
                 }
             }
         };
-        response.html = mustache.render(templates.partials._gistitems, context, templates.partials);
-        res.json(response);
+        if (query.format !== 'json') {
+            response.html = mustache.render(templates.partials._gistitems, context, templates.partials);
+        } else {
+            response.data = result.things;
+        }
+        setTimeout(function() {
+            res.json(response);
+        },0);//2000);
     }).catch(function (err) {
         console.log(err);
         response.err = err;

@@ -100,6 +100,7 @@ var utils = (function() {
                 window.history.pushState({},'',location.pathname+"?"+historyUrl);
             }
         }
+        $(list).children(":not(.gistbox-placeholder)").css("opacity",0.3);
         console.log(thingUrl);
         var done;
         $.getJSON(thingUrl, function(data) {
@@ -125,9 +126,17 @@ var utils = (function() {
         return { then: function(d) { done = d } }
     }
 
+    function loadThingSummary(thingUrl) {
+        var done;
+        $.getJSON(thingUrl, function(data) {
+            if (done)(done(data));
+        });
+        return { then: function(d) { done = d } }
+    }
     return {
         initThingList: initThingList,
         loadThingList:loadThingList,
+        loadThingSummary: loadThingSummary,
         debounce: debounce
     };
 })();

@@ -4,31 +4,84 @@
     <div class="col-1-1">
         <div style="position: relative">
             <div class="gist-filter">
-                <input id="filter-term" name="term" class="gist-filter-input" type="text" value="{{query.term}}" placeholder="Search library"/>
+                <input autocomplete="off" id="filter-term" name="term" class="gist-filter-input" type="text" value="{{query.term}}" placeholder="Search library"/>
                 <span class="filter-term-spinner"></span>
+                {{^fullsearch}}
+                <div class="filter-results">
+                    <ul></ul>
+                </div>
+                <script>
+                    $(".filter-results").on('mousedown', function(evt) { evt.stopPropagation(); });
+                    $("#filter-term").keyup(utils.debounce(function() {
+                        if ($("#filter-term").val().trim() === "") {
+                            $(".filter-term-spinner").hide();
+                            $(".filter-results").hide();
+                        }
+                        $(".filter-term-spinner").show();
+                    }, function() {
+                        var list = $(".filter-results ul");
+                        list.empty();
+                        var term = $("#filter-term").val().trim();
+                        $(document).off('mousedown.search-menu');
+                        if (term === "") {
+                            $(".filter-results").hide();
+                            $(".filter-term-spinner").hide();
+                        } else {
+                            utils.loadThingSummary('/things?format=json&per_page=6&term='+encodeURIComponent(term)).then(function(results) {
+                                $(".filter-term-spinner").hide();
+                                var data = results.data || [];
+                                if (data.length) {
+                                    data.forEach(function(d) {
+                                        var link = $('<a/>');
+                                        var label = $('<span/>').appendTo(link);
+                                        var type = $('<span/>').appendTo(link);
+                                        if (d.isNode) {
+                                            link.attr("href","/node/"+d.name)
+                                            label.text(d.name);
+                                            type.text("node");
+                                        } else {
+                                            link.attr("href","/flow/"+d._id)
+                                            label.text(d.description);
+                                            type.text("flow")
+                                        }
+                                        $('<li>').appendTo(list).append(link);
+                                    })
+                                    $('<li>',{style:"text-align: right"}).appendTo(list).append($('<a>').attr("href","/search?term="+encodeURIComponent(term)).html("see more ("+results.meta.results.count+') <i class="fa fa-caret-right"></i>'));
+                                } else {
+                                    $('<li>').appendTo(list).append($('<span>').text("Nothing found"));
+                                }
+                                $(".filter-results").show();
+                                $(document).one('mousedown.search-menu', function(evt) {
+                                    $(".filter-results").hide();
+                                });
+                            })
+                        }
+                    }, 500));
+                </script>
+                {{/fullsearch}}
             </div>
-        <span class="buttons">
-            <!-- <a class="add-button" href="/add">Add to library</a> -->
-        {{^sessionuser}}<a class="signin" href="/login">Sign in with <b>GitHub</b></a>
-        <script>$(function() { $(".signin").attr('href','/login?return='+window.location.pathname);});</script>
-        {{/sessionuser}}
-        {{#sessionuser}}<a class="user" href="/user/{{sessionuser.login}}"><img src="{{avatar_url}}"/></a>
-        <ul class="user-menu">
-            <li><a href="/user/{{sessionuser.login}}">{{sessionuser.login}}</a></li>
-            <li><hr></li>
-            <li><a href="/add/flow">Add Flow</a></li>
-            <li><hr></li>
-            <li><a href="/settings">Settings</a></li>
-            <li><a href="/logout">Logout</a></li>
-        </ul>
-        <script>$(function() {
-            $(document).on("mousedown.close-usermenu", function(evt) { $(".user-menu").hide(); });
-            $(".user-menu").on("mousedown", function(evt) { evt.stopPropagation(); })
-            $("a.user").on("mousedown", function(evt) { evt.stopPropagation(); })
-            $("a.user").on("click", function(evt) { evt.preventDefault(); $(".user-menu").toggle(); })
-        })</script>
-        {{/sessionuser}}
-        </span>
+            <span class="buttons">
+                <!-- <a class="add-button" href="/add">Add to library</a> -->
+                {{^sessionuser}}<a class="signin" href="/login">Sign in with <b>GitHub</b></a>
+                <script>$(function() { $(".signin").attr('href','/login?return='+window.location.pathname);});</script>
+                {{/sessionuser}}
+                {{#sessionuser}}<a class="user" href="/user/{{sessionuser.login}}"><img src="{{avatar_url}}"/></a>
+                <ul class="user-menu">
+                    <li><a href="/user/{{sessionuser.login}}">{{sessionuser.login}}</a></li>
+                    <li><hr></li>
+                    <li><a href="/add/flow">Add Flow</a></li>
+                    <li><hr></li>
+                    <li><a href="/settings">Settings</a></li>
+                    <li><a href="/logout">Logout</a></li>
+                </ul>
+                <script>$(function() {
+                    $(document).on("mousedown.close-usermenu", function(evt) { $(".user-menu").hide(); });
+                    $(".user-menu").on("mousedown", function(evt) { evt.stopPropagation(); })
+                    $("a.user").on("mousedown", function(evt) { evt.stopPropagation(); })
+                    $("a.user").on("click", function(evt) { evt.preventDefault(); $(".user-menu").toggle(); })
+                })</script>
+                {{/sessionuser}}
+            </span>
         </div>
     </div>
   </div>

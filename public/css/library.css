@@ -91,13 +91,13 @@ h1 {
 
 .user-menu {
     display: none;
-    font-size: 14px;
-    line-height: 40px;
+    font-size: 16px;
+    line-height: 42px;
     position: relative;
     right: -20px;
     top: -22px;
     z-index: 20;
-    min-width: 150px;
+    min-width: 200px;
     list-style-type: none;
     margin: 0;
     padding: 0;
@@ -129,11 +129,11 @@ h1 {
     background-color:rgba(255,255,255,0.3);
 }
 .user-menu a {
-    padding: 3px 10px;
+    padding: 3px 10px 3px 20px;
     display: inline-block;
     width: 100%;
     height: 100%;
-    color: #eee;
+    color: #f3f3f3;
 }
 
 #flow {
@@ -634,6 +634,44 @@ input[type="text"].gist-filter-input {
 .gistbox-sort-label {
     cursor: pointer;
 }
+
+.filter-results {
+    display: none;
+    position: absolute;
+    width: 100%;
+    z-index: 10;
+    background: white;
+    line-height: 18px;
+    border: 3px solid #aa4444;
+    border-bottom-left-radius: 20px;
+    top: 49px;
+    color: #333;
+}
+
+.filter-results ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    border-bottom-left-radius: 20px;
+}
+.filter-results li a,.filter-results li > span {
+    display: inline-block;
+    padding: 10px 20px;
+    width: 100%;
+    height: 100%;
+}
+.filter-results li a span:last-child {
+    float: right;
+}
+.filter-results li > span {
+    color: #999;
+    font-style: italic;
+}
+.filter-results li a:hover {
+    background: #f0f0f0;
+}
+
 
 .filter-term-spinner {
     position: absolute;

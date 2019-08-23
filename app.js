@@ -27,12 +27,13 @@ if (process.env.FLOW_ENV == "PRODUCTION") {
     app.use(session({
         store: new MongoStore({
             url: settings.mongo.url,
-            touchAfter: 24 * 3600
+            touchAfter: 24 * 3600,
+            collection: settings.session.collection || "sessions_new" 
         }),
         key: settings.session.key,
         secret: settings.session.secret,
         saveUninitialized: false,
-        resave: false
+        resave: false,
     }));
 } else {
     app.use(session({

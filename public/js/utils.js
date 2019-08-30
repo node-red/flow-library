@@ -54,7 +54,7 @@ var utils = (function() {
         if (ignoreQueryParams) {
             sort = thingList.find('input[name="seedSort"]').val() || "recent";
             term = "";
-            type = [thingList.find('input[name="seedType"]').val()];
+            type = thingList.find('input[name="seedType"]').val().split(",");
             page = "";
         } else {
             sort = (queryParams.sort || ["recent"])[0];
@@ -66,7 +66,7 @@ var utils = (function() {
         thingList.find('input[name="term"]').val(term);
 
         if (!type) {
-            type = ['node','flow']
+            type = ['node','flow','collection']
         }
         thingList.find('input[name="type"]').prop('checked',false);
         type.forEach(function(t) {
@@ -101,10 +101,8 @@ var utils = (function() {
             }
         }
         $(list).children(":not(.gistbox-placeholder)").css("opacity",0.3);
-        console.log(thingUrl);
         var done;
         $.getJSON(thingUrl, function(data) {
-            console.log(data);
             if (data.links.prev) {
                 thingList.find(".thing-list-nav-prev").attr("href",data.links.prev).css('opacity', 1);
             } else {
@@ -159,3 +157,49 @@ $(function() {
         utils.initThingList(thingList);
     })
 })
+
+function addToCollection(id) {
+    $("body").css({height:"100%",overflow:"hidden"});
+    var dialog = $('<div class="dialog-shade"><div class="dialog">'+
+        '<h4>Add to collection</h4>'+
+        '<div><a class="dialog-create-collection-button" href="/add/collection?addItem='+id+'" style="text-align: left">Create new collection</a></div>'+
+        '<div style="position: relative"><select><option value="">Add to existing collection...</option><option disabled>---</option></select><img class="loader" style="position:absolute; top: 10px; left: calc(50% - 16px)" src="/images/spin.svg" /></div>'+
+        '<div class="dialog-warning">Failed to add to collection</div>'+
+        '<div class="dialog-buttons"><button type="button" onclick="return closeDialog();">Cancel</button></div>'+
+        '</div></div>').appendTo('body').show();
+    var select = dialog.find("select");
+    $.getJSON("/things?format=json&view=summary&username="+loggedInUser+"&type=collection", function(data) {
+        data.data.forEach(function(el) {
+            $('<option>').attr('value',el._id).text(el.name).appendTo(select);
+        })
+    })
+    select.on("change", function(evt) {
+        var collectionId = $(this).val();
+        if (collectionId) {
+            dialog.find(".dialog-warning").hide();
+            select.prop('disabled','disabled');
+            dialog.find(".loader").show();
+            $.ajax({
+                url: "/collection/"+collectionId+"/add/"+id,
+                method: "POST",
+                data: {},
+                success: function(data) {
+                    closeDialog();
+                }
+            }).fail(function(err) {
+                dialog.find(".dialog-warning").show();
+                select.prop('disabled',false);
+                dialog.find(".loader").hide();
+            })
+
+        }
+    })
+    return false;
+}
+
+function closeDialog() {
+    $("body").css({height:"",overflow:""});
+    $(".dialog-shade").hide();
+    $(".dialog-shade:not(.dialog-fixed)").remove();
+    return false;
+}

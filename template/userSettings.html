@@ -26,7 +26,15 @@
 
 
 <div class="grid thing-list-section user-profile-section ">
-    <div class="col-2-12 docs-content"><h4>NPM</h4></div>
+    <div class="col-2-12 docs-content"><h4>NPM</h4>
+{{#user.npm_verified}}
+        <form action="/settings/npm-remove" method="POST">
+            <input name="_csrf" type="hidden" value="{{csrfToken}}">
+            <button type="submit" class="user-profile-action" href="">remove</button>
+        </form>
+{{/user.npm_verified}}
+
+    </div>
     <div class="col-10-12 docs-content">
 
 {{^user.npm_verified}}
@@ -67,7 +75,7 @@ identify what nodes you've published to npm.</p>
 
             break;
             case "npm-verify=fail":
-            $(".npm-verify-fail").show();
+                $(".npm-verify-fail").show();
             break;
         }
         history.replaceState("", document.title, window.location.pathname + window.location.search);

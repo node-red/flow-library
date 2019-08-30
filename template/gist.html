@@ -1,6 +1,6 @@
 {{>_header}}
 
-<div class="grid main-content">
+<div class="grid thing-list-section main-content">
     <div class="col-9-12 docs-content">
         <h1 class="flow-title">{{ description }}</h1>
           {{{ readme }}}
@@ -17,11 +17,19 @@
             <div class="flowinfo">  created {{ created_at_since }}</div>
             {{#updated_at_since}}<div class="flowinfo">  updated {{ updated_at_since }}</div>{{/updated_at_since}}
             <div class="flowinfo"><a href="{{ html_url }}">view on github</a></div>
+          </div>
+          {{#sessionuser}}
+          <div class="flowmeta">
+            <h4>Actions</h4>
+            <div class="flowinfo" style="text-align: right;"><a class="user-profile-action" href="#" onclick="javascript:addToCollection('{{_id}}');">add to collection</a></div>
             {{#owned}}
-                <div class="flowinfo" style="text-align: right;"><img id="refresh-flow-loader" class="loader" src="/images/loader.gif" />&nbsp;&nbsp;<a id="refresh-flow" href="#">refresh</a></div>
-                <div class="flowinfo" style="text-align: right;"><a id="remove-flow" href="#">remove</a></div>
+                <div class="flowinfo" style="text-align: right;"><img id="refresh-flow-loader" class="loader" src="/images/loader.gif" />&nbsp;&nbsp;<a class="user-profile-action" id="refresh-flow" href="#">refresh from github</a></div>
+                <div class="flowinfo" style="text-align: right;"><a class="user-profile-action" id="remove-flow" href="#">remove flow</a></div>
             {{/owned}}
           </div>
+          {{/sessionuser}}
+
+
           <div class="flowmeta">
             <h4>Node Types</h4>
            {{#nodeTypes}}

@@ -4,13 +4,16 @@
         <input type="hidden" name="seedType" value="{{type}}">
         <input type="hidden" name="seedSort" value="{{type}}">
         <form>
+            <input type="hidden" name="collection" value="{{collection}}">
             <input type="hidden" name="username" value="{{username}}">
+            <input type="hidden" name="npm_username" value="{{npm_username}}">
             <input type="hidden" name="term" value="">
             <input type="hidden" name="page" value="">
             <input type="hidden" name="per_page" value="{{per_page}}">
             <ul class="filter-options-filter">
                 <li><input name="type" value="node" type="checkbox" id="thing-list-{{id}}-type-node"/><label class="gistbox-filter-label" for="thing-list-{{id}}-type-node">nodes</label></li>
                 <li><input name="type" value="flow" type="checkbox" id="thing-list-{{id}}-type-flow"/><label class="gistbox-filter-label" for="thing-list-{{id}}-type-flow">flows</label></li>
+                <li><input name="type" value="collection" type="checkbox" id="thing-list-{{id}}-type-collection"/><label class="gistbox-filter-label" for="thing-list-{{id}}-type-collection">collections</label></li>
             </ul>
             <span class="filter-sort">
                 <ul class="filter-options-filter">
@@ -25,13 +28,13 @@
         <ul class="gistlist" style=" clear: both;">
             {{>_gistitems}}
         </ul>
-        {{^hideOptions}}
+        {{^hideNav}}
         <div class="thing-list-nav">
             <a href="#" class="thing-list-nav-link thing-list-nav-prev"><i class="fa fa-caret-left"></i> Prev</a>
             <span class="thing-list-nav-page-info"></span>
             <a href="#" class="thing-list-nav-link thing-list-nav-next">Next <i class="fa fa-caret-right"></i></a>
         </div>
-        {{/hideOptions}}
+        {{/hideNav}}
         <!-- <div style="text-align:center;">
         <a href="#" class="btn btn-load-more">Load More...</a>
     </div> -->

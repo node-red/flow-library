@@ -1,0 +1,76 @@
+{{>_header}}
+
+<div class="grid thing-list-section main-content">
+    <div class="col-9-12 docs-content">
+        <h1 class="flow-title">{{ collection.name }}</h1>
+        {{{ collection.description }}}
+    </div>
+    <div class="col-3-12">
+        <div class="flowmeta">
+            <h4>Collection Info</h4>
+            <div class="flowinfo">{{collection.item_count_label}}</div>
+            <div class="flowinfo">updated {{collection.updated_at_since}}</div>
+            <div class="flowinfo"><a href="/user/{{collection.owner.login}}">{{collection.owner.login}}</a></div>
+        </div>
+        {{#owned}}
+        <div class="flowmeta">
+            <h4>Actions</h4>
+            <div class="flowinfo" style="text-align: right;"><a class="user-profile-action" href="/collection/{{collection._id}}/edit">edit collection</a></div>
+            <div class="flowinfo" style="text-align: right;"><a class="user-profile-action" id="delete-collection" href="#">delete collection</a></div>
+        </div>
+        {{/owned}}
+    </div>
+</div>
+
+
+<div class="grid thing-list-section">
+    {{#query}}{{>_gistlist}}{{/query}}
+</div>
+<script>
+$(function() {
+    $(".gistlist").sortable({
+        handle: ".gistbox-handle",
+         stop: function( event, ui ) {
+            var items = [];
+            $(".gistlist").children().each(function() {
+                items.push($(this).data("thing-id"))
+            });
+            $.ajax({
+                url: "/collection/{{collection._id}}",
+                method: "PUT",
+                data: {
+                    _csrf: "{{csrfToken}}",
+                    items: items
+                },
+                success: function(data) {}
+            })
+         }
+    });
+    $("#delete-collection").on('click', function(evt) {
+        evt.preventDefault();
+        var dialog = $('<div class="dialog-shade"><div class="dialog">'+
+                '<form action="/collection/{{collection._id}}/delete" method="POST">'+
+                '<input name="_csrf" type="hidden" value="{{csrfToken}}">'+
+            '<h4>Are you sure you want to delete this collection?</h4>'+
+            '<div class="dialog-buttons"><button type="button" onclick="return closeDialog();">Cancel</button><button type="submit">Delete</button></div>'+
+            '</form></div></div>').appendTo('body').show();
+    })
+});
+
+function removeFromCollection(id) {
+    $.ajax({
+        url: "/collection/{{collection._id}}/delete/"+id,
+        method: "POST",
+        data: {
+            _csrf: "{{csrfToken}}"
+        },
+        success: function(data) {
+            utils.loadThingList($(".thing-list"));
+        }
+    })
+}
+
+</script>
+
+
+{{>_footer}}

@@ -2,7 +2,7 @@
 {{^sessionuser}}
 <div class="grid">
     <div class="front-hero">
-      <div class="col-2-3" style="position:relative; background: #aa4444; border-top-right-radius:10px;">
+      <div class="col-2-3" style="position:relative; background: #aa4444; border-top-right-radius:20px;border-bottom-left-radius:10px;">
           <div>
         <h2>Node-RED Library</h2>
         <p>Find new nodes, share your flows and see what other people have done with Node-RED.</p>
@@ -28,4 +28,13 @@
     {{>_gistlist}}
 </div>
 {{/flows}}
+
+
+{{#collections}}
+<div class="grid thing-list-section">
+    <div class="col-1-1 thing-list-section-header"><h2>Recent collections</h2> <a href="/search?type=collection">see more ({{count}}) <i class="fa fa-caret-right"></i></a></div>
+    {{>_gistlist}}
+</div>
+{{/collections}}
+
 {{>_footer}}

@@ -1,0 +1,12 @@
+{{#showTools}}
+<div class="gistbox-tools">
+    <div class="gistbox-expand"><a href="#" onclick="javascript:$(this).parent().parent().toggleClass('open');return false;"><i class="fa fa-caret-down"></i></a></div>
+    {{#ownedCollection}}
+    <div class="gistbox-handle"><a href="#" onclick="javascript: return false;"><i class="fa fa-arrows"></i></a></div>
+    <div><a href="#" onclick="javascript:removeFromCollection('{{_id}}'); return false;"><i class="fa fa-minus"></i></a></div>
+    {{/ownedCollection}}
+    {{^ownedCollection}}
+    <div><a href="#" onclick="javascript:addToCollection('{{_id}}');$(this).parent().parent().removeClass('open'); return false;"><i class="fa fa-plus"></i></a></div>
+    {{/ownedCollection}}
+</div>
+{{/showTools}}

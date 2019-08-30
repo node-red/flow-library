@@ -1,56 +1,44 @@
 {{>_header}}
-  <div class="grid main-content add-form">
-   <div class="add-form-row">
-       <div class="col-3-12 add-help">
-           <h4 class="add-flow-label"><label for="add-flow-title">Title</label></h4>
-           <P>Give your flow a short, descriptive title. </p>
-       </div>
-       <div class="col-9-12" style="padding-top: 10px;">
-           <input id="add-flow-title" type="text"></input>
-       </div>
-   </div>
+<div class="grid add-form"  style="background: none;">
+    <div class="add-form-row" >
+        <div class="col-1-12">&nbsp;</div>
+        <div class="col-10-12 thing-list-section" style="background: white; padding: 10px 50px;">
+            <h2 class="pagetitle">Add a flow</h2>
+            <h4 class="add-flow-label"><label for="add-flow-title">Title</label></h4>
+            <p>Give your flow a short, descriptive title. </p>
+            <input id="add-flow-title" type="text"></input>
 
-   <div class="add-form-row">
-       <div class="col-3-12 add-help">
-           <h4 class="add-flow-label"><label for="add-flow-desc">Description</label></h4>
-           <p>Describe what the flow does and how it is used.</p>
-           <p>This uses <a href="http://github.github.com/github-flavored-markdown/">GitHub Flavoured Markdown</a>
-           for formatting. Use the <i>preview</i> tab to see how it looks.</p>
-       </div>
-       <div class="col-9-12" style="padding-top: 10px;border: 1px solid #fff; position: relative;">
-           <textarea id="add-flow-desc"></textarea>
-           <div id="add-flow-desc-md"></div>
-           <div class="add-flow-desc-buttons"><a href="#" class="active" id="add-flow-desc-edit">edit</a><a href="#" class="inactive" id="add-flow-desc-preview">preview</a></div>
-       </div>
-   </div>
-   <div class="add-form-row">
-       <div class="col-3-12 add-help">
-           <h4 class="add-flow-label"><label for="add-flow-flow">Flow</label></h4>
-           <p>In Node-RED, select the flow you want to export. Select <i>Export to
-           &gt; Clipboard</i> from the menu (Ctrl-E), copy the JSON from
-           the dialog and paste here.</p>
-       </div>
-       <div class="col-9-12" style="padding-top: 10px;">
-           <textarea id="add-flow-flow"></textarea>
-       </div>
-   </div>
-   <div class="add-form-row">
-       <div class="col-3-12 add-help">
-           <h4 class="add-flow-label"><label for="add-flow-tags">Tags</label></h4>
-           <p>Add some tags to your flow that will help others find it. Comma- or space-separate the tags.</p>
-       </div>
-       <div class="col-9-12" style="padding-top: 10px;">
-           <ul class="flow-tags" id="add-flow-tags"></ul>
-       </div>
-   </div>
-   <div class="add-form-row">
-       <div class="col-3-12 add-help">&nbsp;</div>
-       <div class="col-8-12 add-help">
+
+            <h4 class="add-flow-label"><label for="add-flow-desc">Description</label></h4>
+            <p>Describe what the flow does and how it is used.</p>
+            <p>This uses <a href="http://github.github.com/github-flavored-markdown/">GitHub Flavoured Markdown</a>
+                for formatting. Use the <i>preview</i> tab to see how it looks.
+            </p>
+
+            <div  style="padding-top: 10px;border: 1px solid #fff; position: relative;">
+                <textarea id="add-flow-desc"></textarea>
+                <div id="add-flow-desc-md"></div>
+                <div class="add-flow-desc-buttons"><a href="#" class="active" id="add-flow-desc-edit">edit</a><a href="#" class="inactive" id="add-flow-desc-preview">preview</a></div>
+            </div>
+
+            <h4 class="add-flow-label"><label for="add-flow-flow">Flow</label></h4>
+            <p>In Node-RED, select the flow you want to export. Select <i>Export to
+                &gt; Clipboard</i> from the menu (Ctrl-E), copy the JSON from
+                the dialog and paste here.
+            </p>
+            <textarea id="add-flow-flow"></textarea>
+
+            <h4 class="add-flow-label"><label for="add-flow-tags">Tags</label></h4>
+            <p>Add some tags to your flow that will help others find it. Comma- or space-separate the tags.</p>
+            <ul class="flow-tags" id="add-flow-tags"></ul>
+
+            <h4>&nbsp;</h4>
             <a id="add-flow-create" href="#" class="btn-create"><span id="add-flow-label">create flow</span><img id="add-flow-loader" class="loader" src="/images/loader.gif" /></a>
             <p class="create-toc">This will create a private gist, owned by you, on GitHub and add it to the Node-RED flow library on your behalf.</p>
-       </div>
-   </div>
 
+        </div>
+    </div>
+</div>
 <script src="/js/marked.js"></script>
 <script src="/js/tags.js"></script>
 <script>
@@ -206,7 +194,5 @@ $(function() {
     var tags = tagger();
 });
 </script>
-
-  </div>
 
 {{>_footer}}

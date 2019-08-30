@@ -139,14 +139,12 @@ function verifyOwner(req,res,next) {
         next();
     } else {
         gister.get(req.params.id).then(function(gist) {
-            console.log(gist);
             if (gist.owner.login == req.session.user.login) {
                 next();
             } else {
                 res.status(403).end();
             }
         }).catch(function() {
-            console.log("NONONO");
             res.status(403).end();
         });
     }

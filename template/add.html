@@ -1,48 +1,47 @@
 {{>_header}}
-  <div class="grid ">
-      <div class="col-1-1">
-        <h2 class="pagetitle">Adding to the library</h2>
-    </div>
-</div>
-
-<div class="grid add-opt">
-    <div class="col-1-3">
-        <a href="/add/node">
+  <div class="grid add-opt">
+    <div class="col-1-3 ">
+        <a  class="thing-list-section" href="/add/node">
             <h3>Node</h3>
-            <p>How to add a new node module</p>
+            <p>Find out how nodes are listed on the library and how you can get yours included.</p>
         </a>
     </div>
-    <div class="col-1-3">
-        {{#sessionuser}}<a href="/add/flow">{{/sessionuser}}
-        {{^sessionuser}}<a href="/login?return=/add/flow">{{/sessionuser}}
-        <h3>Flow</h3>
-        {{#sessionuser}}
-        Add a new flow to the library
-        {{/sessionuser}}
-        {{^sessionuser}}
-        <p>You need to <b>sign in with GitHub</b> before you can add a flow.</p>
-        <p>This is because the Flow Library saves the flow as a Gist under your GitHub account.</p>
-        {{/sessionuser}}
+    <div class="col-1-3   ">
+        {{#sessionuser}}<a class="thing-list-section" href="/add/flow">{{/sessionuser}}
+        {{^sessionuser}}<a class="thing-list-section" href="/login?return=/add/flow">{{/sessionuser}}
+            <h3>Flow</h3>
+            <p>Add a new example flow to the library for others to learn from.</p>
+            {{^sessionuser}}
+            <p><i>You need to be logged in to add a flow.</i></p>
+            {{/sessionuser}}
         </a>
     </div>
-    <div class="col-1-3">
-        <a href="#">
+    <div class="col-1-3 ">
+        {{#sessionuser}}<a class="thing-list-section" href="/add/collection">{{/sessionuser}}
+        {{^sessionuser}}<a class="thing-list-section" href="/login?return=/add/collection">{{/sessionuser}}
             <h3>Collection</h3>
-            <p>How to add a new node module</p>
+            <p>Create a new collection of nodes and flows to share with others.</p>
+            {{^sessionuser}}
+            <p><i>You need to be logged in to create a collection.</i></p>
+            {{/sessionuser}}
         </a>
     </div>
 </div>
 <style>
 .library .grid.add-opt {
+    background: none;
+    min-height: 500px;
+}
+.add-opt .thing-list-section {
+    min-height: 250px;
 }
 .add-opt  a {
     display: inline-block;
     width:100%;
     color: #444;
-    border: 2px solid #aa4444;
-    border-radius: 5px;
     padding: 5px 40px;
     min-height: 200px;
+    background: white;
 }
 .add-opt  a:hover {
     text-decoration: none;

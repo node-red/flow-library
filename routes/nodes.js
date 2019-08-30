@@ -16,7 +16,6 @@ var app = express();
 
 var iconCache = {};
 
-var csrfProtection = csrf({ cookie: true });
 
 app.get("/nodes",function(req,res) {
     var context = {};
@@ -32,7 +31,7 @@ app.get("/nodes",function(req,res) {
     });
 });
 
-app.get("/node/:scope(@[^\\/]{1,})?/:id([^@][^\\/]{1,})",csrfProtection,function(req,res) {
+app.get("/node/:scope(@[^\\/]{1,})?/:id([^@][^\\/]{1,})",appUtils.csrfProtection(),function(req,res) {
     var id = req.params.id;
     if (req.params.scope) {
         id = req.params.scope+"/"+id;
@@ -155,7 +154,7 @@ app.get("/node/:scope(@[^\\/]{1,})?/:id([^@][^\\/]{1,})/refresh",function(req,re
     res.end();
 });
 
-app.post("/node/:scope(@[^\\/]{1,})?/:id([^@][^\\/]{1,})/report",csrfProtection,function(req,res) {
+app.post("/node/:scope(@[^\\/]{1,})?/:id([^@][^\\/]{1,})/report",appUtils.csrfProtection(),function(req,res) {
     var id = req.params.id;
     if (req.params.scope) {
         id = req.params.scope+"/"+id;
@@ -174,7 +173,7 @@ app.post("/node/:scope(@[^\\/]{1,})?/:id([^@][^\\/]{1,})/report",csrfProtection,
     res.end();
 });
 
-app.post("/node/:scope(@[^\\/]{1,})?/:id([^@][^\\/]{1,})/rate", csrfProtection,function(req,res) {
+app.post("/node/:scope(@[^\\/]{1,})?/:id([^@][^\\/]{1,})/rate", appUtils.csrfProtection(),function(req,res) {
     var id = req.params.id;
     if (req.params.scope) {
         id = req.params.scope+"/"+id;

@@ -1,49 +1,61 @@
 {{>_header}}
-  <div class="grid main-content add-form">
-      <div class="col-2-12">&nbsp;</div>
-    <div class="col-8-12">
+<div class="grid" style="background: none;">
+    <div class="col-1-12">&nbsp;</div>
+    <div class="col-10-12 thing-list-section" style="background: white; padding: 10px 50px;">
         <h2 class="pagetitle">Adding a node</h2>
         <p>Node-RED nodes are packaged as modules and published to
             the <a href="https://www.npmjs.com">public npm repository</a>.</p>
         <p>The Flow Library regularly checks the npm repository for new modules that
             have been published and automatically adds them to the library.</p>
-        <p>To add a node to the library, follow these steps:<p>
-        <div class="step"><span class="step-count">1</span><div><span>Create your node and package it as
-            an npm module.</span> <p>Your module must have</p><ul>
-                <li>a name that follows the project's <a href="https://nodered.org/docs/creating-nodes/packaging#naming">naming guidelines</a>,</li>
-                <li>a <a href="https://nodered.org/docs/creating-nodes/packaging#readmemd"><code>README.md</code> file</a> that describes what your node does</a> and how to use it,</li>
-                <li>a <a href="https://nodered.org/docs/creating-nodes/packaging#packagejson"><code>package.json</code> file</a> with: <ul>
-                    <li>a <code>node-red</code> section listing the node files,</li>
-                    <li>and <code>"node-red"</code> in its list of <code>keywords</code>. This is
-                    what the Flow Library uses to search the npm repository - without this, it
-                will not find your node.</li></ul></li>
+        <p>To add a node to the library, follow these steps:</p>
+        <div class="step">
+            <span class="step-count">1</span>
+            <div>
+                <span>Create your node and package it as an npm module.</span>
+                <p>Your module must have</p>
+                <ul>
+                    <li>a name that follows the project's <a href="https://nodered.org/docs/creating-nodes/packaging#naming">naming guidelines</a>,</li>
+                    <li>a <a href="https://nodered.org/docs/creating-nodes/packaging#readmemd"><code>README.md</code> file</a> that describes what your node does</a> and how to use it,</li>
+                    <li>a <a href="https://nodered.org/docs/creating-nodes/packaging#packagejson"><code>package.json</code> file</a> with:
+                        <ul>
+                            <li>a <code>node-red</code> section listing the node files,</li>
+                            <li>and <code>"node-red"</code> in its list of <code>keywords</code>. This is
+                                what the Flow Library uses to search the npm repository - without this, it
+                                will not find your node.
+                            </li>
+                        </ul>
+                    </li>
                 </ul>
             </div>
         </div>
 
-        <div class="step"><span class="step-count">2</span><div><span>Publish your module to the public
-            npm repository.</span>
-            <p>The Flow Library checks the npm repository once every hour for any new
-                modules, or updates to existing modules, with the <code>"node-red"</code>
-                keyword.</p>
+        <div class="step">
+            <span class="step-count">2</span>
+            <div>
+                <span>Publish your module to the public npm repository.</span>
+                <p>The Flow Library checks the npm repository once every hour for any new
+                    modules, or updates to existing modules, with the <code>"node-red"</code>
+                    keyword.
+                </p>
             </div>
         </div>
 
-        <div class="step"><span class="step-count">3</span><div><span>Be patient</span>
-            <p>The Flow Library relies on the npm search index to find nodes. Sometimes
-            the search index can take a little while to update. You can check for yourself
-            by searching for your node on <a href="https://www.npmjs.com/">npmjs.com</a>.</p>
-            <p>If your node does appear in the npm search results, but the Flow Library
-              has not added it after a couple of hours, you can ask for help on the
-              <a href="https://discourse.nodered.org">Node-RED forum</a> or <a href="https://nodered.org/slack">slack</a>.</p>
-</div>
+        <div class="step">
+            <span class="step-count">3</span>
+            <div>
+                <span>Be patient</span>
+                <p>The Flow Library relies on the npm search index to find nodes. Sometimes
+                    the search index can take a little while to update. You can check for yourself
+                    by searching for your node on <a href="https://www.npmjs.com/">npmjs.com</a>.
+                </p>
+                <p>If your node does appear in the npm search results, but the Flow Library
+                    has not added it after a couple of hours, you can ask for help on the
+                    <a href="https://discourse.nodered.org">Node-RED forum</a> or <a href="https://nodered.org/slack">slack</a>.
+                </p>
             </div>
         </div>
-
-
-        <p>
     </div>
-  </div>
+</div>
 <style>
     .step {
         margin-top:40px;
@@ -51,20 +63,21 @@
     }
     .step-count {
         display: inline-block;
-        width:80px;
-        height: 80px;
+        width:50px;
+        height: 50px;
         text-align:center;
-        line-height: 80px;
-        border-radius:10px;
+        line-height: 50px;
+        border-top-right-radius:15px;
+        border-bottom-left-radius:8px;
         background: #aa4444;
         color: white;
-        font-size: 70px;
+        font-size: 40px;
         float: left;
-        margin-right: 30px;
+        margin-right: 20px;
     }
     .step-count + div {
         display: inline-block;
-        max-width: 550px;
+        max-width: 500px;
     }
     .step-count + div > span:first-child {
         font-size: 1.2em;

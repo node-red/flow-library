@@ -1,18 +1,14 @@
-<li class="gistbox gistbox-{{type}}"
-    data-tags="{{keywords}}"
-    data-owner="{{author.name}}"
-    data-updated="{{updated_at}}"
-    data-downloads="{{downloads.week}}"
-    data-score="{{rating.score}}"
-    data-count="{{rating.count}}"><a href="/node/{{name}}">
-<h1 class="gisttitle">{{name}}</h1>
-<p class="gistdescription">{{description}}</p>
-<div class="gistbox-footer">
-    <div class="gistbox-type">
-        {{#dist-tags.latest}} v{{.}} &nbsp;{{/dist-tags.latest}}
-        {{#downloads}} <i class="fa fa-cloud-download"></i> {{week}} &nbsp;{{/downloads}}
-        {{#rating}}<i class="fa fa-star"></i><span class="gistbox-score">{{#toFixed}}{{score}}{{/toFixed}}</span> ({{count}} <i class="fa fa-user"></i>){{/rating}}
+<li class="gistbox gistbox-node"  data-thing-id="{{_id}}"><a href="/node/{{name}}">
+    <h1 class="gisttitle">{{name}}</h1>
+    <p class="gistdescription">{{description}}</p>
+    <div class="gistbox-footer">
+        <div class="gistbox-type">
+            {{#dist-tags.latest}} v{{.}} &nbsp;{{/dist-tags.latest}}
+            {{#downloads}} <i class="fa fa-cloud-download"></i> {{week}} &nbsp;{{/downloads}}
+            {{#rating}}<i class="fa fa-star"></i><span class="gistbox-score">{{#toFixed}}{{score}}{{/toFixed}}</span> ({{count}} <i class="fa fa-user"></i>){{/rating}}
+        </div>
+        <div class="gistbox-owner">{{type}}</div>
     </div>
-    <div class="gistbox-owner">{{type}}</div>
-</div>
-</a></li>
+</a>
+{{>_gistboxTools}}
+</li>

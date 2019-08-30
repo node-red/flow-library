@@ -39,10 +39,14 @@
                                             link.attr("href","/node/"+d.name)
                                             label.text(d.name);
                                             type.text("node");
-                                        } else {
+                                        } else if (d.isFlow) {
                                             link.attr("href","/flow/"+d._id)
                                             label.text(d.description);
                                             type.text("flow")
+                                        } else if (d.isCollection) {
+                                            link.attr("href","/collection/"+d._id)
+                                            label.text(d.name);
+                                            type.text("collection")
                                         }
                                         $('<li>').appendTo(list).append(link);
                                     })
@@ -61,8 +65,8 @@
                 {{/fullsearch}}
             </div>
             <span class="buttons">
-                <!-- <a class="add-button" href="/add">Add to library</a> -->
-                {{^sessionuser}}<a class="signin" href="/login">Sign in with <b>GitHub</b></a>
+                <a href="/add"><i class="fa fa-plus"></i></a>
+                {{^sessionuser}} <a class="signin" href="/login"><span>Sign in with <b>GitHub</b></span><i class="fa fa-github fa-2x"></i></a>
                 <script>$(function() { $(".signin").attr('href','/login?return='+window.location.pathname);});</script>
                 {{/sessionuser}}
                 {{#sessionuser}}<a class="user" href="/user/{{sessionuser.login}}"><img src="{{avatar_url}}"/></a>
@@ -70,11 +74,14 @@
                     <li><a href="/user/{{sessionuser.login}}">{{sessionuser.login}}</a></li>
                     <li><hr></li>
                     <li><a href="/add/flow">Add Flow</a></li>
+                    <li><a href="/add/collection">Add Collection</a></li>
                     <li><hr></li>
                     <li><a href="/settings">Settings</a></li>
                     <li><a href="/logout">Logout</a></li>
                 </ul>
-                <script>$(function() {
+                <script>
+                var loggedInUser = "{{sessionuser.login}}";
+                $(function() {
                     $(document).on("mousedown.close-usermenu", function(evt) { $(".user-menu").hide(); });
                     $(".user-menu").on("mousedown", function(evt) { evt.stopPropagation(); })
                     $("a.user").on("mousedown", function(evt) { evt.stopPropagation(); })

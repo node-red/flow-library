@@ -28,7 +28,7 @@ if (process.env.FLOW_ENV == "PRODUCTION") {
         store: new MongoStore({
             url: settings.mongo.url,
             touchAfter: 24 * 3600,
-            collection: settings.session.collection || "sessions_new" 
+            collection: settings.session.collection || "sessions_new"
         }),
         key: settings.session.key,
         secret: settings.session.secret,
@@ -54,6 +54,7 @@ app.use(require("./routes/nodes"));
 app.use(require("./routes/admin"));
 app.use(require("./routes/users"));
 app.use(require("./routes/api"));
+app.use(require("./routes/collections"));
 app.use(function(req, res) {
     res.status(404).send(mustache.render(templates['404'],{sessionuser:req.session.user},templates.partials));
 });

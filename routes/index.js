@@ -10,35 +10,6 @@ const querystring = require('querystring');
 const app = express();
 
 
-
-app.get("/", function (req, res) {
-    var context = {};
-
-    context.sessionuser = req.session.user;
-    context.nodes = {
-        type: 'node',
-        per_page: context.sessionuser?6:3,
-        hideOptions: true,
-        ignoreQueryParams: true
-    }
-    context.flows = {
-        type: 'flow',
-        per_page: context.sessionuser?6:3,
-        hideOptions: true,
-        ignoreQueryParams: true
-    }
-
-    viewster.getTypeCounts().then(function(counts) {
-        context.nodes.count = counts.node;
-        context.flows.count = counts.flow;
-        res.send(mustache.render(templates.index, context, templates.partials));
-    });
-});
-
-
-
-
-
 function queryFromRequest(req) {
     var query = Object.assign({}, req.query);
     query.page = Number(query.page) || 1;
@@ -46,7 +17,6 @@ function queryFromRequest(req) {
     query.page_size = Number(query.page_size) || viewster.DEFAULT_PER_PAGE;
     return query;
 }
-
 function getNextPageQueryString(count, query) {
     var currentPage = parseInt(query.page) || 1;
     if (viewster.DEFAULT_PER_PAGE * currentPage < count) {
@@ -62,7 +32,42 @@ function getPrevPageQueryString(count, query) {
     return null
 }
 
+app.get("/", function (req, res) {
+    var context = {};
+
+    context.sessionuser = req.session.user;
+    context.nodes = {
+        type: 'node',
+        per_page: context.sessionuser?6:3,
+        hideOptions: true,
+        hideNav: true,
+        ignoreQueryParams: true
+    }
+    context.flows = {
+        type: 'flow',
+        per_page: context.sessionuser?6:3,
+        hideOptions: true,
+        hideNav: true,
+        ignoreQueryParams: true
+    }
+    context.collections = {
+        type: 'collection',
+        per_page: context.sessionuser?6:3,
+        hideOptions: true,
+        hideNav: true,
+        ignoreQueryParams: true
+    }
+    viewster.getTypeCounts().then(function(counts) {
+        context.nodes.count = counts.node;
+        context.flows.count = counts.flow;
+        context.collections.count = counts.collection;
+
+        res.send(mustache.render(templates.index, context, templates.partials));
+    });
+});
+
 app.get("/things", function (req, res) {
+
     var response = {
         links: {
             self: "/things?"+querystring.stringify(req.query),
@@ -79,14 +84,14 @@ app.get("/things", function (req, res) {
         }
     };
     var query = queryFromRequest(req);
-    console.log(query);
+    // console.log(query);
 
     viewster.getForQuery(query).then(function (result) {
         result.things = result.things||[];
         result.things.forEach(function(thing) {
-            if (thing.type === 'node') {
-                thing.isNode = true;
-            }
+            thing.isNode = thing.type === 'node';
+            thing.isFlow = thing.type === 'flow';
+            thing.isCollection = thing.type === 'collection';
         })
         response.meta.results.count = result.count;
         response.meta.results.total = result.total;
@@ -108,6 +113,11 @@ app.get("/things", function (req, res) {
                 }
             }
         };
+        if (req.session.user) {
+            context.showTools = {
+                ownedCollection: result.collectionOwner === req.session.user.login,
+            }
+        }
         if (query.format !== 'json') {
             response.html = mustache.render(templates.partials._gistitems, context, templates.partials);
         } else {

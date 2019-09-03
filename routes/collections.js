@@ -144,8 +144,12 @@ app.post("/collection/:id/delete", appUtils.csrfProtection(), verifyOwner, funct
     })
 })
 
-app.post("/collection/:id/add/:thingId", verifyOwner, function(req,res) {
-    collections.addItem(req.params.id,req.params.thingId).then(function() {
+app.post("/collection/:id/add/:scope(@[^\\/]{1,})?/:thingId([^@][^\\/]{1,})", verifyOwner, function(req,res) {
+    var thingId = req.params.thingId;
+    if (req.params.scope) {
+        thingId = req.params.scope+"/"+thingId;
+    }
+    collections.addItem(req.params.id,thingId).then(function() {
         res.sendStatus(200).end();
     }).catch(function(err) {
         console.log("err",err)
@@ -153,8 +157,12 @@ app.post("/collection/:id/add/:thingId", verifyOwner, function(req,res) {
     })
 });
 
-app.post("/collection/:id/delete/:thingId", appUtils.csrfProtection(), verifyOwner, function(req,res) {
-    collections.removeItem(req.params.id,req.params.thingId).then(function() {
+app.post("/collection/:id/delete/:scope(@[^\\/]{1,})?/:thingId([^@][^\\/]{1,})", appUtils.csrfProtection(), verifyOwner, function(req,res) {
+    var thingId = req.params.thingId;
+    if (req.params.scope) {
+        thingId = req.params.scope+"/"+thingId;
+    }
+    collections.removeItem(req.params.id,thingId).then(function() {
         res.sendStatus(200).end();
     }).catch(function(err) {
         console.log("err",err)

@@ -95,9 +95,18 @@ var utils = (function() {
         }
         if (updateUrl) {
             if (history.pushState) {
-                // Need to remove username=xyz if present
-                var historyUrl = thingUrl.split("?")[1].replace(/username=[^&]+/,"").replace(/^&/,"");
-                window.history.pushState({},'',location.pathname+"?"+historyUrl);
+                var historyUrl = thingUrl.split("?")[1];
+                // Need to remove username=xyz/collection=xyzif present
+                // If collection is present, remove type= as well
+                if (/collection=/.test(historyUrl)) {
+                    historyUrl = historyUrl.replace(/&?type=[^&]+/g,"");
+                }
+                historyUrl = historyUrl.replace(/&?(username|collection)=[^&]+/g,"").replace(/^&/,"");
+                if (historyUrl === "page=1") {
+                    historyUrl = "";
+                }
+                historyUrl = location.pathname + (historyUrl.length>0?("?"+historyUrl):"");
+                window.history.pushState({},'',historyUrl);
             }
         }
         $(list).children(":not(.gistbox-placeholder)").css("opacity",0.3);

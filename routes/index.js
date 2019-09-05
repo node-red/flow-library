@@ -84,7 +84,6 @@ app.get("/things", function (req, res) {
         }
     };
     var query = queryFromRequest(req);
-    // console.log(query);
 
     viewster.getForQuery(query).then(function (result) {
         result.things = result.things||[];
@@ -117,6 +116,9 @@ app.get("/things", function (req, res) {
             context.showTools = {
                 ownedCollection: result.collectionOwner === req.session.user.login,
             }
+        }
+        if (query.collection) {
+            context.collection = query.collection;
         }
         if (query.format !== 'json') {
             response.html = mustache.render(templates.partials._gistitems, context, templates.partials);

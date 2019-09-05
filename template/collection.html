@@ -14,7 +14,9 @@
             {{/collection.item_count_label}}
             <div id="collection-item-count-empty" class="flowinfo" {{#collection.item_count_label}}style="display: none"{{/collection.item_count_label}}><i>empty</i></div>
             <div class="flowinfo">updated {{collection.updated_at_since}}</div>
-            <div class="flowinfo"><a href="/user/{{collection.owner.login}}">{{collection.owner.login}}</a></div>
+            {{#collection.gitOwners}}
+                <div class="flowinfo"><a href="/user/{{.}}">{{.}}</a></div>
+            {{/collection.gitOwners}}
         </div>
         {{#owned}}
         <div class="flowmeta">

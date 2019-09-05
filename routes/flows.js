@@ -8,6 +8,7 @@ var gister = require("../lib/gists");
 var appUtils = require("../lib/utils");
 var npmNodes = require("../lib/nodes");
 var templates = require("../lib/templates");
+var collections = require("../lib/collections");
 
 var app = express();
 
@@ -51,14 +52,25 @@ app.post("/flow", function(req,res) {
     }
 });
 
-app.get("/flow/:id",function(req,res) {
-    gister.get(req.params.id).then(function(gist) {
+app.get("/flow/:id",function(req,res) { getFlow(req.params.id,null,req,res); });
+app.get("/flow/:id/in/:collection",function(req,res) { getFlow(req.params.id,req.params.collection,req,res); });
+function getFlow(id,collection,req,res) {
+    gister.get(id).then(function(gist) {
         gist.sessionuser = req.session.user;
         gist.flow = "";
-
+        gist.collection = collection;
         gist.created_at_since = appUtils.formatDate(gist.created_at);
         gist.updated_at_since = appUtils.formatDate(gist.updated_at);
         gist.refreshed_at_since = appUtils.formatDate(gist.refreshed_at);
+
+
+        var collectionPromise;
+
+        if (collection) {
+            collectionPromise = collections.getSiblings(collection,id);
+        } else {
+            collectionPromise = Promise.resolve();
+        }
 
         if (gist.created_at_since == gist.updated_at_since) {
             delete gist.updated_at_since;
@@ -118,7 +130,16 @@ app.get("/flow/:id",function(req,res) {
             fs.readFile(appUtils.mapGistPath(gist.files['README-md']),'utf-8',function(err,data) {
                 marked(data,{},function(err,content) {
                     gist.readme = content;
-                    res.send(mustache.render(templates.gist,gist,templates.partials));
+                    collectionPromise.then(function(collectionSiblings){
+                        if (collection && collectionSiblings) {
+                            gist.collectionName = collectionSiblings[0].name;
+                            gist.collectionPrev = collectionSiblings[0].prev;
+                            gist.collectionPrevType = collectionSiblings[0].prevType;
+                            gist.collectionNext = collectionSiblings[0].next;
+                            gist.collectionNextType = collectionSiblings[0].nextType;
+                        }
+                        res.send(mustache.render(templates.gist,gist,templates.partials));
+                    });
                 });
             });
         });
@@ -130,7 +151,7 @@ app.get("/flow/:id",function(req,res) {
             console.log(err2);
         }
     });
-});
+}
 
 function verifyOwner(req,res,next) {
     if (!req.session.user) {

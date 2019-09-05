@@ -10,6 +10,7 @@ var npmNodes = require("../lib/nodes");
 var ratings = require("../lib/ratings");
 var templates = require("../lib/templates");
 var events = require("../lib/events");
+var collections = require("../lib/collections");
 
 var app = express();
 
@@ -31,11 +32,19 @@ app.get("/nodes",function(req,res) {
     });
 });
 
+
 app.get("/node/:scope(@[^\\/]{1,})?/:id([^@][^\\/]{1,})",appUtils.csrfProtection(),function(req,res) {
-    var id = req.params.id;
-    if (req.params.scope) {
-        id = req.params.scope+"/"+id;
+    getNode(req.params.id,req.params.scope,null,req,res);
+});
+app.get("/node/:scope(@[^\\/]{1,})?/:id([^@][^\\/]{1,})/in/:collection",appUtils.csrfProtection(),function(req,res) {
+    getNode(req.params.id,req.params.scope,req.params.collection,req,res);
+});
+
+function getNode(id, scope, collection, req,res) {
+    if (scope) {
+        id = scope+"/"+id;
     }
+
     npmNodes.get(id).then(function(node) {
         node.sessionuser = req.session.user;
         node.csrfToken = req.csrfToken();
@@ -44,7 +53,15 @@ app.get("/node/:scope(@[^\\/]{1,})?/:id([^@][^\\/]{1,})",appUtils.csrfProtection
         node.updated_at_since = appUtils.formatDate(node.updated_at);
         iconCache[id] = {};
         node.types = [];
+        node.collection = collection;
 
+        var collectionPromise;
+
+        if (collection) {
+            collectionPromise = collections.getSiblings(collection,id);
+        } else {
+            collectionPromise = Promise.resolve();
+        }
         for (var n in node.versions.latest["node-red"].nodes) {
             var def = node.versions.latest["node-red"].nodes[n];
             //console.log(n);
@@ -111,6 +128,15 @@ app.get("/node/:scope(@[^\\/]{1,})?/:id([^@][^\\/]{1,})",appUtils.csrfProtection
                     rating.score = (rating.total/rating.count * 10 / 10).toFixed(1);
                     node.rating = rating;
                 }
+                return collectionPromise;
+            }).then(function(collectionSiblings) {
+                if (collection && collectionSiblings) {
+                    node.collectionName = collectionSiblings[0].name;
+                    node.collectionPrev = collectionSiblings[0].prev;
+                    node.collectionPrevType = collectionSiblings[0].prevType;
+                    node.collectionNext = collectionSiblings[0].next;
+                    node.collectionNextType = collectionSiblings[0].nextType;
+                }
                 res.send(mustache.render(templates.node,node,templates.partials));
             });
         });
@@ -121,7 +147,7 @@ app.get("/node/:scope(@[^\\/]{1,})?/:id([^@][^\\/]{1,})",appUtils.csrfProtection
         }
         res.status(404).send(mustache.render(templates['404'],{sessionuser:req.session.user},templates.partials));
     });
-});
+};
 
 app.get("/node/:scope(@[^\\/]{1,})?/:id([^@][^\\/]{1,})/icons/:icon", function(req,res) {
     var id = req.params.id;

@@ -13,8 +13,8 @@ const marked = require("marked");
 
 
 function isCollectionOwned(collection,user) {
-    for (var i=0;i<collection.owners.length;i++) {
-        if (collection.owners[i].login == user) {
+    for (var i=0;i<collection.gitOwners.length;i++) {
+        if (collection.gitOwners[i] == user) {
             return true;
         }
     }
@@ -53,11 +53,14 @@ app.post("/collection", function(req,res) {
 
     if (req.session.accessToken) {
         var collection = {
-            owners: [{login: req.session.user.login}],
+            gitOwners: [req.session.user.login],
             name: req.body.title,
             description: req.body.description,
             items: req.body.items || []
         };
+        if (collection.items.length === 0) {
+            collection.empty = true;
+        }
 
         collections.create(collection).then(function(id) {
             res.send("/collection/"+id);

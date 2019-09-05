@@ -1,6 +1,6 @@
-<li class="gistbox gistbox-flow" data-thing-id="{{_id}}"><a href="/flow/{{_id}}">
+<li class="gistbox gistbox-flow" data-thing-id="{{_id}}"><a href="/flow/{{_id}}{{#collection}}/in/{{.}}{{/collection}}">
     <h1 class="gisttitle">{{description}}</h1>
-    <p class="gistdescription">by {{owner.login}}</p>
+    <p class="gistdescription">by {{gitOwners.0}}</p>
     <div class="gistbox-footer">
         <div class="gistbox-owner">{{type}}</div>
     </div>

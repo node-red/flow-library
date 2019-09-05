@@ -12,6 +12,15 @@ const app = express();
 const marked = require("marked");
 
 
+function isCollectionOwned(collection,user) {
+    for (var i=0;i<collection.owners.length;i++) {
+        if (collection.owners[i].login == user) {
+            return true;
+        }
+    }
+    return false;
+}
+
 function verifyOwner(req,res,next) {
     if (!req.session.user) {
         res.status(403).end();
@@ -19,7 +28,7 @@ function verifyOwner(req,res,next) {
     //     next();
     } else {
         collections.get(req.params.id).then(function(collection) {
-            if (collection.owner.login == req.session.user.login) {
+            if (isCollectionOwned(collection,req.session.user.login)) {
                 next();
             } else {
                 res.status(403).end();
@@ -44,7 +53,7 @@ app.post("/collection", function(req,res) {
 
     if (req.session.accessToken) {
         var collection = {
-            owner: {login: req.session.user.login},
+            owners: [{login: req.session.user.login}],
             name: req.body.title,
             description: req.body.description,
             items: req.body.items || []
@@ -81,7 +90,7 @@ app.get("/collection/:id",  appUtils.csrfProtection(), function(req,res) {
             }
 
             if (context.sessionuser) {
-                context.owned = collection.owner.login === context.sessionuser.login
+                context.owned = isCollectionOwned(collection,context.sessionuser.login);
             }
             context.csrfToken = req.csrfToken();
             res.send(mustache.render(templates.collection, context, templates.partials));

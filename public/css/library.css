@@ -1210,6 +1210,14 @@ a:hover .gistbox-footer {
 .dialog-create-collection-button {
     width: 100%;
 }
+.warning-box {
+    border: 1px solid #aa4444;
+    border-radius: 4px;
+    padding: 12px;
+    color: #aa4444;
+    text-align: center;
+}
+
 select {
     color: #333;
     display: block;

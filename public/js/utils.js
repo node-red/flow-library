@@ -128,7 +128,7 @@ var utils = (function() {
                 thingList.find(".thing-list-nav-page-info").text(data.meta.pages.current+" of "+data.meta.pages.total).show();
             }
             list.html(data.html);
-            if (done) { done() }
+            if (done) { done(data) }
         });
         return { then: function(d) { done = d } }
     }

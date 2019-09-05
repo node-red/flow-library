@@ -76,9 +76,7 @@ app.get("/collection/:id",  appUtils.csrfProtection(), function(req,res) {
             collection.description = content;
             collection.updated_at_since = appUtils.formatDate(collection.updated_at);
             collection.item_count = collection.items.length;
-            if (collection.item_count === 0) {
-                collection.item_count_label = "empty";
-            } else {
+            if (collection.item_count > 0) {
                 collection.item_count_label = collection.items.length + " thing" + (collection.items.length === 1 ? "":"s");
             }
 

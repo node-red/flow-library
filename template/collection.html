@@ -3,12 +3,16 @@
 <div class="grid thing-list-section main-content">
     <div class="col-9-12 docs-content">
         <h1 class="flow-title">{{ collection.name }}</h1>
+        <div id="collection-empty-warning" class="warning-box" {{#collection.item_count_label}}style="display: none"{{/collection.item_count_label}}>This collection will not be listed publicly until it contains something.</div>
         {{{ collection.description }}}
     </div>
     <div class="col-3-12">
         <div class="flowmeta">
             <h4>Collection Info</h4>
-            <div class="flowinfo">{{collection.item_count_label}}</div>
+            {{#collection.item_count_label}}
+            <div id="collection-item-count" class="flowinfo">{{collection.item_count_label}}</div>
+            {{/collection.item_count_label}}
+            <div id="collection-item-count-empty" class="flowinfo" {{#collection.item_count_label}}style="display: none"{{/collection.item_count_label}}><i>empty</i></div>
             <div class="flowinfo">updated {{collection.updated_at_since}}</div>
             <div class="flowinfo"><a href="/user/{{collection.owner.login}}">{{collection.owner.login}}</a></div>
         </div>
@@ -65,7 +69,15 @@ function removeFromCollection(id) {
             _csrf: "{{csrfToken}}"
         },
         success: function(data) {
-            utils.loadThingList($(".thing-list"));
+            utils.loadThingList($(".thing-list")).then(function(data) {
+                if (data.meta.results.total === 0) {
+                    $('#collection-item-count').hide();
+                    $('#collection-item-count-empty').show();
+                    $('#collection-empty-warning').show();
+                } else {
+                    $('#collection-item-count').text(data.meta.results.total+" thing"+(data.meta.results.total===1?"":"s"));
+                }
+            });
         }
     })
 }

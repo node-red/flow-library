@@ -28,7 +28,7 @@
             <form id="form-rate" action="/node/{{_id}}/rate" method="POST">
                 <input name="_csrf" type="hidden" value="{{csrfToken}}">
                 <input name="rating" type="hidden">
-                <div class="flowinfo"><span id="set-stars"></span></div>
+                <div class="flowinfo">Rate: <span id="set-stars"></span></div>
             </form>
             <div class="flowinfo" style="text-align: right;"><a class="user-profile-action" href="#" onclick="javascript:addToCollection('{{_id}}');">add to collection</a></div>
             {{^refresh_requested}}<div style="text-align: right;" class="flowinfo"><a href="/node/{{_id}}/refresh" class="user-profile-action">request refresh</a></div>{{/refresh_requested}}
@@ -97,40 +97,13 @@
         </form>
     </div>
 </div>
-<script src="/js/jquery.raty-fa.js"></script>
+{{>_rateTools}}
 <script>
     $("#report-node").click(function(e) {
         $("body").css({height:"100%",overflow:"hidden"});
         e.preventDefault();
-        // var width = $("#report-node-shade").width();
-        // var height = $("#report-node-shade").height();
-
-        // $("#report-node-dialog").width(Math.min(width,400)).height(Math.min(height,500)).css({
-        // });
         $("#report-node-shade").show();
     });
-
-    $.fn.raty.defaults.hints = ['bad', 'poor', 'regular', 'good', 'awesome'];
-    $.fn.raty.defaults.space = false;
-
-    $("#node-stars").raty({
-        {{#rating}}
-        score: {{score}},
-        {{/rating}}
-        readOnly: true});
-
-    function rate(e) {
-        $("input[name=rating]").val(e);
-        $("#form-rate").submit();
-    };
-
-    $("#set-stars").raty({
-        {{#rating}}{{#userRating}}
-        score: {{rating}},
-        {{/userRating}}{{/rating}}
-        cancel: true,
-        click: utils.debounce(rate, 1000)});
-
 </script>
 
 {{#sessionuser}}{{/sessionuser}}

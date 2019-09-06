@@ -10,6 +10,7 @@ const collections = require("../lib/collections");
 const users = require("../lib/users");
 const app = express();
 const marked = require("marked");
+const ratings = require("../lib/ratings");
 
 
 function isCollectionOwned(collection,user) {
@@ -75,6 +76,7 @@ app.post("/collection", function(req,res) {
 
 app.get("/collection/:id",  appUtils.csrfProtection(), function(req,res) {
     var context = {};
+    var id = req.params.id;
     context.sessionuser = req.session.user;
     context.query = {
         type: "node,flow",
@@ -84,6 +86,27 @@ app.get("/collection/:id",  appUtils.csrfProtection(), function(req,res) {
     };
     collections.get(req.params.id).then(function(collection) {
         context.collection = collection;
+
+        var ratingPromise;
+        if (req.session.user) {
+            if (collection.rating && !collection.rating.hasOwnProperty("count")) {
+                delete collection.rating;
+                ratingPromise = Promise.resolve();
+            } else {
+                ratingPromise = ratings.getUserRating(id, req.session.user.login).then(function(userRating) {
+                    if (userRating) {
+                        if (!collection.rating) {
+                            collection.rating = {};
+                        }
+                        collection.rating.userRating = userRating.rating;
+                    }
+                });
+            }
+        } else {
+            ratingPromise = Promise.resolve();
+        }
+
+
         marked(collection.description,{},function(err,content) {
             collection.description = content;
             collection.updated_at_since = appUtils.formatDate(collection.updated_at);
@@ -96,9 +119,12 @@ app.get("/collection/:id",  appUtils.csrfProtection(), function(req,res) {
                 context.owned = isCollectionOwned(collection,context.sessionuser.login);
             }
             context.csrfToken = req.csrfToken();
-            res.send(mustache.render(templates.collection, context, templates.partials));
+            ratingPromise.then(() => {
+                res.send(mustache.render(templates.collection, context, templates.partials));
+            });
         });
     }).catch(function(err) {
+        console.log(err);
         res.send(404).end();
     })
 });
@@ -179,5 +205,24 @@ app.post("/collection/:id/delete/:scope(@[^\\/]{1,})?/:thingId([^@][^\\/]{1,})",
         res.send(400,err).end();
     })
 });
+
+app.post("/collection/:id/rate", appUtils.csrfProtection(),function(req,res) {
+    var id = req.params.id;
+    if (req.session.user) {
+        ratings.rateThing(id,req.session.user.login,Number(req.body.rating)).then(function() {
+            res.writeHead(303, {
+                Location: "/collection/"+id
+            });
+            res.end();
+        })
+    } else {
+        res.writeHead(303, {
+            Location: "/collection/"+id
+        });
+        res.end();
+    }
+});
+
+
 
 module.exports = app;

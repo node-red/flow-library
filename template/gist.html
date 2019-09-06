@@ -15,13 +15,20 @@
           </div>
           <div class="flowmeta">
             <h4>Flow Info</h4>
-            <div class="flowinfo">  created {{ created_at_since }}</div>
-            {{#updated_at_since}}<div class="flowinfo">  updated {{ updated_at_since }}</div>{{/updated_at_since}}
+            <div class="flowinfo">  Created {{ created_at_since }}</div>
+            {{#updated_at_since}}<div class="flowinfo">  Updated {{ updated_at_since }}</div>{{/updated_at_since}}
+            <div class="flowinfo">Rating: <span id="node-stars"></span> {{#rating}} {{score}}</div>
+            <div class="flowinfo">({{count}} <i class="fa fa-user"></i>){{/rating}}</div>
             <div class="flowinfo"><a href="{{ html_url }}">view on github</a></div>
           </div>
           {{#sessionuser}}
           <div class="flowmeta">
             <h4>Actions</h4>
+            <form id="form-rate" action="/flow/{{_id}}/rate" method="POST">
+                <input name="_csrf" type="hidden" value="{{csrfToken}}">
+                <input name="rating" type="hidden">
+                <div class="flowinfo">Rate: <span id="set-stars"></span></div>
+            </form>
             <div class="flowinfo" style="text-align: right;"><a class="user-profile-action" href="#" onclick="javascript:addToCollection('{{_id}}');">add to collection</a></div>
             {{#owned}}
                 <div class="flowinfo" style="text-align: right;"><img id="refresh-flow-loader" class="loader" src="/images/loader.gif" />&nbsp;&nbsp;<a class="user-profile-action" id="refresh-flow" href="#">refresh from github</a></div>
@@ -70,6 +77,7 @@
           </div>
     </div>
 </div>
+{{>_rateTools}}
 <script src="/js/tags.js"></script>
 <script>
 $(function() {

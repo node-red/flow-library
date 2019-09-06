@@ -56,12 +56,33 @@ function getNode(id, scope, collection, req,res) {
         node.collection = collection;
 
         var collectionPromise;
+        var ratingPromise;
+
+        if (req.session.user) {
+            if (node.rating && !node.rating.hasOwnProperty("count")) {
+                delete node.rating;
+                ratingPromise = Promise.resolve();
+            } else {
+                ratingPromise = ratings.getUserRating(id, req.session.user.login).then(function(userRating) {
+                    if (userRating) {
+                        if (!node.rating) {
+                            node.rating = {};
+                        }
+                        node.rating.userRating = userRating.rating;
+                    }
+                });
+            }
+        } else {
+            ratingPromise = Promise.resolve();
+        }
 
         if (collection) {
             collectionPromise = collections.getSiblings(collection,id);
         } else {
             collectionPromise = Promise.resolve();
         }
+
+
         for (var n in node.versions.latest["node-red"].nodes) {
             var def = node.versions.latest["node-red"].nodes[n];
             //console.log(n);
@@ -122,14 +143,8 @@ function getNode(id, scope, collection, req,res) {
                     node.githubUrl = "https://"+m[1];
                 }
             }
-            var userLogin = req.session.user ? req.session.user.login : null;
-            ratings.get(id, userLogin).then(function(rating) {
-                if (rating) {
-                    rating.score = (rating.total/rating.count * 10 / 10).toFixed(1);
-                    node.rating = rating;
-                }
-                return collectionPromise;
-            }).then(function(collectionSiblings) {
+
+            ratingPromise.then(() => collectionPromise).then(function(collectionSiblings) {
                 if (collection && collectionSiblings) {
                     node.collectionName = collectionSiblings[0].name;
                     node.collectionPrev = collectionSiblings[0].prev;
@@ -205,52 +220,18 @@ app.post("/node/:scope(@[^\\/]{1,})?/:id([^@][^\\/]{1,})/rate", appUtils.csrfPro
         id = req.params.scope+"/"+id;
     }
     if (req.session.user) {
-        var rating = {
-            user: req.session.user.login,
-            module: req.params.id
-        }
-        if (Number(req.body.rating) == 0) {
-            ratings.remove(rating).then(function() {
-                return events.add({
-                    action:"module_rating",
-                    module: id,
-                    message:"removed",
-                    user: req.session.user.login
-                });
+        ratings.rateThing(id,req.session.user.login,Number(req.body.rating)).then(function() {
+            res.writeHead(303, {
+                Location: "/node/"+id
             });
-        } else {
-            var version = null;
-            npmNodes.get(id).then(function(node) {
-                version = node.versions.latest.version;
-                rating.rating = +req.body.rating;
-                rating.time = new Date();
-                rating.version = version;
-                return ratings.save(rating);
-            }).then(function() {
-                return ratings.get(id);
-            }).then(function(rating) {
-                var nodeRating = {
-                    score: rating.total/rating.count,
-                    count: rating.count
-                }
-                return npmNodes.update(id,{rating: nodeRating});
-            }).then(function() {
-                return events.add({
-                    action:"module_rating",
-                    module: id,
-                    message:req.body.rating,
-                    user: req.session.user.login,
-                    version: version
-                });
-            }).catch(function(err) {
-                console.log("error rating node module: "+id,err);
-            })
-        }
+            res.end();
+        })
+    } else {
+        res.writeHead(303, {
+            Location: "/node/"+id
+        });
+        res.end();
     }
-    res.writeHead(303, {
-        Location: "/node/"+id
-    });
-    res.end();
 });
 
 

@@ -9,6 +9,8 @@ var appUtils = require("../lib/utils");
 var npmNodes = require("../lib/nodes");
 var templates = require("../lib/templates");
 var collections = require("../lib/collections");
+var ratings = require("../lib/ratings");
+
 
 var app = express();
 
@@ -52,11 +54,12 @@ app.post("/flow", function(req,res) {
     }
 });
 
-app.get("/flow/:id",function(req,res) { getFlow(req.params.id,null,req,res); });
-app.get("/flow/:id/in/:collection",function(req,res) { getFlow(req.params.id,req.params.collection,req,res); });
+app.get("/flow/:id",appUtils.csrfProtection(),function(req,res) { getFlow(req.params.id,null,req,res); });
+app.get("/flow/:id/in/:collection",appUtils.csrfProtection(),function(req,res) { getFlow(req.params.id,req.params.collection,req,res); });
 function getFlow(id,collection,req,res) {
     gister.get(id).then(function(gist) {
         gist.sessionuser = req.session.user;
+        gist.csrfToken = req.csrfToken();
         gist.flow = "";
         gist.collection = collection;
         gist.created_at_since = appUtils.formatDate(gist.created_at);
@@ -65,7 +68,24 @@ function getFlow(id,collection,req,res) {
 
 
         var collectionPromise;
-
+        var ratingPromise;
+        if (req.session.user) {
+            if (gist.rating && !gist.rating.hasOwnProperty("count")) {
+                delete gist.rating;
+                ratingPromise = Promise.resolve();
+            } else {
+                ratingPromise = ratings.getUserRating(id, req.session.user.login).then(function(userRating) {
+                    if (userRating) {
+                        if (!gist.rating) {
+                            gist.rating = {};
+                        }
+                        gist.rating.userRating = userRating.rating;
+                    }
+                });
+            }
+        } else {
+            ratingPromise = Promise.resolve();
+        }
         if (collection) {
             collectionPromise = collections.getSiblings(collection,id);
         } else {
@@ -130,7 +150,7 @@ function getFlow(id,collection,req,res) {
             fs.readFile(appUtils.mapGistPath(gist.files['README-md']),'utf-8',function(err,data) {
                 marked(data,{},function(err,content) {
                     gist.readme = content;
-                    collectionPromise.then(function(collectionSiblings){
+                    ratingPromise.then(()=>collectionPromise).then(function(collectionSiblings){
                         if (collection && collectionSiblings) {
                             gist.collectionName = collectionSiblings[0].name;
                             gist.collectionPrev = collectionSiblings[0].prev;
@@ -193,6 +213,24 @@ app.post("/flow/:id/refresh",verifyOwner,function(req,res) {
         }
     });
 });
+
+app.post("/flow/:id/rate", appUtils.csrfProtection(),function(req,res) {
+    var id = req.params.id;
+    if (req.session.user) {
+        ratings.rateThing(id,req.session.user.login,Number(req.body.rating)).then(function() {
+            res.writeHead(303, {
+                Location: "/flow/"+id
+            });
+            res.end();
+        })
+    } else {
+        res.writeHead(303, {
+            Location: "/flow/"+id
+        });
+        res.end();
+    }
+});
+
 
 //app.post("/flow/:id/add",function(req,res) {
 //    gister.add(req.params.id).then(function () {

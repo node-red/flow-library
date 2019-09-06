@@ -22,6 +22,10 @@
             {{#collection.gitOwners}}
                 <div class="flowinfo"><a href="/user/{{.}}">{{.}}</a></div>
             {{/collection.gitOwners}}
+
+            {{#owned}}
+            <div class="flowinfo" style="text-align: right;"><a class="user-profile-action" id="manage-users" href="#">manage users</a></div>
+            {{/owned}}
         </div>
         {{#sessionuser}}
         <div class="flowmeta">
@@ -44,6 +48,7 @@
 <div class="grid thing-list-section">
     {{#query}}{{>_gistlist}}{{/query}}
 </div>
+{{#sessionuser}}
 <script>
 $(function() {
     $(".gistlist").sortable({
@@ -73,6 +78,83 @@ $(function() {
             '<div class="dialog-buttons"><button type="button" onclick="return closeDialog();">Cancel</button><button type="submit">Delete</button></div>'+
             '</form></div></div>').appendTo('body').show();
     })
+    var users = [];
+    {{#collection.gitOwners}}users.push("{{{.}}}");{{/collection.gitOwners}}
+
+    $("#manage-users").on('click', function(evt) {
+        evt.preventDefault();
+        var dialog = $('<div class="dialog-shade"><div class="dialog">'+
+                '<form action="/collection/{{collection._id}}" method="POST">'+
+                '<input name="_csrf" type="hidden" value="{{csrfToken}}">'+
+                '<h4>Manage users</h4>'+
+                '<div class="dialog-list" id="collection-user-list"></div>'+
+                '<div><input type="text" style="width: calc(100% - 120px); margin-right: 10px;" placeholder="enter username" id="collection-add-user"><button style="position:relative; top: -2px" type="button">add user</button></div>'+
+            '<div class="dialog-buttons"><button type="button" onclick="return closeDialog();">Cancel</button><button type="submit">Save</button></div>'+
+            '</form></div></div>').appendTo('body')
+
+        var userList = [];
+
+        var currentUser = "{{{sessionuser.login}}}";
+        var list = $("#collection-user-list");
+        users.forEach(addUser);
+
+        dialog.find('button[type="submit"]').on("click", function(evt) {
+            evt.preventDefault();
+            var form = dialog.find("form").serialize();
+
+            $.ajax({
+                url: '/collection/{{collection._id}}',
+                type: 'PUT',
+                data: form,
+                success: function(data) {
+                    window.location = data;
+                }
+            }).fail(function(response) {
+                if (response.status == 403) {
+                    window.location.reload();
+                }
+                try {
+                    var errors = JSON.parse(response.responseText);
+                    if (errors.owners) {
+                        errors.owners.forEach(function(u) {
+                            $('<span class="dialog-warning">Unknown user</span>').appendTo(list.find('input[value="'+u+'"] + span'))
+                        })
+                    }
+                } catch(err) {
+                    console.log("ERROR",err);
+                }
+            });
+
+
+        })
+        function addUser(user) {
+            userList.push(user);
+            var row = $('<div></div>').appendTo(list);
+            $('<input type="hidden" name="owners">').val(user).appendTo(row);
+            $('<span></span>').text(user).appendTo(row);
+            $('<button type="button" style="display: none; padding: 2px 4px; min-width: auto; float: right">remove</button>').appendTo(row).on("click", function(evt) {
+                var index = userList.indexOf(user);
+                if (index > -1) {
+                    userList.splice(index, 1);
+                }
+                row.remove();
+                list.find('button').toggle(userList.length > 1);
+            });
+            list.find('button').toggle(userList.length > 1);
+        }
+
+        $("#collection-add-user + button").on("click", function(evt) {
+            var u = $("#collection-add-user").val().trim();
+            if (u && userList.indexOf(u) === -1) {
+                addUser(u);
+            }
+        })
+
+
+        dialog.show();
+    })
+
+
 });
 
 function removeFromCollection(id) {
@@ -95,6 +177,7 @@ function removeFromCollection(id) {
         }
     })
 }
+{{/sessionuser}}
 
 </script>
 {{#collection}}

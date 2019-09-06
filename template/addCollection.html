@@ -1,17 +1,18 @@
 {{>_header}}
-  <div class="grid add-form" style="background: none;">
+  <div class="grid add-form" style="background: none; position:relative">
    <div class="col-1-12">&nbsp;</div>
    <div class="col-10-12 thing-list-section" style="background: white; padding: 10px 50px;">
        <h2 class="pagetitle">{{#collection}}Edit your collection{{/collection}}{{^collection}}Add a collection{{/collection}}</h2>
 
        <h4 class="add-flow-label"><label for="add-flow-title">Title</label></h4>
-       <p>Give your collection a short, descriptive title. </p>
+       <p>Give your collection a short, descriptive title.</p>
        <input id="add-flow-title" type="text" value="{{ collection.name }}"></input>
-
+       <div style="position:relative"><div class="add-collection-title-warning dialog-warning">The title must be at least 10 characters long</div></div>
        <h4 class="add-flow-label"><label for="add-flow-desc">Description</label></h4>
        <p>Describe what your collection contains.</p>
        <p>This uses <a href="http://github.github.com/github-flavored-markdown/">GitHub Flavoured Markdown</a>
        for formatting. Use the <i>preview</i> tab to see how it looks.</p>
+       <div class="add-collection-description-warning dialog-warning">The description must be at least 30 characters long</div>
        <div style="padding-top: 10px;border: 1px solid #fff; position: relative;">
            <textarea id="add-flow-desc">{{ collection.description }}</textarea>
            <div id="add-flow-desc-md"></div>
@@ -28,27 +29,31 @@
 <script>
 
 $(function() {
-
-    $("#add-flow-title").change(function(e) {
-        var title = $.trim($(this).val());
-        if (title == "") {
+    var titleValid = false;
+    var descValid = false;
+    $("#add-flow-title").keyup(function(e) {
+        var val = $(this).val().trim();
+        if (val.length < 10) {
+            titleValid = false;
+            $(".add-collection-title-warning").show();
             $(this).addClass("input-error");
         } else {
+            titleValid = true;
+            $(".add-collection-title-warning").hide();
             $(this).removeClass("input-error");
         }
     });
 
-    $("#add-flow-flow").change(function(e) {
-        var flow = $(this).val();
-        if (flow == "") {
-            $("#add-flow-flow").removeClass("input-error");
+    $("#add-flow-desc").keyup(function(e) {
+        var val = $(this).val().trim();
+        if (val.length < 30) {
+            descValid = false;
+            $(".add-collection-description-warning").show();
+            $(this).addClass("input-error");
         } else {
-            try {
-                JSON.parse(flow);
-                $("#add-flow-flow").removeClass("input-error");
-            } catch(err) {
-                $("#add-flow-flow").addClass("input-error");
-            }
+            descValid = true;
+            $(".add-collection-description-warning").hide();
+            $(this).removeClass("input-error");
         }
     });
 
@@ -82,11 +87,13 @@ $(function() {
     if (qsMatch) {
         addItem = decodeURIComponent(qsMatch[1]);
     }
-
-
     $('#add-flow-create').click(function(e) {
         e.preventDefault();
         if (createSubmitted) {
+            return;
+        }
+        if (!titleValid || !descValid) {
+            window.scrollTo(0,0);
             return;
         }
         createSubmitted = true;
@@ -94,16 +101,11 @@ $(function() {
         $("#add-flow-create").addClass("submitted");
         $("#add-flow-loader").show();
         var collection = {
-            title: $.trim($("#add-flow-title").val()),
+            title: $("#add-flow-title").val().trim(),
             description: $("#add-flow-desc").val()
             // tags: tags.get()
         };
-        var errors = false;
 
-        if (collection.title == "") {
-            errors = true;
-            $("#add-flow-title").addClass("input-error");
-        }
         {{#csrfToken}}
         collection._csrf = '{{csrfToken}}';
         {{/csrfToken}}
@@ -111,39 +113,29 @@ $(function() {
         if (addItem) {
             collection.items = [addItem];
         }
-
-
-        if (!errors) {
-            $.ajax({
+        $.ajax({
             {{^collection}}
-                url:"/collection",
-                type: "POST",
+            url:"/collection",
+            type: "POST",
             {{/collection}}
             {{#collection}}
-                url: '/collection/{{collection._id}}',
-                type: 'PUT',
+            url: '/collection/{{collection._id}}',
+            type: 'PUT',
             {{/collection}}
-                data: collection,
-                success: function(data) {
-                    window.location = data;
-                }
-            }).fail(function(err) {
-                if (err.status == 403) {
-                    window.location.reload();
-                }
-                createSubmitted = false;
-                console.log("ERROR",err);
-                $("#add-flow-create").removeClass("submitted");
-                $("#add-flow-loader").hide();
-                $("#add-flow-label").show();
-            });
-        } else {
+            data: collection,
+            success: function(data) {
+                window.location = data;
+            }
+        }).fail(function(err) {
+            if (err.status == 403) {
+                window.location.reload();
+            }
+            createSubmitted = false;
+            console.log("ERROR",err);
             $("#add-flow-create").removeClass("submitted");
             $("#add-flow-loader").hide();
             $("#add-flow-label").show();
-            createSubmitted = false;
-            window.scrollTo(0,0);
-        }
+        });
     });
     // var tags = tagger();
 

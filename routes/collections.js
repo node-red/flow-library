@@ -157,11 +157,20 @@ app.put("/collection/:id", appUtils.csrfProtection(),verifyOwner, function(req,r
         if (req.body.hasOwnProperty('items')) {
             collection.items = req.body.items;
         }
+        if (req.body.hasOwnProperty('owners')) {
+            collection.gitOwners = req.body.owners;
+            if (typeof collection.gitOwners === "string") {
+                collection.gitOwners = [collection.gitOwners];
+            }
+            if (collection.gitOwners.length === 0) {
+                delete collection.gitOwners
+            }
+        }
         collections.update(collection).then(function(id) {
             res.send("/collection/"+id);
         }).catch(function(err) {
             console.log("Error updating collection:",err);
-            res.send(err);
+            res.status(400).json(err);
         });
     } else {
         res.status(403).end();

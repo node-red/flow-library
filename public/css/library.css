@@ -259,6 +259,9 @@ h1 {
     margin-bottom: 10px;
     font-size: 14px;
 }
+.add-form .dialog-warning.add-collection-title-warning {
+    right: 0;
+}
 .add-form input[type=text] {
     margin-bottom: 0;
     height: 40px;
@@ -283,7 +286,6 @@ h1 {
 .add-form textarea:focus,
 .add-form input:focus {
     outline: none;
-    box-shadow: 0 0 8px #fbb;
 }
 
 #add-flow-title {
@@ -455,10 +457,6 @@ ul#add-flow-tags li i.icon {
 
 .input-error {
     border-color: rgb(214, 97, 95) !important;
-}
-.input-error:focus {
-    box-shadow: rgba(0, 0, 0, 0.0745098) 0px 1px 1px 0px inset,
-                rgba(236, 168, 82, 0.6) 0px 0px 12px 0px !important
 }
 
 .header-image {
@@ -810,8 +808,8 @@ li.gistbox {
     float: left;
     margin-bottom: 15px;
     margin-right: 15px;
-    width: calc(33% - 12px);
-    min-width: 240px;
+    width: calc(33% - 13px);
+    min-width: 150px;
     overflow: hidden;
 
     box-shadow: 3px 3px 0 rgba(0,0,0,0.1);
@@ -1354,6 +1352,29 @@ span.username {
 }
 .user-meta a.active {
     border-bottom: 3px solid white;
+}
+
+.dialog-list {
+    min-height: 250px;
+    border: 1px solid #aa4444;
+    border-radius: 4px;
+    margin: 10px 0;
+    overflow-y: scroll;
+    background: #f6f6f6;
+}
+.dialog-list > div {
+    padding: 8px 6px;
+    background: white;
+    position: relative;
+}
+.dialog-list > div:not(:last-child) {
+    border-bottom: 1px solid #f0f0f0;
+}
+.dialog-list .dialog-warning {
+    display: inline-block;
+    bottom: 8px;
+    right: 80px;
+
 }
 
 @media handheld, only screen and (max-width: 767px) {

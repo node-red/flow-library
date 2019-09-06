@@ -98,6 +98,7 @@
     </div>
 </div>
 {{>_rateTools}}
+{{#sessionuser}}
 <script>
     $("#report-node").click(function(e) {
         $("body").css({height:"100%",overflow:"hidden"});
@@ -105,6 +106,5 @@
         $("#report-node-shade").show();
     });
 </script>
-
-{{#sessionuser}}{{/sessionuser}}
+{{/sessionuser}}
 {{>_footer}}

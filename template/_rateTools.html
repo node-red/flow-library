@@ -1,0 +1,22 @@
+<script src="/js/jquery.raty-fa.js"></script>
+<script>
+    $.fn.raty.defaults.hints = ['bad', 'poor', 'regular', 'good', 'awesome'];
+    $.fn.raty.defaults.space = false;
+
+    $("#node-stars").raty({
+        {{#rating}}score: {{#score}}{{.}}{{/score}}{{^score}}0{{/score}},{{/rating}}
+        readOnly: true
+    });
+
+{{#sessionuser}}
+    function rate(e) {
+        $("input[name=rating]").val(e);
+        $("#form-rate").submit();
+    };
+
+    $("#set-stars").raty({
+        {{#rating}}{{#userRating}}score: {{.}},{{/userRating}}{{/rating}}
+        cancel: true,
+        click: utils.debounce(rate, 1000)});
+{{/sessionuser}}
+</script>

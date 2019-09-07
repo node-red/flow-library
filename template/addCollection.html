@@ -43,7 +43,6 @@ $(function() {
             $(this).removeClass("input-error");
         }
     });
-
     $("#add-flow-desc").keyup(function(e) {
         var val = $(this).val().trim();
         if (val.length < 30) {
@@ -56,6 +55,9 @@ $(function() {
             $(this).removeClass("input-error");
         }
     });
+
+    $("#add-flow-title").trigger("keyup");
+    $("#add-flow-desc").trigger("keyup");
 
     $('#add-flow-desc-preview').click(function(e) {
         var desc = $("#add-flow-desc").val();

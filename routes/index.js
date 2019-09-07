@@ -113,8 +113,14 @@ app.get("/things", function (req, res) {
             }
         };
         if (req.session.user) {
-            context.showTools = {
-                ownedCollection: result.collectionOwner === req.session.user.login,
+            context.showTools = {};
+            if (result.collectionOwners) {
+                for (var i=0;i<result.collectionOwners.length;i++) {
+                    if (result.collectionOwners[i] === req.session.user.login) {
+                        context.showTools.ownedCollection = true;
+                        break;
+                    }
+                }
             }
         }
         if (query.collection) {

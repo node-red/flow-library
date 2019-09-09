@@ -34,11 +34,9 @@ app.get("/nodes",function(req,res) {
 
 
 app.get("/node/:scope(@[^\\/]{1,})?/:id([^@][^\\/]{1,})",appUtils.csrfProtection(),function(req,res) {
-    console.log(req.url);
     getNode(req.params.id,req.params.scope,null,req,res);
 });
 app.get("/node/:scope(@[^\\/]{1,})?/:id([^@][^\\/]{1,})/in/:collection",appUtils.csrfProtection(),function(req,res) {
-    console.log(req.url);
     getNode(req.params.id,req.params.scope,req.params.collection,req,res);
 });
 
@@ -72,7 +70,9 @@ function getNode(id, scope, collection, req,res) {
                         }
                         node.rating.userRating = userRating.rating;
                     }
-                    node.rating.score = (node.rating.score||0).toFixed(1);
+                    if (node.rating && node.rating.hasOwnProperty('score')) {
+                        node.rating.score = (node.rating.score||0).toFixed(1);
+                    }
                 });
             }
         } else {
@@ -81,7 +81,6 @@ function getNode(id, scope, collection, req,res) {
             }
             ratingPromise = Promise.resolve();
         }
-
         if (collection) {
             collectionPromise = collections.getSiblings(collection,id);
         } else {

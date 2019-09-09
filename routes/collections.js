@@ -101,6 +101,10 @@ app.get("/collection/:id",  appUtils.csrfProtection(), function(req,res) {
                         }
                         collection.rating.userRating = userRating.rating;
                     }
+                    if (collection.rating && collection.rating.hasOwnProperty('score')) {
+                        collection.rating.score = (collection.rating.score||0).toFixed(1);
+                    }
+
                 });
             }
         } else {

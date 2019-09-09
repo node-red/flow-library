@@ -81,6 +81,9 @@ function getFlow(id,collection,req,res) {
                         }
                         gist.rating.userRating = userRating.rating;
                     }
+                    if (gist.rating && gist.rating.hasOwnProperty('score')) {
+                        gist.rating.score = (gist.rating.score||0).toFixed(1);
+                    }
                 });
             }
         } else {

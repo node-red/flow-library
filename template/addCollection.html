@@ -56,8 +56,12 @@ $(function() {
         }
     });
 
-    $("#add-flow-title").trigger("keyup");
-    $("#add-flow-desc").trigger("keyup");
+    if ($("#add-flow-title").val() > 0) {
+        $("#add-flow-title").trigger("keyup");
+    }
+    if ($("#add-flow-desc").val() > 0) {
+        $("#add-flow-desc").trigger("keyup");
+    }
 
     $('#add-flow-desc-preview').click(function(e) {
         var desc = $("#add-flow-desc").val();
@@ -95,6 +99,8 @@ $(function() {
             return;
         }
         if (!titleValid || !descValid) {
+            $("#add-flow-title").trigger("keyup");
+            $("#add-flow-desc").trigger("keyup");            
             window.scrollTo(0,0);
             return;
         }

@@ -7,7 +7,7 @@
             <h4 class="add-flow-label"><label for="add-flow-title">Title</label></h4>
             <p>Give your flow a short, descriptive title. </p>
             <input id="add-flow-title" type="text"></input>
-
+            <div style="position:relative"><div class="add-collection-title-warning dialog-warning">The title must be at least 10 characters long</div></div>
 
             <h4 class="add-flow-label"><label for="add-flow-desc">Description</label></h4>
             <p>Describe what the flow does and how it is used.</p>
@@ -15,7 +15,8 @@
                 for formatting. Use the <i>preview</i> tab to see how it looks.
             </p>
 
-            <div  style="padding-top: 10px;border: 1px solid #fff; position: relative;">
+            <div class="add-collection-description-warning dialog-warning">The description must be at least 30 characters long</div>
+            <div style="padding-top: 10px;border: 1px solid #fff; position: relative;">
                 <textarea id="add-flow-desc"></textarea>
                 <div id="add-flow-desc-md"></div>
                 <div class="add-flow-desc-buttons"><a href="#" class="active" id="add-flow-desc-edit">edit</a><a href="#" class="inactive" id="add-flow-desc-preview">preview</a></div>
@@ -27,6 +28,7 @@
                 the dialog and paste here.
             </p>
             <textarea id="add-flow-flow"></textarea>
+            <div style="position:relative"><div class="add-collection-flow-warning dialog-warning">The flow must contain at least one node</div></div>
 
             <h4 class="add-flow-label"><label for="add-flow-tags">Tags</label></h4>
             <p>Add some tags to your flow that will help others find it. Comma- or space-separate the tags.</p>
@@ -45,68 +47,62 @@
 
 $(function() {
 
-    $("#flowurl").keydown(function(event){
-        if(event.keyCode == 13) {
-            event.preventDefault();
-            return false;
-        }
-    });
+    var titleValid = false;
+    var descValid = false;
+    var flowValid = false;
 
-    $("#addflow").click(function(event) {
-        var r = /^https?:\/\/gist\.github\.com(\/.+)*\/([^\/]*)$/
-        var match = r.exec($("#flowurl").val());
-        if (match) {
-            $('#flowurl').removeClass('input-error');
-            $('#flowerror').html('&nbsp;');
-            var id = match.pop();
-            //https://gist.github.com/knolleary/223cbbbedbfd383872a8
-
-            $.post("/add/"+id,function(data) {
-                window.location = data;
-            }).fail(function(data) {
-                $('#flowurl').addClass('input-error');
-                $('#flowerror').html(data.responseText);
-                $('#flowurl').focus();
-            });
-
-        } else {
-            $("#add-flow-loader").show();
-            $('#flowurl').addClass('input-error');
-            $('#flowerror').html('Invalid GitHub url');
-        }
-        event.preventDefault();
-    });
-
-    $("#add-flow-title").change(function(e) {
-        var title = $.trim($(this).val());
-        if (title == "") {
+    $("#add-flow-title").keyup(function(e) {
+        var val = $(this).val().trim();
+        if (val.length < 10) {
+            titleValid = false;
+            $(".add-collection-title-warning").show();
             $(this).addClass("input-error");
         } else {
+            titleValid = true;
+            $(".add-collection-title-warning").hide();
             $(this).removeClass("input-error");
         }
     });
-    $("#add-flow-desc").change(function(e) {
-        var desc = $.trim($(this).val());
-        if (desc == "") {
+    $("#add-flow-desc").keyup(function(e) {
+        var val = $(this).val().trim();
+        if (val.length < 30) {
+            descValid = false;
+            $(".add-collection-description-warning").show();
             $(this).addClass("input-error");
         } else {
+            descValid = true;
+            $(".add-collection-description-warning").hide();
             $(this).removeClass("input-error");
         }
     });
 
-    $("#add-flow-flow").change(function(e) {
-        var flow = $(this).val();
+    function validateFlow(e) {
+        var flow = $(this).val().trim();
         if (flow == "") {
-            $("#add-flow-flow").removeClass("input-error");
+            $(".add-collection-flow-warning").show();
+            $(this).addClass("input-error");
+            flowValid = false;
         } else {
             try {
-                JSON.parse(flow);
-                $("#add-flow-flow").removeClass("input-error");
+                var nodes = JSON.parse(flow);
+                if (!Array.isArray(nodes) || nodes.length === 0) {
+                    $(".add-collection-flow-warning").show();
+                    $(this).addClass("input-error");
+                    flowValid = false;
+                } else {
+                    $(".add-collection-flow-warning").hide();
+                    $(this).removeClass("input-error");
+                    flowValid = true;
+                }
             } catch(err) {
-                $("#add-flow-flow").addClass("input-error");
+                $(".add-collection-flow-warning").show();
+                $(this).addClass("input-error");
+                flowValid = false;
             }
         }
-    });
+    }
+    $("#add-flow-flow").keyup(validateFlow);
+    $("#add-flow-flow").on('paste',validateFlow);
 
     $('#add-flow-desc-preview').click(function(e) {
         var desc = $("#add-flow-desc").val();
@@ -137,6 +133,13 @@ $(function() {
         if (createSubmitted) {
             return;
         }
+        if (!titleValid || !descValid || !flowValid) {
+            $("#add-flow-title").trigger("keyup");
+            $("#add-flow-desc").trigger("keyup");
+            $("#add-flow-flow").trigger("keyup");
+            window.scrollTo(0,0);
+            return;
+        }
         createSubmitted = true;
         $("#add-flow-label").hide();
         $("#add-flow-create").addClass("submitted");
@@ -147,48 +150,18 @@ $(function() {
             flow: $("#add-flow-flow").val(),
             tags: tags.get()
         };
-        var errors = false;
-
-        if (flow.title == "") {
-            errors = true;
-            $("#add-flow-title").addClass("input-error");
-        }
-        if (flow.description == "") {
-            errors = true;
-            $("#add-flow-desc").addClass("input-error");
-        }
-        if (flow.flow == "") {
-            errors = true;
-            $("#add-flow-flow").addClass("input-error");
-        } else {
-            try {
-                JSON.parse(flow.flow);
-            } catch(err) {
-                errors = true;
-                $("#add-flow-flow").addClass("input-error");
+        $.post("/flow",flow,function(data) {
+            window.location = data;
+        }).fail(function(err) {
+            if (err.status == 403) {
+                window.location.reload();
             }
-        }
-
-        if (!errors) {
-            $.post("/flow",flow,function(data) {
-                window.location = data;
-            }).fail(function(err) {
-                if (err.status == 403) {
-                    window.location.reload();
-                }
-                createSubmitted = false;
-                console.log("ERROR",err);
-                $("#add-flow-create").removeClass("submitted");
-                $("#add-flow-loader").hide();
-                $("#add-flow-label").show();
-            });
-        } else {
+            createSubmitted = false;
+            console.log("ERROR",err);
             $("#add-flow-create").removeClass("submitted");
             $("#add-flow-loader").hide();
             $("#add-flow-label").show();
-            createSubmitted = false;
-            window.scrollTo(0,0);
-        }
+        });
     });
 
     var tags = tagger();

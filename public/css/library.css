@@ -1,8 +1,10 @@
 :root {
     --node-type-primary-color: #CD9494;
     --node-type-secondary-color: #ad6868;
+
     --flow-type-primary-color: #799191;
     --flow-type-secondary-color: #3E6868;
+
     --collection-type-primary-color: #d9cb8c;
     --collection-type-secondary-color: #bdac5d;
 }
@@ -156,11 +158,34 @@ h1 {
 #flow {
     margin-top: 30px;
     margin-bottom: 30px;
-    padding: 30px;
+    padding: 10px;
     font-size: 12px;
     line-height: 22px;
     font-family: monospace;
     cursor: pointer;
+    position:relative;
+}
+button.copy-button {
+    position: absolute;
+    right: 0;
+    top: 0px;
+    box-sizing: border-box;
+    background: white;
+    border: 1px solid #aa6767;
+    text-shadow: none;
+    font-size: 12px;
+    color: #666 !important;
+    padding: 6px 10px;
+    border-top-right-radius: 3px;
+    border-bottom-left-radius: 3px;
+    vertical-align: middle;
+    cursor: pointer;
+}
+button.copy-button:focus {
+    outline: none;
+}
+button.copy-button:active {
+    background: #f3f3f3;
 }
 
 #dreadme {
@@ -170,11 +195,6 @@ h1 {
     margin-bottom: 30px;
 }
 
-.flowuser img {
-    width:32px;
-    border-radius: 5px;
-    vertical-align:middle;
-}
 .pagetitle {
     vertical-align:middle;
 }
@@ -209,10 +229,6 @@ h1 {
     margin-left: 10px;
     font-size: 14px;
 }
-.flowuser {
-    font-family: 'Roboto Slab', serif;
-    font-size: 18px;
-}
 .flow-stat {
     display: inline-block;
     min-width: 30px;
@@ -221,11 +237,6 @@ h1 {
 }
 .nodeTypeList {
     margin: 0;
-}
-.pagetitle .flowuser {
-    color: #aaa;
-    vertical-align:bottom;
-    font-weight: normal;
 }
 .userinfo {
     margin-left: 10px;
@@ -260,6 +271,9 @@ h1 {
     font-size: 14px;
 }
 .add-form .dialog-warning.add-collection-title-warning {
+    right: 0;
+}
+.add-form .dialog-warning.add-collection-flow-warning {
     right: 0;
 }
 .add-form input[type=text] {
@@ -670,15 +684,31 @@ input[type="text"].gist-filter-input {
     width: 100%;
     height: 100%;
 }
-.filter-results li a span:last-child {
-    float: right;
-}
+
 .filter-results li > span {
     color: #999;
     font-style: italic;
 }
 .filter-results li a:hover {
     background: #f0f0f0;
+}
+.filter-result-type {
+    float: right;
+    color: white;
+    display: inline-block;
+    font-size: 0.9em;
+    border-top-right-radius: 8px;
+    border-bottom-left-radius: 4px;
+    padding: 3px 6px;
+}
+.filter-result-node {
+    background: var(--node-type-primary-color);
+}
+.filter-result-flow {
+    background: var(--flow-type-primary-color);
+}
+.filter-result-collection {
+    background: var(--collection-type-primary-color);
 }
 
 
@@ -1376,6 +1406,7 @@ span.username {
     right: 80px;
 
 }
+
 
 @media handheld, only screen and (max-width: 767px) {
     .library .grid {

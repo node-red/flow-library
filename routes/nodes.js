@@ -70,9 +70,13 @@ function getNode(id, scope, collection, req,res) {
                         }
                         node.rating.userRating = userRating.rating;
                     }
+                    node.rating.score = (node.rating.score||0).toFixed(1);
                 });
             }
         } else {
+            if (node.rating) {
+                node.rating.score = (node.rating.score||0).toFixed(1);
+            }
             ratingPromise = Promise.resolve();
         }
 

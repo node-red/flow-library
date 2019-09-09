@@ -104,27 +104,32 @@ function getFlow(id,collection,req,res) {
         gist.nodeTypes = [];
         if (gist.files['flow-json']) {
             gist.flow = fs.readFileSync(appUtils.mapGistPath(gist.files['flow-json']),'utf-8');
-            var nodes = JSON.parse(gist.flow);
-            var nodeTypes = {};
-            for (var n in nodes) {
-                var node = nodes[n];
-                nodeTypes[node.type] = (nodeTypes[node.type]||0)+1;
-            }
-            gist.nodeTypes = [];
-            for (var nt in nodeTypes) {
-                gist.nodeTypes.push({type:nt,count:nodeTypes[nt]});
-            }
-            gist.nodeTypes.sort(function(a,b) {
-                if (a.type in coreNodes && !(b.type in coreNodes)) {
-                    return -1;
+            try {
+                var nodes = JSON.parse(gist.flow);
+                var nodeTypes = {};
+                for (var n in nodes) {
+                    var node = nodes[n];
+                    nodeTypes[node.type] = (nodeTypes[node.type]||0)+1;
                 }
-                if (!(a.type in coreNodes) && b.type in coreNodes) {
-                    return 1;
+                gist.nodeTypes = [];
+                for (var nt in nodeTypes) {
+                    gist.nodeTypes.push({type:nt,count:nodeTypes[nt]});
                 }
-                if (a.type>b.type) return 1;
-                if (a.type<b.type) return -1;
-                return 0;
-            });
+                gist.nodeTypes.sort(function(a,b) {
+                    if (a.type in coreNodes && !(b.type in coreNodes)) {
+                        return -1;
+                    }
+                    if (!(a.type in coreNodes) && b.type in coreNodes) {
+                        return 1;
+                    }
+                    if (a.type>b.type) return 1;
+                    if (a.type<b.type) return -1;
+                    return 0;
+                });
+                gist.flow = JSON.stringify(nodes);
+            } catch(err) {
+                gist.flow = "Invalid JSON";
+            }
         }
         npmNodes.findTypes(gist.nodeTypes.map(function(t) { return t.type; })).then(function(typeMap) {
             var nodeTypes = gist.nodeTypes;
@@ -246,11 +251,14 @@ app.post("/flow/:id/rate", appUtils.csrfProtection(),function(req,res) {
 //    })
 //});
 
-app.post("/flow/:id/delete",verifyOwner,function(req,res) {
+app.post("/flow/:id/delete",appUtils.csrfProtection(),verifyOwner,function(req,res) {
     gister.remove(req.params.id).then(function() {
-        res.status(200).end();
+        res.writeHead(303, {
+            Location: "/"
+        });
+        res.end();
     }).catch(function(err) {
-        res.send(200,err);
+        res.send(400,err).end();
     });
 });
 

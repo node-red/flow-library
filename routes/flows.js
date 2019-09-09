@@ -65,7 +65,7 @@ function getFlow(id,collection,req,res) {
         gist.created_at_since = appUtils.formatDate(gist.created_at);
         gist.updated_at_since = appUtils.formatDate(gist.updated_at);
         gist.refreshed_at_since = appUtils.formatDate(gist.refreshed_at);
-
+        gist.pageTitle = gist.description+" (flow)";
 
         var collectionPromise;
         var ratingPromise;

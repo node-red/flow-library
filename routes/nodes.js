@@ -48,7 +48,7 @@ function getNode(id, scope, collection, req,res) {
     npmNodes.get(id).then(function(node) {
         node.sessionuser = req.session.user;
         node.csrfToken = req.csrfToken();
-        node.pageTitle = req.params.id;
+        node.pageTitle = req.params.id+" (node)";
         //console.log(node);
         node.updated_at_since = appUtils.formatDate(node.updated_at);
         iconCache[id] = {};

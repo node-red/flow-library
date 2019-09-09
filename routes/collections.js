@@ -86,6 +86,7 @@ app.get("/collection/:id",  appUtils.csrfProtection(), function(req,res) {
     };
     collections.get(req.params.id).then(function(collection) {
         context.collection = collection;
+        context.pageTitle = collection.name+" (collection)";
 
         var ratingPromise;
         if (req.session.user) {

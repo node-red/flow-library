@@ -4,22 +4,20 @@
     <div class="col-9-12 docs-content">
         <h1 class="flow-title">{{ description }}</h1>
           {{{ readme }}}
-          <pre id="flow" class="highlight language-javascript">{{ flow }}</pre>
+          <pre id="flow" class="highlight language-javascript"><button class="copy-button" type="button">Copy</button><span>{{ flow }}</span></pre>
     </div>
     <div class="col-3-12">
         {{>_collectionNavBox}}
           <div class="flowmeta">
-            <span class="flowuser">
-              <img src="{{ owner.avatar_url }}"/>
-              <a href="/user/{{ owner.login }}">{{ owner.login }}</a></span>
-          </div>
-          <div class="flowmeta">
             <h4>Flow Info</h4>
             <div class="flowinfo">  Created {{ created_at_since }}</div>
             {{#updated_at_since}}<div class="flowinfo">  Updated {{ updated_at_since }}</div>{{/updated_at_since}}
-            <div class="flowinfo">Rating: <span id="node-stars"></span> {{#rating}} {{score}}</div>
-            <div class="flowinfo">({{count}} <i class="fa fa-user"></i>){{/rating}}</div>
+            <div class="flowinfo">Rating: {{#rating}} {{score}}<i class="icon-star"></i> {{count}}<i class="icon-user"></i>{{/rating}}{{^rating}}<i>not yet rated</i>{{/rating}}</div>
             <div class="flowinfo"><a href="{{ html_url }}">view on github</a></div>
+          </div>
+          <div class="flowmeta">
+              <h4>Owner</h4>
+              <div class="flowinfo"><a href="/user/{{ owner.login }}">{{ owner.login }}</a></div>
           </div>
           {{#sessionuser}}
           <div class="flowmeta">
@@ -77,25 +75,26 @@
           </div>
     </div>
 </div>
-{{>_rateTools}}
+{{#sessionuser}}{{>_rateTools}}{{/sessionuser}}
 <script src="/js/tags.js"></script>
 <script>
 $(function() {
-    function selectText(containerid) {
-        if (document.selection) {
-            var range = document.body.createTextRange();
-            range.moveToElementText(document.getElementById(containerid));
-            range.select();
-        } else if (window.getSelection) {
-            var range = document.createRange();
-            range.selectNode(document.getElementById(containerid));
-            window.getSelection().addRange(range);
-        }
-    }
-    $('#flow').click(function() {
-        selectText('flow');
+    $(".copy-button").on("click", function(evt) {
+        evt.preventDefault();
+        var ta = document.createElement('textarea');
+        ta.value = $(this).next()[0].innerText;
+        ta.style.position = 'absolute';
+        ta.style.left = '-3000px';
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+        $(this).text("Copied!");
+        var self = $(this);
+        setTimeout(function() {
+            self.text("Copy");
+        },3000)
     });
-
 {{#owned}}
     $('#refresh-flow').click(function(event) {
         $("#refresh-flow-loader").show();
@@ -110,13 +109,15 @@ $(function() {
         event.preventDefault();
     });
 
-    $('#remove-flow').click(function(event) {
-        $.post("/flow/{{ id }}/delete",function(data,textStatus,jqXHR) {
-            if (jqXHR.status != 304) {
-                window.location = "/";
-            }
-        });
-        event.preventDefault();
+    $('#remove-flow').click(function(evt) {
+        evt.preventDefault();
+        var dialog = $('<div class="dialog-shade"><div class="dialog">'+
+                '<form action="/flow/{{id}}/delete" method="POST">'+
+                '<input name="_csrf" type="hidden" value="{{csrfToken}}">'+
+            '<h4>Are you sure you want to remove this flow?</h4>'+
+            '<p>It will be removed from the library, but your GitHub Gist will not be affected.'+
+            '<div class="dialog-buttons"><button type="button" onclick="return closeDialog();">Cancel</button><button type="submit">Delete</button></div>'+
+            '</form></div></div>').appendTo('body').show();
     });
 
 

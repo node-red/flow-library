@@ -3,8 +3,8 @@
     <h4>Collection Info</h4>
     <div class="flowinfo"><a href="/collection/{{.}}">{{{collectionName}}}</a></div>
     <div class="flowinfo">
-        {{#collectionPrev}}<a href="/{{collectionPrevType}}/{{.}}/in/{{collection}}"{{/collectionPrev}}{{^collectionPrev}}<span{{/collectionPrev}} style="display:inline-block; width: 50px;" ><i class="fa fa-caret-left"></i> prev{{#collectionPrev}}</a>{{/collectionPrev}}{{^collectionPrev}}</span>{{/collectionPrev}}
-        {{#collectionNext}}<a href="/{{collectionNextType}}/{{.}}/in/{{collection}}"{{/collectionNext}}{{^collectionNext}}<span{{/collectionNext}} style="display:inline-block; width: 50px; text-align: right;" >next <i class="fa fa-caret-right"></i>{{#collectionNext}}</a>{{/collectionNext}}{{^collectionNext}}</span>{{/collectionNext}}
+        {{#collectionPrev}}<a class="user-profile-action"href="/{{collectionPrevType}}/{{.}}/in/{{collection}}"{{/collectionPrev}}{{^collectionPrev}}<span{{/collectionPrev}} style="display:inline-block; width: 60px;" ><i class="icon-caret-left"></i>prev{{#collectionPrev}}</a>{{/collectionPrev}}{{^collectionPrev}}</span>{{/collectionPrev}}
+        {{#collectionNext}}<a href="/{{collectionNextType}}/{{.}}/in/{{collection}}"{{/collectionNext}}{{^collectionNext}}<span{{/collectionNext}} style="display:inline-block; width: 60px; text-align: right;" >next<i class="icon-caret-right"></i>{{#collectionNext}}</a>{{/collectionNext}}{{^collectionNext}}</span>{{/collectionNext}}
     </div>
 </div>
 {{/collection}}

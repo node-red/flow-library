@@ -17,8 +17,7 @@
             <div class="flowinfo"> Version: {{ versions.latest.version }}</div>
             {{#updated_at_since}}<div class="flowinfo">  Updated {{ updated_at_since }}</div>{{/updated_at_since}}
             {{#license}}<div class="flowinfo">License: {{ license }}</div>{{/license}}
-            <div class="flowinfo">Rating: <span id="node-stars"></span> {{#rating}} {{score}}</div>
-            <div class="flowinfo">({{count}} <i class="fa fa-user"></i>){{/rating}}</div>
+            <div class="flowinfo">Rating: {{#rating}} {{score}}<i class="icon-star"></i> {{count}}<i class="icon-user"></i>{{/rating}}{{^rating}}<i>not yet rated</i>{{/rating}}</div>
             <div class="flowinfo"><a target="_blank" href="https://npmjs.org/package/{{ name }}">View on npm</a></div>
             {{#githubUrl}}<div class="flowinfo"><a target="_blank" href="{{githubUrl}}">View on GitHub</a></div>{{/githubUrl}}
           </div>
@@ -97,8 +96,8 @@
         </form>
     </div>
 </div>
-{{>_rateTools}}
 {{#sessionuser}}
+{{>_rateTools}}
 <script>
     $("#report-node").click(function(e) {
         $("body").css({height:"100%",overflow:"hidden"});

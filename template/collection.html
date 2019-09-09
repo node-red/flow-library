@@ -14,8 +14,7 @@
             {{/collection.item_count_label}}
             <div id="collection-item-count-empty" class="flowinfo" {{#collection.item_count_label}}style="display: none"{{/collection.item_count_label}}><i>empty</i></div>
             <div class="flowinfo">Updated {{collection.updated_at_since}}</div>
-            <div class="flowinfo">Rating: <span id="node-stars"></span> {{#rating}} {{score}}</div>
-            <div class="flowinfo">({{count}} <i class="fa fa-user"></i>){{/rating}}</div>
+            <div class="flowinfo">Rating: {{#collection.rating}} {{score}}<i class="icon-star"></i> {{count}}<i class="icon-user"></i>{{/collection.rating}}{{^collection.rating}}<i>not yet rated</i>{{/collection.rating}}</div>
         </div>
         <div class="flowmeta">
             <h4>Owners</h4>
@@ -181,7 +180,9 @@ function removeFromCollection(id) {
 
 </script>
 {{#collection}}
+{{#sessionuser}}
 {{>_rateTools}}
+{{/sessionuser}}
 {{/collection}}
 
 {{>_footer}}

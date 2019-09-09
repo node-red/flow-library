@@ -34,23 +34,26 @@
                                     data.forEach(function(d) {
                                         var link = $('<a/>');
                                         var label = $('<span/>').appendTo(link);
-                                        var type = $('<span/>').appendTo(link);
+                                        var type = $('<span class="filter-result-type"/>').appendTo(link);
                                         if (d.isNode) {
                                             link.attr("href","/node/"+d.name)
                                             label.text(d.name);
+                                            type.addClass("filter-result-node");
                                             type.text("node");
                                         } else if (d.isFlow) {
                                             link.attr("href","/flow/"+d._id)
                                             label.text(d.description);
+                                            type.addClass("filter-result-flow");
                                             type.text("flow")
                                         } else if (d.isCollection) {
                                             link.attr("href","/collection/"+d._id)
                                             label.text(d.name);
+                                            type.addClass("filter-result-collection");
                                             type.text("collection")
                                         }
                                         $('<li>').appendTo(list).append(link);
                                     })
-                                    $('<li>',{style:"text-align: right"}).appendTo(list).append($('<a>').attr("href","/search?term="+encodeURIComponent(term)).html("see more ("+results.meta.results.count+') <i class="fa fa-caret-right"></i>'));
+                                    $('<li>',{style:"text-align: right"}).appendTo(list).append($('<a>').attr("href","/search?term="+encodeURIComponent(term)).html("see more ("+results.meta.results.count+')<i class="icon-caret-right"></i>'));
                                 } else {
                                     $('<li>').appendTo(list).append($('<span>').text("Nothing found"));
                                 }
@@ -65,8 +68,8 @@
                 {{/fullsearch}}
             </div>
             <span class="buttons">
-                <a href="/add"><i class="fa fa-plus"></i></a>
-                {{^sessionuser}} <a class="signin" href="/login"><span>Sign in with <b>GitHub</b></span><i class="fa fa-github fa-2x"></i></a>
+                <a href="/add"><i class="icon-plus"></i></a>
+                {{^sessionuser}} <a class="signin" href="/login"><span>Sign in with <b>GitHub</b></span><i class="icon-github"></i></a>
                 <script>$(function() { $(".signin").attr('href','/login?return='+window.location.pathname);});</script>
                 {{/sessionuser}}
                 {{#sessionuser}}<a class="user" href="/user/{{sessionuser.login}}"><img src="{{avatar_url}}"/></a>

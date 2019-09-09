@@ -2,13 +2,13 @@
 <script>
     $.fn.raty.defaults.hints = ['bad', 'poor', 'regular', 'good', 'awesome'];
     $.fn.raty.defaults.space = false;
+    $.fn.raty.defaults.space = false;
+    $.fn.raty.defaults.starHalf = "icon-star-half";
+    $.fn.raty.defaults.starOff = "icon-star-empty";
+    $.fn.raty.defaults.starOn = "icon-star";
+    $.fn.raty.defaults.cancelOff = "icon-trash";
+    $.fn.raty.defaults.cancelOn = "icon-trash";
 
-    $("#node-stars").raty({
-        {{#rating}}score: {{#score}}{{.}}{{/score}}{{^score}}0{{/score}},{{/rating}}
-        readOnly: true
-    });
-
-{{#sessionuser}}
     function rate(e) {
         $("input[name=rating]").val(e);
         $("#form-rate").submit();
@@ -18,5 +18,4 @@
         {{#rating}}{{#userRating}}score: {{.}},{{/userRating}}{{/rating}}
         cancel: true,
         click: utils.debounce(rate, 1000)});
-{{/sessionuser}}
 </script>

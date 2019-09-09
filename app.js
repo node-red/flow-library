@@ -47,6 +47,12 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 
 app.use("/",serveStatic(path.join(__dirname,'public')));
+if (process.env.FLOW_ENV !== "PRODUCTION") {
+    app.use("*", function(req,res,next) {
+        console.log(">",req.url);
+        next();
+    })
+}
 app.use(require("./routes/index"));
 app.use(require("./routes/auth"));
 app.use(require("./routes/flows"));

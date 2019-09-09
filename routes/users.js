@@ -20,11 +20,11 @@ app.get("/user/:username", function (req, res) {
         type: ""
     }
 
-    db.users.findOne({_id:context.query.username},function(err,user) {
-        if (user) {
-            context.user = user;
-            if (user.npm_login && user.npm_login !== context.username) {
-                context.query.npm_username = user.npm_login;
+    db.users.find({_id:context.query.username},null,null,function(err,user) {
+        if (user && user.length > 0) {
+            context.user = user[0];
+            if (user[0].npm_login && user[0].npm_login !== context.username) {
+                context.query.npm_username = user[0].npm_login;
             }
         }
         res.send(mustache.render(templates.user, context, templates.partials));

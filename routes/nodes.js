@@ -34,9 +34,11 @@ app.get("/nodes",function(req,res) {
 
 
 app.get("/node/:scope(@[^\\/]{1,})?/:id([^@][^\\/]{1,})",appUtils.csrfProtection(),function(req,res) {
+    console.log(req.url);
     getNode(req.params.id,req.params.scope,null,req,res);
 });
 app.get("/node/:scope(@[^\\/]{1,})?/:id([^@][^\\/]{1,})/in/:collection",appUtils.csrfProtection(),function(req,res) {
+    console.log(req.url);
     getNode(req.params.id,req.params.scope,req.params.collection,req,res);
 });
 
@@ -146,6 +148,15 @@ function getNode(id, scope, collection, req,res) {
                 if ((m=/(github.com\/.*?\/.*?)($|\.git$|\/.*$)/.exec(repo))) {
                     node.githubUrl = "https://"+m[1];
                 }
+            } else {
+                var re = /(<img .*?src="(.*?)")/gi;
+                while((m=re.exec(node.readme)) !== null) {
+                    if (!/^http/.test(m[2])) {
+                        node.readme = node.readme.substring(0,m.index) +
+                                      '<img src=""'+
+                                      node.readme.substring(m.index+m[1].length);
+                    }
+                };
             }
 
             ratingPromise.then(() => collectionPromise).then(function(collectionSiblings) {

@@ -56,10 +56,10 @@ $(function() {
         }
     });
 
-    if ($("#add-flow-title").val() > 0) {
+    if ($("#add-flow-title").val() !== "") {
         $("#add-flow-title").trigger("keyup");
     }
-    if ($("#add-flow-desc").val() > 0) {
+    if ($("#add-flow-desc").val() !== "") {
         $("#add-flow-desc").trigger("keyup");
     }
 
@@ -99,8 +99,9 @@ $(function() {
             return;
         }
         if (!titleValid || !descValid) {
+            console.log(titleValid,descValid)
             $("#add-flow-title").trigger("keyup");
-            $("#add-flow-desc").trigger("keyup");            
+            $("#add-flow-desc").trigger("keyup");
             window.scrollTo(0,0);
             return;
         }

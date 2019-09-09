@@ -5,4 +5,4 @@ node_modules
 settings*.js
 npm-debug.log
 package-lock.json
-logs/access*
+logs/*access.log

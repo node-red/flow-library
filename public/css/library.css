@@ -1324,6 +1324,11 @@ a:hover .gistbox-footer {
     color: #aa4444;
     text-align: center;
 }
+.warning-box:after {
+    content: '';
+    display: table;
+    clear: both;
+}
 
 select {
     color: #333;

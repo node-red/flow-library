@@ -3,7 +3,12 @@
 <div class="grid thing-list-section main-content">
     <div class="col-9-12 docs-content">
         <h1 class="flow-title">{{ collection.name }}</h1>
-        <div id="collection-empty-warning" class="warning-box" {{#collection.item_count_label}}style="display: none"{{/collection.item_count_label}}>This collection will not be listed publicly until it contains something.</div>
+        <div id="collection-empty-warning" class="warning-box" {{#collection.item_count_label}}style="display: none"{{/collection.item_count_label}}>
+            <p>This collection will not be listed publicly until it contains something.</p>
+            <img style="float: right" width="50%" src="/images/add-to-collection.gif" />
+            <p style="text-align: left">To add a node or flow, use the add button in the thing's drop-down menu, or select
+            the 'add to collection' option on the item's page.</p>
+        </div>
         {{{ collection.description }}}
     </div>
     <div class="col-3-12">

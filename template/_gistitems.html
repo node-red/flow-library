@@ -1,4 +1,10 @@
 {{#things}}
 {{#isNode}}{{>_nodebox}}{{/isNode}}
-{{^isNode}}{{>_gistbox}}{{/isNode}}
+{{#isFlow}}{{>_gistbox}}{{/isFlow}}
+{{#isCollection}}{{>_collectionbox}}{{/isCollection}}
+{{/things}}
+{{^things}}
+<li class="gistbox gistbox-placeholder"><a href="#"><h1 class="gisttitle">&nbsp;</h1><p class="gistdescription">&nbsp;</p><div class="gistbox-footer"><div class="gistbox-owner">&nbsp;</div></div></a></li>
+<li class="gistbox gistbox-placeholder"><a href="#"><h1 class="gisttitle">&nbsp;</h1><p class="gistdescription">&nbsp;</p><div class="gistbox-footer"><div class="gistbox-owner">&nbsp;</div></div></a></li>
+<li class="gistbox gistbox-placeholder"><a href="#"><h1 class="gisttitle">&nbsp;</h1><p class="gistdescription">&nbsp;</p><div class="gistbox-footer"><div class="gistbox-owner">&nbsp;</div></div></a></li>
 {{/things}}

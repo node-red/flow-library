@@ -1,0 +1,85 @@
+{{>_header}}
+<div class="grid" style="text-align: center; padding-top: 30px;">
+    <div class="user-hero">
+        {{#user.avatar_url}}<img class="avatar" src="{{user.avatar_url}}" />{{/user.avatar_url}}
+        {{^user.avatar_url}}<div class="avatar avatar-placeholder"></div>{{/user.avatar_url}}
+        <div class="user-meta">
+            <span class="username">{{user.login}}</span>
+        </div>
+    </div>
+</div>
+<div class="grid thing-list-section user-profile-section ">
+    <div class="col-2-12 docs-content"><h4>GitHub</h4>
+        <form action="/settings/github-refresh" method="POST">
+            <input name="_csrf" type="hidden" value="{{csrfToken}}">
+            <button type="submit" class="user-profile-action" href="">refresh</button>
+        </form>
+    </div>
+    <div class="col-10-12 docs-content">
+        <table class="user-profile">
+            <tr><td>Username</td><td>{{user.login}}</td></tr>
+            <tr><td>Name</td><td>{{user.name}}</td></tr>
+            <tr><td>Bio</td><td>{{user.bio}}</td></tr>
+        </table>
+    </div>
+</div>
+
+
+<div class="grid thing-list-section user-profile-section ">
+    <div class="col-2-12 docs-content"><h4>NPM</h4>
+{{#user.npm_verified}}
+        <form action="/settings/npm-remove" method="POST">
+            <input name="_csrf" type="hidden" value="{{csrfToken}}">
+            <button type="submit" class="user-profile-action" href="">remove</button>
+        </form>
+{{/user.npm_verified}}
+
+    </div>
+    <div class="col-10-12 docs-content">
+
+{{^user.npm_verified}}
+<p>Your profile is not currently connected to an npm user account. This means we cannot
+identify what nodes you've published to npm.</p>
+<p>To verify your account:</p>
+<ol>
+    <li>Login into <a href="https://www.npmjs.com/login" target="_blank">npmjs.com</a>.</li>
+    <li>Go to your Profile Settings page and then the Tokens section.</li>
+    <li>Create a new <b>Read Only</b> token and copy it into the box below and click verify.
+        <i>We do not store this token - we only use to make a one-time request to retrieve your verified npm profile.</i>
+    </li>
+    <li>Once you have connected your npm user account you can delete the token from your npm profile.</li>
+</ol>
+<form class="npm-token-form" action="/settings/npm-verify" method="POST" autocomplete="off">
+    <input name="_csrf" type="hidden" value="{{csrfToken}}">
+    <input type="text" name="token" id="npm-token" placeholder="npm token" class="npm-token-input">
+    <button class="user-profile-action" type="submit">verify</button>
+    <div class="npm-verify-fail">Failed to verify npm token</div>
+</form>
+
+{{/user.npm_verified}}
+{{#user.npm_verified}}
+{{#npm_verify_message}}
+{{/npm_verify_message}}
+<table class="user-profile">
+    <tr><td>Username</td><td>{{user.npm_login}}</td></tr>
+</table>
+{{/user.npm_verified}}
+
+    </div>
+</div>
+<script>
+    var status = location.hash.substring(1);
+    if (status) {
+        switch(status) {
+            case "npm-verify=success":
+
+            break;
+            case "npm-verify=fail":
+                $(".npm-verify-fail").show();
+            break;
+        }
+        history.replaceState("", document.title, window.location.pathname + window.location.search);
+    }
+</script>
+
+{{>_footer}}

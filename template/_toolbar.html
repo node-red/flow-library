@@ -1,0 +1,99 @@
+<form id="search-form" method="get" action="/search">
+<div class="toolbar">
+  <div class="grid">
+    <div class="col-1-1">
+        <div style="position: relative">
+            <div class="gist-filter">
+                <input autocomplete="off" id="filter-term" name="term" class="gist-filter-input" type="text" value="{{query.term}}" placeholder="Search library"/>
+                <span class="filter-term-spinner"></span>
+                {{^fullsearch}}
+                <div class="filter-results">
+                    <ul></ul>
+                </div>
+                <script>
+                    $(".filter-results").on('mousedown', function(evt) { evt.stopPropagation(); });
+                    $("#filter-term").keyup(utils.debounce(function() {
+                        if ($("#filter-term").val().trim() === "") {
+                            $(".filter-term-spinner").hide();
+                            $(".filter-results").hide();
+                        }
+                        $(".filter-term-spinner").show();
+                    }, function() {
+                        var list = $(".filter-results ul");
+                        list.empty();
+                        var term = $("#filter-term").val().trim();
+                        $(document).off('mousedown.search-menu');
+                        if (term === "") {
+                            $(".filter-results").hide();
+                            $(".filter-term-spinner").hide();
+                        } else {
+                            utils.loadThingSummary('/things?format=json&per_page=6&term='+encodeURIComponent(term)).then(function(results) {
+                                $(".filter-term-spinner").hide();
+                                var data = results.data || [];
+                                if (data.length) {
+                                    data.forEach(function(d) {
+                                        var link = $('<a/>');
+                                        var label = $('<span/>').appendTo(link);
+                                        var type = $('<span class="filter-result-type"/>').appendTo(link);
+                                        if (d.isNode) {
+                                            link.attr("href","/node/"+d.name)
+                                            label.text(d.name);
+                                            type.addClass("filter-result-node");
+                                            type.text("node");
+                                        } else if (d.isFlow) {
+                                            link.attr("href","/flow/"+d._id)
+                                            label.text(d.description);
+                                            type.addClass("filter-result-flow");
+                                            type.text("flow")
+                                        } else if (d.isCollection) {
+                                            link.attr("href","/collection/"+d._id)
+                                            label.text(d.name);
+                                            type.addClass("filter-result-collection");
+                                            type.text("collection")
+                                        }
+                                        $('<li>').appendTo(list).append(link);
+                                    })
+                                    $('<li>',{style:"text-align: right"}).appendTo(list).append($('<a>').attr("href","/search?term="+encodeURIComponent(term)).html("see more ("+results.meta.results.count+')<i class="icon-caret-right"></i>'));
+                                } else {
+                                    $('<li>').appendTo(list).append($('<span>').text("Nothing found"));
+                                }
+                                $(".filter-results").show();
+                                $(document).one('mousedown.search-menu', function(evt) {
+                                    $(".filter-results").hide();
+                                });
+                            })
+                        }
+                    }, 500));
+                </script>
+                {{/fullsearch}}
+            </div>
+            <span class="buttons">
+                <a href="/add"><i class="icon-plus"></i></a>
+                {{^sessionuser}} <a class="signin" href="/login"><span>Sign in with <b>GitHub</b></span><i class="icon-github"></i></a>
+                <script>$(function() { $(".signin").attr('href','/login?return='+window.location.pathname);});</script>
+                {{/sessionuser}}
+                {{#sessionuser}}<a class="user" href="/user/{{sessionuser.login}}"><img src="{{avatar_url}}"/></a>
+                <ul class="user-menu">
+                    <li><a href="/user/{{sessionuser.login}}">{{sessionuser.login}}</a></li>
+                    <li><hr></li>
+                    <li><a href="/add/flow">Add Flow</a></li>
+                    <li><a href="/add/collection">Add Collection</a></li>
+                    <li><hr></li>
+                    <li><a href="/settings">Settings</a></li>
+                    <li><a href="/logout">Logout</a></li>
+                </ul>
+                <script>
+                var loggedInUser = "{{sessionuser.login}}";
+                $(function() {
+                    $(document).on("mousedown.close-usermenu", function(evt) { $(".user-menu").hide(); });
+                    $(".user-menu").on("mousedown", function(evt) { evt.stopPropagation(); })
+                    $("a.user").on("mousedown", function(evt) { evt.stopPropagation(); })
+                    $("a.user").on("click", function(evt) { evt.preventDefault(); $(".user-menu").toggle(); })
+                })</script>
+                {{/sessionuser}}
+            </span>
+        </div>
+    </div>
+  </div>
+</div>
+</form>

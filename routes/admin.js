@@ -11,7 +11,7 @@ app.get("/admin/log",function(req,res) {
     events.get().then(function(events) {
         context.events = events;
         res.send(mustache.render(templates.events,context,templates.partials));
-    }).otherwise(function(err) {
+    }).catch(function(err) {
         console.log(err);
         context.err = err;
         context.events = [];

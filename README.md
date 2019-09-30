@@ -36,4 +36,4 @@ To test you will want to add a few nodes to the database.  To do so, use the upd
 
 or in the docker container running the application
 
-    docker exec -it flowlibrary_node_1 node tasks/update-one.js node-red-dashboard
+    docker exec -it flow-library_node_1 node tasks/update-one.js node-red-dashboard

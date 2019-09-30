@@ -1,0 +1,193 @@
+{{>_header}}
+
+<div class="grid thing-list-section main-content">
+    <div class="col-9-12 docs-content">
+        <h1 class="flow-title">{{ collection.name }}</h1>
+        <div id="collection-empty-warning" class="warning-box" {{#collection.item_count_label}}style="display: none"{{/collection.item_count_label}}>
+            <p>This collection will not be listed publicly until it contains something.</p>
+            <img style="float: right" width="50%" src="/images/add-to-collection.gif" />
+            <p style="text-align: left">To add a node or flow, use the add button in the thing's drop-down menu, or select
+            the 'add to collection' option on the item's page.</p>
+        </div>
+        {{{ collection.description }}}
+    </div>
+    <div class="col-3-12">
+        <div class="flowmeta">
+            <h4>Collection Info</h4>
+            {{#collection.item_count_label}}
+            <div id="collection-item-count" class="flowinfo">{{collection.item_count_label}}</div>
+            {{/collection.item_count_label}}
+            <div id="collection-item-count-empty" class="flowinfo" {{#collection.item_count_label}}style="display: none"{{/collection.item_count_label}}><i>empty</i></div>
+            <div class="flowinfo">Updated {{collection.updated_at_since}}</div>
+            <div class="flowinfo">Rating: {{#collection.rating}} {{score}}<i class="icon-star"></i> {{count}}<i class="icon-user"></i>{{/collection.rating}}{{^collection.rating}}<i>not yet rated</i>{{/collection.rating}}</div>
+        </div>
+        <div class="flowmeta">
+            <h4>Owners</h4>
+            {{#collection.gitOwners}}
+                <div class="flowinfo"><a href="/user/{{.}}">{{.}}</a></div>
+            {{/collection.gitOwners}}
+
+            {{#owned}}
+            <div class="flowinfo" style="text-align: right;"><a class="user-profile-action" id="manage-users" href="#">manage users</a></div>
+            {{/owned}}
+        </div>
+        {{#sessionuser}}
+        <div class="flowmeta">
+            <h4>Actions</h4>
+            <form id="form-rate" action="/collection/{{collection._id}}/rate" method="POST">
+                <input name="_csrf" type="hidden" value="{{csrfToken}}">
+                <input name="rating" type="hidden">
+                <div class="flowinfo">Rate: <span id="set-stars"></span></div>
+            </form>
+            {{#owned}}
+            <div class="flowinfo" style="text-align: right;"><a class="user-profile-action" href="/collection/{{collection._id}}/edit">edit collection</a></div>
+            <div class="flowinfo" style="text-align: right;"><a class="user-profile-action" id="delete-collection" href="#">delete collection</a></div>
+            {{/owned}}
+        </div>
+        {{/sessionuser}}
+    </div>
+</div>
+
+
+<div class="grid thing-list-section">
+    {{#query}}{{>_gistlist}}{{/query}}
+</div>
+{{#sessionuser}}
+<script>
+$(function() {
+    $(".gistlist").sortable({
+        handle: ".gistbox-handle",
+         stop: function( event, ui ) {
+            var items = [];
+            $(".gistlist").children().each(function() {
+                items.push($(this).data("thing-id"))
+            });
+            $.ajax({
+                url: "/collection/{{collection._id}}",
+                method: "PUT",
+                data: {
+                    _csrf: "{{csrfToken}}",
+                    items: items
+                },
+                success: function(data) {}
+            })
+         }
+    });
+    $("#delete-collection").on('click', function(evt) {
+        evt.preventDefault();
+        var dialog = $('<div class="dialog-shade"><div class="dialog">'+
+                '<form action="/collection/{{collection._id}}/delete" method="POST">'+
+                '<input name="_csrf" type="hidden" value="{{csrfToken}}">'+
+            '<h4>Are you sure you want to delete this collection?</h4>'+
+            '<div class="dialog-buttons"><button type="button" onclick="return closeDialog();">Cancel</button><button type="submit">Delete</button></div>'+
+            '</form></div></div>').appendTo('body').show();
+    })
+    var users = [];
+    {{#collection.gitOwners}}users.push("{{{.}}}");{{/collection.gitOwners}}
+
+    $("#manage-users").on('click', function(evt) {
+        evt.preventDefault();
+        var dialog = $('<div class="dialog-shade"><div class="dialog">'+
+                '<form action="/collection/{{collection._id}}" method="POST">'+
+                '<input name="_csrf" type="hidden" value="{{csrfToken}}">'+
+                '<h4>Manage users</h4>'+
+                '<div class="dialog-list" id="collection-user-list"></div>'+
+                '<div><input type="text" style="width: calc(100% - 120px); margin-right: 10px;" placeholder="enter username" id="collection-add-user"><button style="position:relative; top: -2px" type="button">add user</button></div>'+
+            '<div class="dialog-buttons"><button type="button" onclick="return closeDialog();">Cancel</button><button type="submit">Save</button></div>'+
+            '</form></div></div>').appendTo('body')
+
+        var userList = [];
+
+        var currentUser = "{{{sessionuser.login}}}";
+        var list = $("#collection-user-list");
+        users.forEach(addUser);
+
+        dialog.find('button[type="submit"]').on("click", function(evt) {
+            evt.preventDefault();
+            var form = dialog.find("form").serialize();
+
+            $.ajax({
+                url: '/collection/{{collection._id}}',
+                type: 'PUT',
+                data: form,
+                success: function(data) {
+                    window.location = data;
+                }
+            }).fail(function(response) {
+                if (response.status == 403) {
+                    window.location.reload();
+                }
+                try {
+                    var errors = JSON.parse(response.responseText);
+                    if (errors.owners) {
+                        errors.owners.forEach(function(u) {
+                            $('<span class="dialog-warning">Unknown user</span>').appendTo(list.find('input[value="'+u+'"] + span'))
+                        })
+                    }
+                } catch(err) {
+                    console.log("ERROR",err);
+                }
+            });
+
+
+        })
+        function addUser(user) {
+            userList.push(user);
+            var row = $('<div></div>').appendTo(list);
+            $('<input type="hidden" name="owners">').val(user).appendTo(row);
+            $('<span></span>').text(user).appendTo(row);
+            $('<button type="button" style="display: none; padding: 2px 4px; min-width: auto; float: right">remove</button>').appendTo(row).on("click", function(evt) {
+                var index = userList.indexOf(user);
+                if (index > -1) {
+                    userList.splice(index, 1);
+                }
+                row.remove();
+                list.find('button').toggle(userList.length > 1);
+            });
+            list.find('button').toggle(userList.length > 1);
+        }
+
+        $("#collection-add-user + button").on("click", function(evt) {
+            var u = $("#collection-add-user").val().trim();
+            if (u && userList.indexOf(u) === -1) {
+                addUser(u);
+            }
+        })
+
+
+        dialog.show();
+    })
+
+
+});
+
+function removeFromCollection(id) {
+    $.ajax({
+        url: "/collection/{{collection._id}}/delete/"+id,
+        method: "POST",
+        data: {
+            _csrf: "{{csrfToken}}"
+        },
+        success: function(data) {
+            utils.loadThingList($(".thing-list")).then(function(data) {
+                if (data.meta.results.total === 0) {
+                    $('#collection-item-count').hide();
+                    $('#collection-item-count-empty').show();
+                    $('#collection-empty-warning').show();
+                } else {
+                    $('#collection-item-count').text(data.meta.results.total+" thing"+(data.meta.results.total===1?"":"s"));
+                }
+            });
+        }
+    })
+}
+{{/sessionuser}}
+
+</script>
+{{#collection}}
+{{#sessionuser}}
+{{>_rateTools}}
+{{/sessionuser}}
+{{/collection}}
+
+{{>_footer}}

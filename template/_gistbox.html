@@ -1,7 +1,12 @@
-<li class="gistbox gistbox-flow" data-tags="{{tags}}" data-owner="{{owner.login}}" data-updated="{{updated_at}}" data-downloads="0"><a href="/flow/{{_id}}">
-<h1 class="gisttitle">{{description}}</h1>
-<p class="gistdescription">by {{owner.login}}</p>
-<div class="gistbox-footer">
-    <div class="gistbox-owner">{{type}}</div>
-</div>
-</a></li>
+<li class="gistbox gistbox-flow" data-thing-id="{{_id}}"><a href="/flow/{{_id}}{{#collection}}/in/{{.}}{{/collection}}">
+    <h1 class="gisttitle">{{description}}</h1>
+    <p class="gistdescription">{{summary}}</p>
+    <div class="gistbox-footer">
+        <div class="gistbox-type">
+        {{gitOwners.0}} {{#rating}}<i class="icon-star"></i><span class="gistbox-score">{{#toFixed}}{{score}}{{/toFixed}}</span>{{/rating}}
+        </div>
+        <div class="gistbox-owner">{{type}}</div>
+    </div>
+</a>
+{{>_gistboxTools}}
+</li>

@@ -1,6 +1,6 @@
 {{>_header}}
 
-<div class="grid main-content">
+<div class="grid thing-list-section main-content">
     <div class="col-9-12 docs-content">
         <h1 class="flow-title" style="margin-bottom: 10px;">{{ name }} <span class="flow-version">{{ versions.latest.version }}</span></h1>
         <p class="flow-description">{{ description }}</p>
@@ -11,13 +11,13 @@
           {{{ readme }}}
     </div>
     <div class="col-3-12">
+         {{>_collectionNavBox}}
           <div class="flowmeta">
             <h4>Node Info</h4>
             <div class="flowinfo"> Version: {{ versions.latest.version }}</div>
             {{#updated_at_since}}<div class="flowinfo">  Updated {{ updated_at_since }}</div>{{/updated_at_since}}
             {{#license}}<div class="flowinfo">License: {{ license }}</div>{{/license}}
-            <div class="flowinfo">Rating: <span id="node-stars"></span> {{#rating}} {{score}}</div>
-            <div class="flowinfo">({{count}} <i class="fa fa-user"></i>){{/rating}}</div>
+            <div class="flowinfo">Rating: {{#rating}} {{score}}<i class="icon-star"></i> {{count}}<i class="icon-user"></i>{{/rating}}{{^rating}}<i>not yet rated</i>{{/rating}}</div>
             <div class="flowinfo"><a target="_blank" href="https://npmjs.org/package/{{ name }}">View on npm</a></div>
             {{#githubUrl}}<div class="flowinfo"><a target="_blank" href="{{githubUrl}}">View on GitHub</a></div>{{/githubUrl}}
           </div>
@@ -29,9 +29,10 @@
                 <input name="rating" type="hidden">
                 <div class="flowinfo">Rate: <span id="set-stars"></span></div>
             </form>
-            {{^refresh_requested}}<div class="flowinfo"><a href="/node/{{_id}}/refresh">Request refresh</a></div>{{/refresh_requested}}
-            {{#refresh_requested}}<div class="flowinfo">Refresh requested</a></div>{{/refresh_requested}}
-            <div class="flowinfo"><a id="report-node" href="/node/{{_id}}/report">Report this module</a></div>
+            <div class="flowinfo" style="text-align: right;"><a class="user-profile-action" href="#" onclick="javascript:addToCollection('{{_id}}');">add to collection</a></div>
+            {{^refresh_requested}}<div style="text-align: right;" class="flowinfo"><a href="/node/{{_id}}/refresh" class="user-profile-action">request refresh</a></div>{{/refresh_requested}}
+            {{#refresh_requested}}<div style="text-align: right;" class="flowinfo">refresh requested</a></div>{{/refresh_requested}}
+            <div style="text-align: right;" class="flowinfo"><a class="user-profile-action" id="report-node" href="/node/{{_id}}/report">report this module</a></div>
           </div>
           {{/sessionuser}}
 
@@ -63,7 +64,7 @@
             <h4>Maintainers</h4>
             <ul>
             {{#maintainers}}
-            <li>{{name}}</li>
+            <li><a href="/user/{{name}}">{{name}}</a></li>
             {{/maintainers}}
             </ul>
             {{#contributors.length}}
@@ -77,8 +78,8 @@
       </div>
 </div>
 {{#sessionuser}}{{/sessionuser}}
-<div id="report-node-shade">
-    <div id="report-node-dialog">
+<div class="dialog-shade dialog-fixed" id="report-node-shade">
+    <div class="dialog" id="report-node-dialog">
         <form action="/node/{{_id}}/report" method="POST">
             <input name="_csrf" type="hidden" value="{{csrfToken}}">
         <h4>Report this module</h4>
@@ -89,52 +90,20 @@
             contact its maintainers directly.</p>
         <p>Please provide some details about the module:</p>
         <div><textarea name="details" id="details"></textarea></div>
-        <div id="report-node-dialog-buttons">
+        <div class="dialog-buttons">
             <button type="button" onclick="return closeDialog();">Cancel</button> <button type="submit">Report</button>
         </div>
         </form>
     </div>
 </div>
+{{#sessionuser}}
+{{>_rateTools}}
 <script>
-    function closeDialog() {
-        $("body").css({height:"",overflow:""});
-        $("#report-node-shade").hide();
-        return false;
-    }
-
     $("#report-node").click(function(e) {
         $("body").css({height:"100%",overflow:"hidden"});
         e.preventDefault();
-        // var width = $("#report-node-shade").width();
-        // var height = $("#report-node-shade").height();
-
-        // $("#report-node-dialog").width(Math.min(width,400)).height(Math.min(height,500)).css({
-        // });
         $("#report-node-shade").show();
     });
-    
-    $.fn.raty.defaults.hints = ['bad', 'poor', 'regular', 'good', 'awesome'];
-    $.fn.raty.defaults.space = false;
-
-    $("#node-stars").raty({
-        {{#rating}}
-        score: {{score}},
-        {{/rating}}
-        readOnly: true});
-    
-    function rate(e) {
-        $("input[name=rating]").val(e);
-        $("#form-rate").submit();
-    };
-
-    $("#set-stars").raty({
-        {{#rating}}{{#userRating}}
-        score: {{rating}},
-        {{/userRating}}{{/rating}}
-        cancel: true,
-        click: utils.debounce(rate, 1000)});
-
 </script>
-
-{{#sessionuser}}{{/sessionuser}}
+{{/sessionuser}}
 {{>_footer}}

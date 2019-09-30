@@ -1,15 +1,40 @@
 {{>_header}}
-<div class="grid" style="background:none; line-height: 0;"><img class="header-image"  src="images/flow01.png" /></div>
-
+{{^sessionuser}}
 <div class="grid">
-      <div class="col-1-1">
-          <div style="float: right; padding-top: 30px;">
-            <a href="/add" class="btn btn-download">Add a flow</a>
-          </div>
-        <h2 class="pagetitle">Node-RED Library</h2>
-        <p class="lead">Find new nodes, share your flows and see what other people have done with Node-RED.</p>
+    <div class="front-hero">
+      <div class="col-2-3" style="position:relative; background: #aa4444; border-top-right-radius:20px;border-bottom-left-radius:10px;">
+          <div>
+        <h2>Node-RED Library</h2>
+        <p>Find new nodes, share your flows and see what other people have done with Node-RED.</p>
+        </div>
       </div>
+      <div class="col-1-3" style="position: relative">
+
+      </div>
+  </div>
 </div>
-{{>_gistlist}}
+{{/sessionuser}}
+
+{{#nodes}}
+<div class="grid thing-list-section">
+    <div class="col-1-1 thing-list-section-header"><h2>Recent nodes</h2> <a href="/search?type=node">see more ({{count}})<i class="icon-caret-right"></i></a></div>
+    {{>_gistlist}}
+</div>
+{{/nodes}}
+
+{{#flows}}
+<div class="grid thing-list-section">
+    <div class="col-1-1 thing-list-section-header"><h2>Recent flows</h2> <a href="/search?type=flow">see more ({{count}})<i class="icon-caret-right"></i></a></div>
+    {{>_gistlist}}
+</div>
+{{/flows}}
+
+
+{{#collections}}
+<div class="grid thing-list-section">
+    <div class="col-1-1 thing-list-section-header"><h2>Recent collections</h2> <a href="/search?type=collection">see more ({{count}})<i class="icon-caret-right"></i></a></div>
+    {{>_gistlist}}
+</div>
+{{/collections}}
 
 {{>_footer}}

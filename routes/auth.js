@@ -1,5 +1,5 @@
 var express = require("express");
-
+const users = require("../lib/users");
 var github = require("../lib/github");
 var settings = require('../config');
 var OAuth2 = require("oauth").OAuth2;
@@ -23,14 +23,17 @@ function login(req,res) {
         res.end();
         return;
     } else {
-        res.writeHead(200);
-        res.end(JSON.stringify(req.session.user));
+        res.writeHead(302, {
+            Location: req.query.return||"/"
+        });
+        res.end();
         return;
     }
 }
 function logout(req,res) {
-    delete req.session.accessToken;
-    res.redirect('/');
+    req.session.destroy(function(err) {
+        res.redirect('/');
+    })
 }
 function loginCallback(req,res) {
     if (!req.query.code) {
@@ -53,17 +56,19 @@ function loginCallback(req,res) {
         req.session.accessToken = access_token;
 
         github.getAuthedUser(req.session.accessToken).then(function(user) {
-            req.session.user = {
-                login: user.login,
-                avatar_url: user.avatar_url,
-                url: user.html_url,
-                name: user.name
-            };
-            res.writeHead(303, {
-                Location: req.session.returnPath||"/"
+            return users.ensureExists(user.login,user).then(function() {
+                req.session.user = {
+                    login: user.login,
+                    avatar_url: user.avatar_url,
+                    url: user.html_url,
+                    name: user.name
+                };
+                res.writeHead(303, {
+                    Location: req.session.returnPath||"/"
+                });
+                res.end();
             });
-            res.end();
-        }).otherwise(function(err) {
+        }).catch(function(err) {
             if (err) {
                 res.writeHead(err.code);
                 res.end(err + "");

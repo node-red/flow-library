@@ -1,8 +1,0 @@
-  <div class="grid toolbar">
-    <div class="col-1-1 login">
-        {{^sessionuser}}<a class="signin" href="/login"><i class="icon-github"></i> sign in with <b>GitHub</b></a>
-        <script>$(function() { $(".signin").attr('href','/login?return='+window.location.pathname);});</script>
-        {{/sessionuser}}
-        {{#sessionuser}}<b>{{login}}</b> <img src="{{avatar_url}}"/>{{/sessionuser}}  
-    </div>
-  </div>

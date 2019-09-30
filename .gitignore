@@ -1,7 +1,8 @@
+.DS_Store
 bin
 data
 node_modules
 settings*.js
 npm-debug.log
 package-lock.json
-logs/access*
+logs/*access.log

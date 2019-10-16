@@ -11,16 +11,12 @@ var templates = require("../lib/templates");
 
 var app = express();
 
-var coreNodes = ["sentiment", "inject", "debug", "exec", "function", "template",
-    "delay", "trigger", "comment", "unknown", "arduino in", "arduino out", "arduino-board",
-    "rpi-gpio in", "rpi-gpio out", "rpi-mouse", "mqtt in", "mqtt out", "mqtt-broker",
-    "http in", "http response", "http request", "websocket in", "websocket out",
-    "websocket-listener", "websocket-client", "watch", "serial in", "serial out",
-    "serial-port", "tcp in", "tcp out", "tcp request", "udp in", "udp out", "switch",
-    "change", "range", "csv", "html", "json", "xml", "twitter-credentials",
-    "twitter in", "twitter out", "feedparse", "e-mail", "e-mail in", "irc in",
-    "irc out", "irc-server", "tail", "file", "file in", "redis out", "mongodb",
-    "mongodb out", "mongodb in", "catch"].reduce(function(o, v, i) {
+var coreNodes = ["batch","catch","change","comment","complete","csv","debug","delay",
+    "exec","file","file in","function","html","http in","http request","http response",
+    "inject","join","json","link in","link out","mqtt in","mqtt out","mqtt-broker","range",
+    "rbe","sort","split","status","switch","tab","tail","tcp in","tcp out","tcp request",
+    "template","trigger","udp in","udp out","watch","websocket in","websocket out",
+    "websocket-listener","xml","yaml"].reduce(function(o, v, i) {
       o[v] = 1;
       return o;
     }, {});

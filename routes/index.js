@@ -162,4 +162,8 @@ app.get("/add/node",function(req,res) {
     res.send(mustache.render(templates.addNode,context,templates.partials));
 });
 
+app.get("/inspect", function(req,res) {
+    var context = {};
+    res.send(mustache.render(templates.flowInspector,context,templates.partials));
+})
 module.exports = app;

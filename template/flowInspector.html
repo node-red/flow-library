@@ -86,9 +86,26 @@ $(function() {
                     report += (type.count+"").padStart(5)+' | ';
                     if (type.module.length === 0) {
                         report += "*unknown*";
-                    } else {
-                        report += type.module.join(", ");
+                    } else if (type.module.length === 1) {
+                        report += type.module[0];
                         if (type.module[0] !== "@node-red/nodes") {
+                            moduleList[type.module.join(", ")] = 1;
+                        }
+                    } else {
+                        // Multiple modules. Check to see if any have already been
+                        // marked as unique as that will probably be the one we want.
+                        var unique = "";
+                        for (var i=0;i<type.module.length;i++) {
+                            if (result.uniqueModules[type.module[i]]) {
+                                unique = type.module[i];
+                                break
+                            }
+                        }
+                        if (unique) {
+                            report += unique;
+                            moduleList[unique] = 1;
+                        } else {
+                            report += type.module.join(", ");
                             moduleList[type.module.join(", ")] = 1;
                         }
                     }
@@ -136,6 +153,7 @@ $(function() {
         var types = {};
         var nodeCount = 0;
         var maxTypeLength = 8;
+        var uniqueModules = {};
         flow.forEach(function(n) {
             if (n.type === "tab") {
                 flows[n.id] = n;
@@ -168,6 +186,9 @@ $(function() {
         $.post("/api/types",{types:typeList},function(data) {
             for (var t in types) {
                 types[t].module = data[t];
+                if (data[t].length === 1) {
+                    uniqueModules[data[t][0]] = 1;
+                }
             }
 
             done(null,{
@@ -178,7 +199,8 @@ $(function() {
                 subflowInstances: subflowInstances,
                 types: types,
                 nodeCount: nodeCount,
-                maxTypeLength: maxTypeLength
+                maxTypeLength: maxTypeLength,
+                uniqueModules:uniqueModules
             });
         }).fail(function(err) {
             done(err);

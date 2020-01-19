@@ -1,0 +1,220 @@
+{{>_header}}
+<div class="grid add-form"  style="background: none;">
+    <div class="add-form-row" >
+        <div class="col-1-12">&nbsp;</div>
+        <div class="col-10-12 thing-list-section" style="background: white; padding: 10px 50px;">
+            <h4 class="add-flow-label"><label for="add-flow-flow">Inspect Flow</label></h4>
+            <p>Paste your flow and click inspect. This will generate a report about the contents of the flow. It will attempt
+            to identify what node modules are used by the flow based on the node types. If there is more than one possible
+            module for a given node type, all of the candidate modules will be listed.</p>
+            <textarea id="flow"></textarea>
+            <div style="position:relative; top: -35px;"><div class="flow-warning dialog-warning">The flow must contain at least one node</div></div>
+
+            <a id="inspect" href="#" class="btn-create">inspect flow</a>
+
+            <pre id="result"></pre>
+        </div>
+    </div>
+</div>
+
+
+<script>
+$(function() {
+    var inspectSubmitted = false;
+
+    $("#flow").keyup(function() { validateFlow(); });
+    $("#flow").on('paste',function() { validateFlow() });
+
+    $('#inspect').click(function(e) {
+        e.preventDefault();
+        if (inspectSubmitted) {
+            return;
+        }
+        if (!validateFlow()) {
+            return;
+        }
+        $("#result").text("");
+        inspectSubmitted = true;
+        $("#inspect").addClass("submitted");
+        $("#inspect-loader").show();
+
+        inspectFlow($("#flow").val(), function(err, result) {
+            inspectSubmitted = false;
+            $("#inspect").removeClass("submitted");
+            $("#inspect-loader").hide();
+            if (err) {
+                $(".flow-warning").text(err).show();
+            } else {
+                var types = Object.keys(result.types);
+                types.sort(function(a,b) {
+                    var A = result.types[a];
+                    var B = result.types[b];
+                    if (A.module.length !== B.module.length) {
+                        return A.module.length - B.module.length;
+                        if (A.module.length === 0) {
+                            return -1;
+                        }
+                        if (B.module.length === 0) {
+                            return 1;
+                        }
+                        if (A.module.length > 1) {
+                            return -1;
+                        }
+                        if (B.module.length > 1) {
+                            return 1;
+                        }
+                    }
+                    return a.localeCompare(b);
+                });
+                var report = "";
+                if (result.flowCount > 0) {
+                    report += 'Flows: '+result.flowCount+'\n';
+                }
+                if (result.subflowCount > 0) {
+                    report += 'Subflows: '+result.subflowCount+'\n';
+                }
+                report += 'Nodes: '+result.nodeCount+'\n';
+                report += "\n";
+
+                report += ' '+'Type'.padEnd(result.maxTypeLength)+' | Count | Module\n';
+                report += ''.padEnd(result.maxTypeLength+2,'-')+'|-------|-------------------'+'\n';
+
+                var moduleList = {};
+                types.forEach(function(t) {
+                    var type = result.types[t];
+                    report += ' '+t.padEnd(result.maxTypeLength)+' | ';
+                    report += (type.count+"").padStart(5)+' | ';
+                    if (type.module.length === 0) {
+                        report += "*unknown*";
+                    } else {
+                        report += type.module.join(", ");
+                        if (type.module[0] !== "@node-red/nodes") {
+                            moduleList[type.module.join(", ")] = 1;
+                        }
+                    }
+                    report += "\n"
+                })
+
+                var subflows = Object.keys(result.subflows);
+                subflows.forEach(function(id) {
+                    var sf = result.subflows[id];
+                    report += ' '+('subflow:'+sf.id).padEnd(result.maxTypeLength)+' | ';
+                    report += (sf.instanceCount+"").padStart(5)+' | ';
+                    report += "\n"
+                })
+
+                report += "\n\n";
+
+                report += "Modules:\n";
+                var modules = Object.keys(moduleList);
+                modules.sort();
+                modules.forEach(function(m) {
+                    report += ' - '+m+'\n';
+                })
+
+
+
+
+                $("#result").text(report);
+            }
+        });
+    });
+
+    function inspectFlow(rawFlow,done) {
+        // We know its valid by this point
+        var flow = JSON.parse(rawFlow);
+
+        // - flow count
+        // - node count
+        // - subflow count
+        // - core node count
+        // - list of contrib nodes
+
+        var flows = {};
+        var subflows = {};
+        var subflowInstances = {};
+        var types = {};
+        var nodeCount = 0;
+        var maxTypeLength = 8;
+        flow.forEach(function(n) {
+            if (n.type === "tab") {
+                flows[n.id] = n;
+            } else if (n.type === "subflow") {
+                subflows[n.id] = n;
+                n.instanceCount = 0;
+            } else {
+                maxTypeLength = Math.max(maxTypeLength,n.type.length);
+                nodeCount++;
+                if (n.type.substring(0,8) == "subflow:") {
+                    subflowInstances[n.id] = n;
+                } else {
+                    types[n.type] = types[n.type] || {count:0}
+                    types[n.type].count++;
+                }
+            }
+        })
+        for (var sfi in subflowInstances) {
+            var sf = subflowInstances[sfi];
+            var sftype = sf.type.substring(8);
+            if (subflows[sftype]) {
+                subflows[sftype].instanceCount++
+            }
+        }
+
+
+        var typeList = Object.keys(types);
+
+
+        $.post("/api/types",{types:typeList},function(data) {
+            for (var t in types) {
+                types[t].module = data[t];
+            }
+
+            done(null,{
+                flows:flows,
+                flowCount: Object.keys(flows).length,
+                subflows: subflows,
+                subflowCount: Object.keys(subflows).length,
+                subflowInstances: subflowInstances,
+                types: types,
+                nodeCount: nodeCount,
+                maxTypeLength: maxTypeLength
+            });
+        }).fail(function(err) {
+            done(err);
+        });
+    }
+
+    function validateFlow(e) {
+        var flow = $("#flow").val().trim();
+        if (flow == "") {
+            $(".flow-warning").text("Flow must contain at least one node").show();
+            $("#flow").addClass("input-error");
+            return false;
+        } else {
+            try {
+                var nodes = JSON.parse(flow);
+                if (!Array.isArray(nodes) || nodes.length === 0) {
+                    $(".flow-warning").text("Flow must contain at least one node").show();
+                    $("#flow").addClass("input-error");
+                    return false;
+                } else {
+                    $(".flow-warning").text("").hide();
+                    $("#flow").removeClass("input-error");
+                    return true;
+                }
+            } catch(err) {
+                $(".flow-warning").text(err).show();
+                $("#flow").addClass("input-error");
+                return false;
+            }
+        }
+        return false;
+    }
+
+});
+
+
+</script>
+
+{{>_footer}}

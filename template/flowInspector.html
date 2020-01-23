@@ -84,13 +84,11 @@ $(function() {
                     var type = result.types[t];
                     report += ' '+t.padEnd(result.maxTypeLength)+' | ';
                     report += (type.count+"").padStart(5)+' | ';
+                    var m;
                     if (type.module.length === 0) {
                         report += "*unknown*";
-                    } else if (type.module.length === 1) {
+                    } else if (type.module.length === 1 && type.module[0] === "@node-red/nodes" ) {
                         report += type.module[0];
-                        if (type.module[0] !== "@node-red/nodes") {
-                            moduleList[type.module.join(", ")] = 1;
-                        }
                     } else {
                         // Multiple modules. Check to see if any have already been
                         // marked as unique as that will probably be the one we want.
@@ -102,10 +100,15 @@ $(function() {
                             }
                         }
                         if (unique) {
-                            report += unique;
+                            report += '<a href="/node/'+unique+'" target="_blank">'+unique+'</a>'
                             moduleList[unique] = 1;
                         } else {
-                            report += type.module.join(", ");
+                            type.module.forEach(function(m,i) {
+                                if (i > 0) {
+                                    report += ", ";
+                                }
+                                report += '<a href="/node/'+m+'" target="_blank">'+m+'</a>';
+                            })
                             moduleList[type.module.join(", ")] = 1;
                         }
                     }
@@ -126,13 +129,13 @@ $(function() {
                 var modules = Object.keys(moduleList);
                 modules.sort();
                 modules.forEach(function(m) {
-                    report += ' - '+m+'\n';
+                    report += ' - <a href="/node/'+m+'" target="_blank">'+m+'</a>\n';
                 })
 
 
 
 
-                $("#result").text(report);
+                $("#result").html(report);
             }
         });
     });

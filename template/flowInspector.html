@@ -126,7 +126,7 @@ $(function() {
                 var modules = Object.keys(moduleList);
                 modules.sort();
                 modules.forEach(function(m) {
-                    report += ' - '+m+'\n';
+                    report += ' - <a href="https://flows.nodered.org/node/' + m + '" target="_blank">' + m + '</a>\n';
                 })
 
 

@@ -131,8 +131,10 @@ function getNode(id, scope, collection, req,res) {
                 } else if ((m=/https:\/\/github.com\/(.*)/.exec(repo))) {
                     baseUrl = "https://raw.githubusercontent.com/"+m[1]+"/master/";
                     m = null;
+                } else if ((m=/git:\/\/github.com\/(.*)\.git$/.exec(repo))) {
+                    baseUrl = "https://raw.githubusercontent.com/"+m[1]+"/master/";
+                    m = null;
                 }
-
                 var re = /(<img .*?src="(.*?)")/gi;
 
                 while((m=re.exec(node.readme)) !== null) {

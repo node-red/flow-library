@@ -5,8 +5,7 @@
         <h2 class="pagetitle">Adding a node</h2>
         <p>Node-RED nodes are packaged as modules and published to
             the <a href="https://www.npmjs.com">public npm repository</a>.</p>
-        <p>The Flow Library regularly checks the npm repository for new modules that
-            have been published and automatically adds them to the library.</p>
+        <p>Once published to npm, they can be added to the Flow Library using the form below.</p>
         <p>To add a node to the library, follow these steps:</p>
         <div class="step">
             <span class="step-count">1</span>
@@ -19,9 +18,7 @@
                     <li>a <a href="https://nodered.org/docs/creating-nodes/packaging#packagejson"><code>package.json</code> file</a> with:
                         <ul>
                             <li>a <code>node-red</code> section listing the node files,</li>
-                            <li>and <code>"node-red"</code> in its list of <code>keywords</code>. This is
-                                what the Flow Library uses to search the npm repository - without this, it
-                                will not find your node.
+                            <li>and <code>"node-red"</code> in its list of <code>keywords</code>.
                             </li>
                         </ul>
                     </li>
@@ -33,9 +30,7 @@
             <span class="step-count">2</span>
             <div>
                 <span>Publish your module to the public npm repository.</span>
-                <p>The Flow Library checks the npm repository once every hour for any new
-                    modules, or updates to existing modules, with the <code>"node-red"</code>
-                    keyword.
+                <p>You can use the <a href="https://docs.npmjs.com/cli/publish"><code>npm publish</code></a> command to do this.
                 </p>
             </div>
         </div>
@@ -43,14 +38,14 @@
         <div class="step">
             <span class="step-count">3</span>
             <div>
-                <span>Be patient</span>
-                <p>The Flow Library relies on the npm search index to find nodes. Sometimes
-                    the search index can take a little while to update. You can check for yourself
-                    by searching for your node on <a href="https://www.npmjs.com/">npmjs.com</a>.
-                </p>
-                <p>If your node does appear in the npm search results, but the Flow Library
-                    has not added it after a couple of hours, you can ask for help on the
-                    <a href="https://discourse.nodered.org">Node-RED forum</a> or <a href="https://nodered.org/slack">slack</a>.
+                <span>Add your node to the Flow Library</span>
+                <p>Use this form to tell the Flow Library about your node.</p>
+                    <form id="add-node" action="/add/node" method="POST">
+                        <input id="add-node-csrf" name="_csrf" type="hidden" value="{{csrfToken}}">
+                        <input id="add-node-module" type="text" name="module" placeholder="Enter your npm module name here">
+                        <div style="position:relative"><div id="add-node-error" class="dialog-warning"></div>&nbsp;</div>
+                        <button type="button" class="btn-create" id="add-node-create"><span id="add-node-label">add node</span><img id="add-node-loader" class="loader" src="/images/loader.gif" /></button>
+                    </form>
                 </p>
             </div>
         </div>
@@ -83,4 +78,42 @@
         font-size: 1.2em;
     }
     </style>
+
+    <script>
+
+    $(function() {
+        var createSubmitted = false;
+
+        $('#add-node-create').click(function(e) {
+            e.preventDefault();
+            if (createSubmitted) {
+                return;
+            }
+            createSubmitted = true;
+            $("#add-node-error").hide();
+            $("#add-node-label").hide();
+            $("#add-node-create").addClass("submitted");
+            $("#add-node-loader").show();
+            var module = {
+                module: $("#add-node-module").val(),
+                _csrf: $("#add-node-csrf").val()
+            };
+            $.post("/add/node",module,function(data) {
+                window.location = data;
+            }).fail(function(err) {
+                if (err.status == 403) {
+                    window.location.reload();
+                }
+                createSubmitted = false;
+                console.log("ERROR",err);
+                $("#add-node-create").removeClass("submitted");
+                $("#add-node-loader").hide();
+                $("#add-node-label").show();
+                $("#add-node-error").text(err.responseText).show();
+            });
+        });
+
+    });
+    </script>
+
 {{>_footer}}

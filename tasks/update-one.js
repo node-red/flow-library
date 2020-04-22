@@ -13,6 +13,8 @@ npmModules.refreshModule(name).then(function(results) {
              console.log("Failed:",res.reason);
          } else if (res.value) {
              console.log("Updated:",res.value);
+         } else {
+             console.log("Nothing to do",res)
          }
      });
 

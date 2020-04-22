@@ -156,11 +156,6 @@ app.get("/add",function(req,res) {
     context.sessionuser = req.session.user;
     res.send(mustache.render(templates.add,context,templates.partials));
 });
-app.get("/add/node",function(req,res) {
-    var context = {};
-    context.sessionuser = req.session.user;
-    res.send(mustache.render(templates.addNode,context,templates.partials));
-});
 
 app.get("/inspect", function(req,res) {
     var context = {};

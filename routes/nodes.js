@@ -7,6 +7,7 @@ var csrf = require('csurf');
 
 var appUtils = require("../lib/utils");
 var npmNodes = require("../lib/nodes");
+var npmModules = require("../lib/modules");
 var ratings = require("../lib/ratings");
 var templates = require("../lib/templates");
 var events = require("../lib/events");
@@ -249,6 +250,34 @@ app.post("/node/:scope(@[^\\/]{1,})?/:id([^@][^\\/]{1,})/rate", appUtils.csrfPro
         res.end();
     }
 });
+
+app.get("/add/node",appUtils.csrfProtection(),function(req,res) {
+    var context = {};
+    context.sessionuser = req.session.user;
+    context.csrfToken = req.csrfToken();
+    res.send(mustache.render(templates.addNode,context,templates.partials));
+});
+
+app.post("/add/node",appUtils.csrfProtection(),function(req,res) {
+    var context = {};
+    context.sessionuser = req.session.user;
+    var name = req.body.module;
+    if (name) {
+        name = name.trim();
+        npmModules.refreshModule(name).then(function(results) {
+            results.forEach(function(result) {
+                if (result.state === 'rejected') {
+                    res.status(400).send(result.reason.toString())
+                } else {
+                    res.send("/node/"+name)
+                }
+            });
+        });
+    } else {
+        res.status(400).send("Invalid module name")
+    }
+});
+
 
 
 module.exports = app;

@@ -193,7 +193,7 @@ app.get("/node/:scope(@[^\\/]{1,})?/:id([^@][^\\/]{1,})/icons/:icon", function(r
     }
 });
 
-app.get("/node/:scope(@[^\\/]{1,})?/:id([^@][^\\/]{1,})/refresh",function(req,res) {
+app.get("/node/:scope(@[^\\/]{1,})?/:id([^@][^\\/]{1,})/refresh",appUtils.csrfProtection(),function(req,res) {
     var id = req.params.id;
     if (req.params.scope) {
         id = req.params.scope+"/"+id;

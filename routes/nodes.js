@@ -150,6 +150,13 @@ function getNode(id, scope, collection, req,res) {
                 if ((m=/(github.com\/.*?\/.*?)($|\.git$|\/.*$)/.exec(repo))) {
                     node.githubUrl = "https://"+m[1];
                 }
+
+                var linksRE = /(<a href="([^#].*?)")/gi;
+                while ((m=linksRE.exec(node.readme)) !== null) {
+                    if (!/^https?:/.test(m[2])) {
+                        node.readme = node.readme.substring(0,m.index) + `<a href="${baseUrl}/${m[2]}"` + node.readme.substring(m.index+m[1].length);
+                    }
+                }
             } else {
                 var re = /(<img .*?src="(.*?)")/gi;
                 while((m=re.exec(node.readme)) !== null) {

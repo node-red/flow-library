@@ -45,7 +45,6 @@ function getFlow(id,collection,req,res) {
     gister.get(id).then(function(gist) {
         gist.sessionuser = req.session.user;
         gist.csrfToken = req.csrfToken();
-        gist.flow = "";
         gist.collection = collection;
         gist.created_at_since = appUtils.formatDate(gist.created_at);
         gist.updated_at_since = appUtils.formatDate(gist.updated_at);
@@ -90,8 +89,10 @@ function getFlow(id,collection,req,res) {
             ));
 
         gist.nodeTypes = [];
-        if (gist.files['flow-json']) {
+        if (!gist.flow && gist.files && gist.files['flow-json']) {
             gist.flow = fs.readFileSync(appUtils.mapGistPath(gist.files['flow-json']),'utf-8');
+        }
+        if (gist.flow) {
             try {
                 var nodes = JSON.parse(gist.flow);
                 var nodeTypes = {};
@@ -140,7 +141,7 @@ function getFlow(id,collection,req,res) {
                 }
 
             });
-            fs.readFile(appUtils.mapGistPath(gist.files['README-md']),'utf-8',function(err,data) {
+            function completeRender(data) {
                 marked(data,{},function(err,content) {
                     gist.readme = content;
                     ratingPromise.then(()=>collectionPromise).then(function(collectionSiblings){
@@ -154,7 +155,17 @@ function getFlow(id,collection,req,res) {
                         res.send(mustache.render(templates.gist,gist,templates.partials));
                     });
                 });
-            });
+            }
+
+            if (gist.readme) {
+                completeRender(gist.readme);
+            } else if (gist.files && gist.files['README-md']) {
+                fs.readFile(appUtils.mapGistPath(gist.files['README-md']),'utf-8',function(err,data) {
+                    completeRender(data);
+                });
+            } else {
+                completeRender("Missing readme");
+            }
         });
     }).catch(function(err) {
         console.log("Error loading flow:",err);
@@ -250,17 +261,18 @@ app.post("/flow/:id/delete",appUtils.csrfProtection(),verifyOwner,function(req,r
     });
 });
 
-app.get("/flow/:id/flow",function(req,res) {
-    gister.get(req.params.id).then(function(gist) {
-        if (gist.files['flow.json']) {
-            res.sendFile(appUtils.mapGistPath(gist.files['flow.json'].local_path),'utf-8');
-        } else {
-            res.status(404).send(mustache.render(templates['404'],{sessionuser:req.session.user},templates.partials));
-        }
-    }).catch(function() {
-        res.status(404).send(mustache.render(templates['404'],{sessionuser:req.session.user},templates.partials));
-    });
-});
+//
+// app.get("/flow/:id/flow",function(req,res) {
+//     gister.get(req.params.id).then(function(gist) {
+//         if (gist.files['flow.json']) {
+//             res.sendFile(appUtils.mapGistPath(gist.files['flow.json'].local_path),'utf-8');
+//         } else {
+//             res.status(404).send(mustache.render(templates['404'],{sessionuser:req.session.user},templates.partials));
+//         }
+//     }).catch(function() {
+//         res.status(404).send(mustache.render(templates['404'],{sessionuser:req.session.user},templates.partials));
+//     });
+// });
 
 
 app.get("/add/flow",function(req,res) {

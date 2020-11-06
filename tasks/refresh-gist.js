@@ -11,5 +11,9 @@ if (!id) {
 gists.refresh(id).then(function(result) {
     console.log("Success");
 }).catch(function(err) {
-    console.log("Failed");
+    if (err === true) {
+        console.log("No update needed")
+    } else {
+        console.log("Failed",err);
+    }
 }).then(() => { db.close() })

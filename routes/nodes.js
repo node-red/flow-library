@@ -5,6 +5,7 @@ var fs = require("fs");
 var path = require("path");
 var csrf = require('csurf');
 
+var settings = require("../config");
 var appUtils = require("../lib/utils");
 var npmNodes = require("../lib/nodes");
 var npmModules = require("../lib/modules");
@@ -99,10 +100,15 @@ function getNode(id, scope, collection, req,res) {
                 if (def.types[t].icon) {
                     if (/^font-awesome\//.test(def.types[t].icon)) {
                         def.types[t].iconFA = def.types[t].icon.substring(13)
-                    } else if (fs.existsSync(__dirname+"/../public/icons/"+def.types[t].icon)) {
-                        def.types[t].iconUrl = "/icons/"+def.types[t].icon;
-                    } else {
-                        def.types[t].iconUrl = "/node/"+id+"/icons/"+def.types[t].icon;
+                    } else if (!def.types[t].iconUrl) {
+                        // Legacy nodes that have their icons stored locally
+                        // and not uploaded to The Bucket
+                        def.types[t].iconUrl = ("/icons/"+id+"/"+t).replace(/ /g,"%20");
+                        if (fs.existsSync(__dirname+"/../public/icons/"+def.types[t].icon)) {
+                            iconCache[id][t] = path.resolve(__dirname+"/../public/icons/"+def.types[t].icon);
+                        } else {
+                            iconCache[id][t] = appUtils.mapNodePath(def.types[t].iconPath);
+                        }
                     }
                 }
                 def.types[t].hasInputs = (def.types[t].inputs > 0);
@@ -113,7 +119,7 @@ function getNode(id, scope, collection, req,res) {
 
                 node.types.push(def.types[t]);
                 //console.log(def.types[t]);
-                iconCache[id][def.types[t].icon] = appUtils.mapNodePath(def.types[t].iconPath);
+
             }
         }
         //console.log(node);
@@ -190,13 +196,14 @@ function getNode(id, scope, collection, req,res) {
     });
 };
 
-app.get("/node/:scope(@[^\\/]{1,})?/:id([^@][^\\/]{1,})/icons/:icon", function(req,res) {
+app.get("/icons/:scope(@[^\\/]{1,})?/:id([^@][^\\/]{1,})/:type", function(req,res) {
     var id = req.params.id;
     if (req.params.scope) {
         id = req.params.scope+"/"+id;
     }
-    if (iconCache[id] && iconCache[id][req.params.icon]) {
-        res.sendFile(iconCache[id][req.params.icon]);
+    var type = req.params.type;
+    if (iconCache[id] && iconCache[id][type]) {
+        res.sendFile(iconCache[id][type]);
     } else {
         res.sendFile(path.resolve(__dirname+"/../public/icons/arrow-in.png"));
     }

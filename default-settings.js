@@ -32,6 +32,12 @@ var settings = {
     },
     modules: {
         block: []
+    },
+    aws: {
+        iconBucket: "",
+        accessKeyId: "",
+        secretAccessKey: "",
+        region: ""
     }
 };
 

@@ -97,7 +97,9 @@ function getNode(id, scope, collection, req,res) {
                 //console.log("-",n);
                 def.types[t].name = t;
                 if (def.types[t].icon) {
-                    if (fs.existsSync(__dirname+"/../public/icons/"+def.types[t].icon)) {
+                    if (/^font-awesome\//.test(def.types[t].icon)) {
+                        def.types[t].iconFA = def.types[t].icon.substring(13)
+                    } else if (fs.existsSync(__dirname+"/../public/icons/"+def.types[t].icon)) {
                         def.types[t].iconUrl = "/icons/"+def.types[t].icon;
                     } else {
                         def.types[t].iconUrl = "/node/"+id+"/icons/"+def.types[t].icon;

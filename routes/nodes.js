@@ -210,22 +210,7 @@ app.get("/icons/:scope(@[^\\/]{1,})?/:id([^@][^\\/]{1,})/:type", function(req,re
 });
 
 app.get("/node/:scope(@[^\\/]{1,})?/:id([^@][^\\/]{1,})/refresh",appUtils.csrfProtection(),function(req,res) {
-    var id = req.params.id;
-    if (req.params.scope) {
-        id = req.params.scope+"/"+id;
-    }
-    if (req.session.user) {
-        npmNodes.update(id,{refresh_requested:true});
-        events.add({
-            action:"refresh_requested",
-            module: id,
-            user:req.session.user.login
-        });
-    }
-    res.writeHead(303, {
-        Location: "/node/"+id
-    });
-    res.end();
+    res.status(400).send("This end point is no longer used. If you are calling it directly - update to use POST /add/node instead")
 });
 
 app.post("/node/:scope(@[^\\/]{1,})?/:id([^@][^\\/]{1,})/report",appUtils.csrfProtection(),function(req,res) {
@@ -281,11 +266,14 @@ app.post("/add/node",appUtils.csrfProtection(),function(req,res) {
     if (name) {
         name = name.trim();
         npmModules.refreshModule(name).then(function(results) {
+            console.log(results);
             results.forEach(function(result) {
                 if (result.state === 'rejected') {
                     res.status(400).send(result.reason.toString())
-                } else {
+                } else if (result.value) {
                     res.send("/node/"+name)
+                } else {
+                    res.status(400).send("Module already at latest version")
                 }
             });
         });

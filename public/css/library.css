@@ -1279,7 +1279,7 @@ a:hover .gistbox-footer {
 .dialog  > div:not(:last-child) {
     margin-bottom: 20px;
 }
-.dialog button,.dialog a {
+.dialog button {
     line-height: 1.3em;
     border: 1px solid #aa6767;
     text-align: center;

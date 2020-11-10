@@ -21,7 +21,7 @@
             <div class="flowinfo"><a target="_blank" href="https://npmjs.org/package/{{ name }}">View on npm</a></div>
             {{#githubUrl}}<div class="flowinfo"><a target="_blank" href="{{githubUrl}}">View on GitHub</a></div>{{/githubUrl}}
           </div>
-          {{#sessionuser}}
+          {{#sessionuser }}
           <div class="flowmeta">
             <h4>Actions</h4>
             <form id="form-rate" action="/node/{{_id}}/rate" method="POST">
@@ -30,14 +30,14 @@
                 <div class="flowinfo">Rate: <span id="set-stars"></span></div>
             </form>
             <div class="flowinfo" style="text-align: right;"><a class="user-profile-action" href="#" onclick="javascript:addToCollection('{{_id}}');">add to collection</a></div>
-            {{^refresh_requested}}<div style="text-align: right;" class="flowinfo">
-                <form id="request-refresh" action="/node/{{_id}}/refresh" method="GET">
-                    <input name="_csrf" type="hidden" value="{{csrfToken}}">
-                    <button type="submit" class="user-profile-action" style="background: none; color: #aa6767">request refresh</button>
+            <hr>
+            <div style="text-align: right;" class="flowinfo">
+                <form id="request-refresh" action="/node/{{_id}}/refresh" method="POST">
+                    <input id="refresh-csrf" name="_csrf" type="hidden" value="{{csrfToken}}">
+                    <button id="refresh-button" type="button" class="user-profile-action" style="background: none; color: #aa6767"><span id="refresh-node-label">check for update</span><img id="refresh-node-loader" class="loader" src="/images/loader.gif" /></button>
+                    <div id="refresh-node-error" class="dialog-warning" style="position:relative"></div>
                 </form>
-                </div>
-            {{/refresh_requested}}
-            {{#refresh_requested}}<div style="text-align: right;" class="flowinfo">refresh requested</a></div>{{/refresh_requested}}
+            </div>
             <div style="text-align: right;" class="flowinfo"><a class="user-profile-action" id="report-node" href="/node/{{_id}}/report">report this module</a></div>
           </div>
           {{/sessionuser}}
@@ -89,11 +89,10 @@
         <form action="/node/{{_id}}/report" method="POST">
             <input name="_csrf" type="hidden" value="{{csrfToken}}">
         <h4>Report this module</h4>
-        <p>The modules on this site are automatically indexed from npm. If you have a concern
-           about this module, please let us know. For example, if you believe it contains
-           unsuitable or inappropriate material.</p>
-        <p>This is <b>not</b> the place to seek help with the module - for that, please
-            contact its maintainers directly.</p>
+        <p>If you have a concern about the contents of this module, please let us know.
+            For example, if you believe it contains unsuitable or inappropriate material.</p>
+        <p><b>This is not a way to get help with this module.</b> For that, please
+            contact its maintainers directly or post to the <a href="https://discourse.nodered.org" target="_blank">Node-RED Forum</a>.</p>
         <p>Please provide some details about the module:</p>
         <div><textarea name="details" id="details"></textarea></div>
         <div class="dialog-buttons">
@@ -105,11 +104,46 @@
 {{#sessionuser}}
 {{>_rateTools}}
 <script>
-    $("#report-node").click(function(e) {
-        $("body").css({height:"100%",overflow:"hidden"});
-        e.preventDefault();
-        $("#report-node-shade").show();
+    $(function() {
+        $("#report-node").click(function(e) {
+            $("body").css({height:"100%",overflow:"hidden"});
+            e.preventDefault();
+            $("#report-node-shade").show();
+        });
+
+        var refreshSubmitted = false;
+
+        $('#refresh-button').click(function(e) {
+            e.preventDefault();
+            if (refreshSubmitted) {
+                return;
+            }
+            refreshSubmitted = true;
+            $("#refresh-node-error").hide();
+            $("#refresh-node-label").hide();
+            $("#refresh-button").addClass("submitted");
+            $("#refresh-node-loader").show();
+            var module = {
+                _csrf: $("#refresh-csrf").val(),
+                module: "{{_id}}"
+            };
+            $.post("/add/node",module,function(data) {
+                window.location = data;
+            }).fail(function(err) {
+                if (err.status == 403) {
+                    window.location.reload();
+                }
+                refreshSubmitted = false;
+                console.log("ERROR",err);
+                $("#refresh-button").removeClass("submitted");
+                $("#refresh-node-loader").hide();
+                $("#refresh-node-label").show();
+                $("#refresh-node-error").text(err.responseText).show();
+            });
+        });
+
     });
+
 </script>
 {{/sessionuser}}
 {{>_footer}}

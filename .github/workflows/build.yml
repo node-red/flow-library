@@ -1,0 +1,35 @@
+name: PublishUpdatedCatalog
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron:  '*/30 * * * *'
+jobs:
+  generate:
+    name: 'Update Flow Library Catalogue'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out flow-library repository
+        uses: actions/checkout@v2
+        with:
+            path: 'flow-library'
+      - name: Check out catalogue.nodered.org repository
+        uses: actions/checkout@v2
+        with:
+            repository: 'node-red/catalogue.nodered.org'
+            path: 'catalogue.nodered.org'
+            token: ${{ secrets.FLOW_LIBRARY_PAT }}
+            ref: 'master'
+      - uses: actions/setup-node@v1
+        with:
+            node-version: '12'
+      - name: npm install
+        run: |
+          cd flow-library
+          npm install
+      - name: Run update
+        env:
+            NR_MONGO_URL: ${{ secrets.NR_MONGO_URL }}
+            FLOW_ENV: PRODUCTION
+        run: ./flow-library/.github/scripts/generate-catalog.sh
+

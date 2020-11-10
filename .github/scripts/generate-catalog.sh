@@ -5,7 +5,9 @@ if [ $? -ne 0 ]; then
 fi
 
 node ./flow-library/.github/scripts/compare-catalogs.js
-if [ $? -ne 0 ]; then
+RC=$?
+echo RC=$RC
+if [ $RC -eq 0 ]; then
     echo "Nothing to do"
    exit
 fi

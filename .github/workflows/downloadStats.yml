@@ -1,0 +1,23 @@
+name: Update Download Stats
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron:  '33 4 * * *'
+jobs:
+  generate:
+    name: 'Update Download Stats'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out flow-library repository
+        uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+            node-version: '12'
+      - run: npm install
+      - name: Run update
+        env:
+            NR_MONGO_URL: ${{ secrets.NR_MONGO_URL }}
+            FLOW_ENV: PRODUCTION
+        run: node ./flow-library/tasks/update-download-stats.js
+

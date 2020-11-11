@@ -14,10 +14,10 @@ jobs:
       - uses: actions/setup-node@v1
         with:
             node-version: '12'
-      - run: npm install
+      - run: npm install --only=production
       - name: Run update
         env:
             NR_MONGO_URL: ${{ secrets.NR_MONGO_URL }}
             FLOW_ENV: PRODUCTION
-        run: node ./flow-library/tasks/update-download-stats.js
+        run: node ./tasks/update-download-stats.js
 

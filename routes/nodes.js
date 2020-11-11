@@ -106,8 +106,6 @@ function getNode(id, scope, collection, req,res) {
                         def.types[t].iconUrl = ("/icons/"+id+"/"+t).replace(/ /g,"%20");
                         if (fs.existsSync(__dirname+"/../public/icons/"+def.types[t].icon)) {
                             iconCache[id][t] = path.resolve(__dirname+"/../public/icons/"+def.types[t].icon);
-                        } else {
-                            iconCache[id][t] = appUtils.mapNodePath(def.types[t].iconPath);
                         }
                     }
                 }

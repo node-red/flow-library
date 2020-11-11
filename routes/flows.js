@@ -89,10 +89,9 @@ function getFlow(id,collection,req,res) {
             ));
 
         gist.nodeTypes = [];
-        if (!gist.flow && gist.files && gist.files['flow-json']) {
-            gist.flow = fs.readFileSync(appUtils.mapGistPath(gist.files['flow-json']),'utf-8');
-        }
-        if (gist.flow) {
+        if (!gist.flow) {
+            gist.flow = [];
+        } else if (gist.flow) {
             try {
                 var nodes = JSON.parse(gist.flow);
                 var nodeTypes = {};
@@ -159,10 +158,6 @@ function getFlow(id,collection,req,res) {
 
             if (gist.readme) {
                 completeRender(gist.readme);
-            } else if (gist.files && gist.files['README-md']) {
-                fs.readFile(appUtils.mapGistPath(gist.files['README-md']),'utf-8',function(err,data) {
-                    completeRender(data);
-                });
             } else {
                 completeRender("Missing readme");
             }
@@ -235,21 +230,6 @@ app.post("/flow/:id/rate", appUtils.csrfProtection(),function(req,res) {
     }
 });
 
-
-//app.post("/flow/:id/add",function(req,res) {
-//    gister.add(req.params.id).then(function () {
-//        res.send("/flow/"+req.params.id);
-//    }).catch(function(err) {
-//        if (err.errno == 47) {
-//            res.send("/flow/"+req.params.id);
-//        } else if (err.code == 404) {
-//            res.send(404,mustache.render(templates['404'],{sessionuser:req.session.user},templates.partials));
-//        } else {
-//            res.send(406,err);
-//        }
-//    })
-//});
-
 app.post("/flow/:id/delete",appUtils.csrfProtection(),verifyOwner,function(req,res) {
     gister.remove(req.params.id).then(function() {
         res.writeHead(303, {
@@ -260,20 +240,6 @@ app.post("/flow/:id/delete",appUtils.csrfProtection(),verifyOwner,function(req,r
         res.send(400,err).end();
     });
 });
-
-//
-// app.get("/flow/:id/flow",function(req,res) {
-//     gister.get(req.params.id).then(function(gist) {
-//         if (gist.files['flow.json']) {
-//             res.sendFile(appUtils.mapGistPath(gist.files['flow.json'].local_path),'utf-8');
-//         } else {
-//             res.status(404).send(mustache.render(templates['404'],{sessionuser:req.session.user},templates.partials));
-//         }
-//     }).catch(function() {
-//         res.status(404).send(mustache.render(templates['404'],{sessionuser:req.session.user},templates.partials));
-//     });
-// });
-
 
 app.get("/add/flow",function(req,res) {
     if (!req.session.user) {

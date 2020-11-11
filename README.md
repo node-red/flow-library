@@ -37,3 +37,26 @@ To test you will want to add a few nodes to the database.  To do so, use the upd
 or in the docker container running the application
 
     docker exec -it flow-library_node_1 node tasks/update-one.js node-red-dashboard
+
+## Configuration
+
+
+PORT
+NR_GITHUB_CLIENTID
+NR_GITHUB_SECRET
+NR_GITHUB_CALLBACK
+NR_GITHUB_ACCESSTOKEN
+NR_MONGO_URL
+NR_SESSION_KEY
+NR_SESSION_SECRET
+NR_ADMINS
+NR_TWITTER_CONSUMER_KEY
+NR_TWITTER_CONSUMER_SECRET
+NR_TWITTER_ACCESS_TOKEN_KEY
+NR_TWITTER_ACCESS_TOKEN_SECRET
+NR_SLACK_WEBHOOK
+NR_MODULE_BLOCKLIST
+NR_AWS_BUCKET
+NR_AWS_ACCESS_KEY_ID
+NR_AWS_SECRET_ACCESS_KEY
+NR_AWS_REGION

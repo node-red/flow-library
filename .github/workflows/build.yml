@@ -26,7 +26,7 @@ jobs:
       - name: npm install
         run: |
           cd flow-library
-          npm install
+          npm install --only=production
       - name: Run update
         env:
             NR_MONGO_URL: ${{ secrets.NR_MONGO_URL }}

@@ -13,20 +13,23 @@ viewster.get({type:'node'},null,{
 }
 
 ).then(function(things) {
-    things.forEach(function(t) {
-        t.id = t._id;
-        delete t._id;
-        t.version = t['dist-tags'].latest;
-        delete t['dist-tags'];
-        delete t.updated_formatted;
-        t.url = "http://flows.nodered.org/node/"+t.id;
+    const modules = things.map(function(t) {
+        return {
+            id: t._id,
+            version: t['dist-tags'].latest,
+            description: t.description,
+            updated_at: t.updated_at,
+            types: t.types,
+            keywords: t.keywords,
+            url: "https://flows.nodered.org/node/"+t._id
+        }
     })
 
     console.log('{');
     console.log('   "name": "Node-RED Community catalogue",');
     console.log('   "updated_at": "'+(new Date()).toISOString()+'",');
     console.log('   "modules":');
-    console.log(JSON.stringify(things));
+    console.log(JSON.stringify(modules));
     console.log('}');
     db.close();
 }).catch(function(err) {

@@ -25,7 +25,7 @@ describe("ratings", function () {
             sinon.assert.calledWith(dbUpdate,
                 { module: testRating.module, user: testRating.user }, testRating, { upsert: true });
             done();
-        }).otherwise(function (err) {
+        }).catch(function (err) {
             done(err);
         });
     });
@@ -39,7 +39,7 @@ describe("ratings", function () {
         ratings.remove(testRating).then(function () {
             sinon.assert.calledWith(dbRemove, testRating);
             done();
-        }).otherwise(function (err) {
+        }).catch(function (err) {
             done(err);
         });
     });
@@ -74,7 +74,7 @@ describe("ratings", function () {
                 }
             });
             done();
-        }).otherwise(function (err) {
+        }).catch(function (err) {
             done(err);
         });
     });
@@ -102,7 +102,7 @@ describe("ratings", function () {
             });
             sinon.assert.notCalled(dbFindOne);
             done();
-        }).otherwise(function (err) {
+        }).catch(function (err) {
             done(err);
         });
     });

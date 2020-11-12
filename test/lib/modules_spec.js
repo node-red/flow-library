@@ -1,6 +1,5 @@
 var should = require('should');
 var sinon = require('sinon');
-var when = require('when');
 var nodes = require('../../lib/nodes');
 var ratings = require('../../lib/ratings');
 var events = require('../../lib/events');
@@ -16,12 +15,12 @@ describe("modules", function () {
 
     it('#pruneRatings', function (done) {
         var list = ['node-red-dashboard', 'node-red-contrib-influxdb', 'node-red-contrib-noble'];
-        sandbox.stub(ratings, 'getRatedModules').returns(when(list));
-        sandbox.stub(nodes, 'get').returns(when({
+        sandbox.stub(ratings, 'getRatedModules').returns(Promise.resolve(list));
+        sandbox.stub(nodes, 'get').returns(Promise.resolve({
             _id: 'node-red-dashboard'
-        })).returns(when({
+        })).returns(Promise.resolve({
             _id: 'node-red-contrib-influxdb'
-        })).returns(when({
+        })).returns(Promise.resolve({
             _id: 'node-red-contrib-noble'
         }));
 
@@ -33,20 +32,20 @@ describe("modules", function () {
 
     it('#pruneRatings module removed', function (done) {
         var list = ['node-red-dashboard', 'node-red-contrib-influxdb', 'node-red-contrib-noble'];
-        sandbox.stub(ratings, 'getRatedModules').returns(when(list));
+        sandbox.stub(ratings, 'getRatedModules').returns(Promise.resolve(list));
 
         var nodesGet = sandbox.stub(nodes, 'get')
-        nodesGet.withArgs('node-red-dashboard').returns(when({
+        nodesGet.withArgs('node-red-dashboard').returns(Promise.resolve({
             _id: 'node-red-dashboard'
         }));
-        nodesGet.withArgs('node-red-contrib-influxdb').returns(when({
+        nodesGet.withArgs('node-red-contrib-influxdb').returns(Promise.resolve({
             _id: 'node-red-contrib-influxdb'
         }));
         nodesGet.withArgs('node-red-contrib-noble').returns(
-            when.reject(new Error('node not found: node-red-contrib-noble')));
+            Promise.reject(new Error('node not found: node-red-contrib-noble')));
 
-        var removeForModule = sandbox.stub(ratings, 'removeForModule').returns(when());
-        sandbox.stub(events, 'add').returns(when());
+        var removeForModule = sandbox.stub(ratings, 'removeForModule').returns(Promise.resolve());
+        sandbox.stub(events, 'add').returns(Promise.resolve());
 
         modules.pruneRatings().then(function (results) {
             results.should.have.length(1);

@@ -2,6 +2,9 @@ try {
     module.exports = require("../settings.js");
 } catch(err) {
     module.exports = require("../default-settings.js");
+    if (process.env.NR_MAINTENANCE !== undefined) {
+        module.exports.maintenance = true
+    }
     module.exports.port = process.env.PORT || module.exports.port;
     module.exports.github.clientId = process.env.NR_GITHUB_CLIENTID || module.exports.github.clientId;
     module.exports.github.secret = process.env.NR_GITHUB_SECRET || module.exports.github.secret;

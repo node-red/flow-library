@@ -5,7 +5,7 @@ var settings = {
     github: {
         clientId: "",
         secret: "",
-        authCallback: "http://localhost:7000/login/callback",
+        authCallback: "http://localhost:8080/login/callback",
         accessToken: ""
     },
     mongo: {

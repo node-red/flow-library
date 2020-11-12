@@ -3,7 +3,7 @@ try {
 } catch(err) {
     module.exports = require("../default-settings.js");
     if (process.env.NR_MAINTENANCE !== undefined) {
-        module.exports.maintenance = true
+        module.exports.maintenance = (process.env.NR_MAINTENANCE === 'true')
     }
     module.exports.port = process.env.PORT || module.exports.port;
     module.exports.github.clientId = process.env.NR_GITHUB_CLIENTID || module.exports.github.clientId;

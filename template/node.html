@@ -2,6 +2,16 @@
 
 <div class="grid thing-list-section main-content">
     <div class="col-9-12 docs-content">
+        {{#message}}
+        <a href="#" onclick="return clearSystemMessage()" class="system-message">{{ . }} <i class="fa fa-close"></i></a>
+        <script>
+            window.history.replaceState({}, document.title, window.location.pathname);
+            function clearSystemMessage(){
+                $(".system-message").fadeOut()
+                return false;
+            }
+        </script>
+        {{/message}}
         <h1 class="flow-title" style="margin-bottom: 10px;">{{ name }} <span class="flow-version">{{ versions.latest.version }}</span></h1>
         <p class="flow-description">{{ description }}</p>
         <p class="flowmeta flow-install">

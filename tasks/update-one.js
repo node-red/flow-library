@@ -12,7 +12,7 @@ npmModules.refreshModule(name).then(function(results) {
          if (res.state === 'rejected') {
              console.log("Failed:",res.reason);
          } else if (res.value) {
-             console.log("Updated:",res.value);
+             console.log(res.value);
          } else {
              console.log("Nothing to do",res)
          }

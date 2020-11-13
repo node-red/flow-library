@@ -46,12 +46,17 @@ function getNode(id, scope, collection, req,res) {
     if (scope) {
         id = scope+"/"+id;
     }
-
     npmNodes.get(id).then(function(node) {
         node.sessionuser = req.session.user;
         node.csrfToken = req.csrfToken();
         node.pageTitle = req.params.id+" (node)";
-        //console.log(node);
+
+        if (req.query.m) {
+            try {
+                node.message = Buffer.from(req.query.m, 'base64').toString();
+            } catch(err){}
+        }
+
         node.updated_at_since = appUtils.formatDate(node.updated_at);
         iconCache[id] = {};
         node.types = [];
@@ -269,7 +274,7 @@ app.post("/add/node",appUtils.csrfProtection(),function(req,res) {
                 if (result.state === 'rejected') {
                     res.status(400).send(result.reason.toString())
                 } else if (result.value) {
-                    res.send("/node/"+name)
+                    res.send("/node/"+name+"?m="+Buffer.from(result.value).toString('base64'))
                 } else {
                     res.status(400).send("Module already at latest version")
                 }

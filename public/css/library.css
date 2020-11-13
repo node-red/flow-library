@@ -1545,3 +1545,17 @@ span.username {
         display: inline-block;
     }
 }
+.system-message {
+    display: block;
+    border: 2px solid #aa4444;
+    padding: 8px;
+    border-bottom-left-radius: 8px;
+    border-top-right-radius: 8px;
+    position:relative;
+}
+.system-message i {
+    position: absolute;
+    right: 10px;
+    top: 12px;
+
+}

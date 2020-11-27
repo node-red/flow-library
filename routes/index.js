@@ -135,7 +135,6 @@ app.get("/things", function (req, res) {
             res.json(response);
         },0);//2000);
     }).catch(function (err) {
-        console.log(err);
         response.err = err;
         res.json(response);
     });

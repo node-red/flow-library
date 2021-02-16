@@ -133,7 +133,7 @@
             $("#refresh-node-loader").show();
             var module = {
                 _csrf: $("#refresh-csrf").val(),
-                module: "{{_id}}"
+                module: "{{{_id}}}"
             };
             $.post("/add/node",module,function(data) {
                 window.location = data;

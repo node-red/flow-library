@@ -133,25 +133,30 @@ function getNode(id, scope, collection, req,res) {
             if (node.repository && node.repository.url && /github\.com/.test(node.repository.url)) {
                 var m;
                 var repo = node.repository.url;
-                var baseUrl;
+                var rawUrl;
+                var repoUrl;
                 if ((m=/git@github.com:(.*)\.git$/.exec(repo))) {
-                    baseUrl = "https://raw.githubusercontent.com/"+m[1]+"/master/";
+                    rawUrl = "https://raw.githubusercontent.com/"+m[1]+"/master/";
+                    repoUrl = "https://github.com/"+m[1]+"/blob/master/"
                     m = null;
                 } else if ((m=/https:\/\/github.com\/(.*)\.git/.exec(repo))) {
-                    baseUrl = "https://raw.githubusercontent.com/"+m[1]+"/master/";
+                    rawUrl = "https://raw.githubusercontent.com/"+m[1]+"/master/";
+                    repoUrl = "https://github.com/"+m[1]+"/blob/master/"
                     m = null;
                 } else if ((m=/https:\/\/github.com\/(.*)/.exec(repo))) {
-                    baseUrl = "https://raw.githubusercontent.com/"+m[1]+"/master/";
+                    rawUrl = "https://raw.githubusercontent.com/"+m[1]+"/master/";
+                    repoUrl = "https://github.com/"+m[1]+"/blob/master/"
                     m = null;
                 } else if ((m=/git:\/\/github.com\/(.*)\.git$/.exec(repo))) {
-                    baseUrl = "https://raw.githubusercontent.com/"+m[1]+"/master/";
+                    rawUrl = "https://raw.githubusercontent.com/"+m[1]+"/master/";
+                    repoUrl = "https://github.com/"+m[1]+"/blob/master/"
                     m = null;
                 }
                 var re = /(<img .*?src="(.*?)")/gi;
 
                 while((m=re.exec(node.readme)) !== null) {
                     if (!/^https?:/.test(m[2])) {
-                        var newImage = m[1].replace('"'+m[2]+'"','"'+baseUrl+m[2]+'"');
+                        var newImage = m[1].replace('"'+m[2]+'"','"'+rawUrl+m[2]+'"');
                         node.readme = node.readme.substring(0,m.index) +
                                         newImage +
                                       node.readme.substring(m.index+m[1].length);
@@ -165,7 +170,8 @@ function getNode(id, scope, collection, req,res) {
                 var linksRE = /(<a href="([^#].*?)")/gi;
                 while ((m=linksRE.exec(node.readme)) !== null) {
                     if (!/^https?:/.test(m[2])) {
-                        node.readme = node.readme.substring(0,m.index) + `<a href="${baseUrl}/${m[2]}"` + node.readme.substring(m.index+m[1].length);
+                        var targetUrl = /\.md$/i.test(m[2])?repoUrl:rawUrl;
+                        node.readme = node.readme.substring(0,m.index) + `<a href="${targetUrl}/${m[2]}"` + node.readme.substring(m.index+m[1].length);
                     }
                 }
             } else {

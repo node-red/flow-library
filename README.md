@@ -22,7 +22,7 @@ This repo comes with a docker-compose based development environment. To get star
         npm run docker
 
    This first time you run this will take a while as it downloads various pieces.
-   When it completes, you will be able to access http://localhost:7000 to see
+   When it completes, you will be able to access http://localhost:8080 to see
    the flow library.
 
 The docker image uses `nodemon` to watch for changes to the source code and

@@ -31,7 +31,7 @@
             <div class="flowinfo"><a target="_blank" href="https://npmjs.org/package/{{ name }}">View on npm</a></div>
             {{#githubUrl}}<div class="flowinfo"><a target="_blank" href="{{githubUrl}}">View on GitHub</a></div>{{/githubUrl}}
           </div>
-          {{#sessionuser }}
+          
           <div class="flowmeta">
             <h4>Actions</h4>
             <form id="form-rate" action="/node/{{_id}}/rate" method="POST">
@@ -39,6 +39,8 @@
                 <input name="rating" type="hidden">
                 <div class="flowinfo">Rate: <span id="set-stars"></span></div>
             </form>
+            {{#sessionuser}}
+            <div style="text-align: right;" class="flowinfo"><a class="user-profile-action" id="report-node" href="/node/{{_id}}/report">report this module</a></div>
             <div class="flowinfo" style="text-align: right;"><a class="user-profile-action" href="#" onclick="javascript:addToCollection('{{_id}}');">add to collection</a></div>
             <hr>
             <div style="text-align: right;" class="flowinfo">
@@ -48,9 +50,9 @@
                     <div id="refresh-node-error" class="dialog-warning" style="position:relative"></div>
                 </form>
             </div>
-            <div style="text-align: right;" class="flowinfo"><a class="user-profile-action" id="report-node" href="/node/{{_id}}/report">report this module</a></div>
+            {{/sessionuser}} 
           </div>
-          {{/sessionuser}}
+         
 
           <div class="flowmeta">
             <h4>Downloads</h4>
@@ -109,7 +111,11 @@
         </form>
     </div>
 </div>
-{{#sessionuser}}
+
+
+
+
+
 {{>_rateTools}}
 <script>
     $(function() {
@@ -153,5 +159,6 @@
     });
 
 </script>
-{{/sessionuser}}
+{{#sessionuser}}
+//{{/sessionuser}}
 {{>_footer}}

@@ -10,7 +10,7 @@ var npmNodes = require("../lib/nodes");
 var templates = require("../lib/templates");
 var collections = require("../lib/collections");
 var ratings = require("../lib/ratings");
-
+var uuid = require('uuid');
 
 var app = express();
 
@@ -53,12 +53,12 @@ function getFlow(id,collection,req,res) {
 
         var collectionPromise;
         var ratingPromise;
-        if (req.session.user) {
+        if (req.cookies.rateID) {
             if (gist.rating && !gist.rating.hasOwnProperty("count")) {
                 delete gist.rating;
                 ratingPromise = Promise.resolve();
             } else {
-                ratingPromise = ratings.getUserRating(id, req.session.user.login).then(function(userRating) {
+                ratingPromise = ratings.getUserRating(id, req.cookies.rateID).then(function(userRating) {
                     if (userRating) {
                         if (!gist.rating) {
                             gist.rating = {};
@@ -215,14 +215,16 @@ app.post("/flow/:id/refresh",verifyOwner,function(req,res) {
 
 app.post("/flow/:id/rate", appUtils.csrfProtection(),function(req,res) {
     var id = req.params.id;
-    if (req.session.user) {
-        ratings.rateThing(id,req.session.user.login,Number(req.body.rating)).then(function() {
+    if (req.cookies.rateID) {
+        ratings.rateThing(id,req.cookies.rateID,Number(req.body.rating)).then(function() {
             res.writeHead(303, {
                 Location: "/flow/"+id
             });
             res.end();
         })
     } else {
+        var rateID = uuid.v4()
+        res.cookie('rateID', rateID)
         res.writeHead(303, {
             Location: "/flow/"+id
         });

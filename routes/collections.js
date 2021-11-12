@@ -1,5 +1,6 @@
 const express = require("express");
 const mustache = require('mustache');
+const uuid = require('uuid');
 
 const settings = require("../config");
 const appUtils = require("../lib/utils");
@@ -222,18 +223,22 @@ app.post("/collection/:id/delete/:scope(@[^\\/]{1,})?/:thingId([^@][^\\/]{1,})",
 
 app.post("/collection/:id/rate", appUtils.csrfProtection(),function(req,res) {
     var id = req.params.id;
-    if (req.session.user) {
-        ratings.rateThing(id,req.session.user.login,Number(req.body.rating)).then(function() {
+    if (req.cookies.rateID) {
+        ratings.rateThing(id,req.cookies.rateID,Number(req.body.rating)).then(function() {
             res.writeHead(303, {
                 Location: "/collection/"+id
             });
             res.end();
         })
     } else {
-        res.writeHead(303, {
-            Location: "/collection/"+id
-        });
-        res.end();
+        var rateID = uuid.v4()
+        res.cookie('rateID', rateID)
+        ratings.rateThing(id,req.cookies.rateID,Number(req.body.rating)).then(function() {
+            res.writeHead(303, {
+                Location: "/collection/"+id
+            });
+            res.end();
+        })
     }
 });
 

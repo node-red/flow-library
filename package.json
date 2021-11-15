@@ -33,6 +33,7 @@
         "mocha": "8.2.1",
         "nodemon": "2.0.6",
         "should": "13.2.3",
-        "sinon": "9.2.1"
+        "sinon": "9.2.1",
+        "vanilla-cookieconsent": "^2.6.1"
     }
 }

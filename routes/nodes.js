@@ -244,6 +244,11 @@ app.post("/node/:scope(@[^\\/]{1,})?/:id([^@][^\\/]{1,})/report",appUtils.csrfPr
 
 app.post("/node/:scope(@[^\\/]{1,})?/:id([^@][^\\/]{1,})/rate", appUtils.csrfProtection(),function(req,res) {
     var id = req.params.id;
+    try {
+        var cc_cookie = JSON.parse(req.cookies.cc_cookie)
+    } catch (e) {
+        var cc_cookie = false
+    }    
     if (req.params.scope) {
         id = req.params.scope+"/"+id;
     }
@@ -254,15 +259,20 @@ app.post("/node/:scope(@[^\\/]{1,})?/:id([^@][^\\/]{1,})/rate", appUtils.csrfPro
             });
             res.end();
         })
-    } else {
+    } else if (cc_cookie && cc_cookie.level.includes("functionality")) {
         var rateID = uuid.v4()
-        res.cookie('rateID', rateID)
+        res.cookie('rateID', rateID, { maxAge : 31556952000})
         ratings.rateThing(id,rateID,Number(req.body.rating)).then(function() {
             res.writeHead(303, {
                 Location: "/node/"+id
             });
             res.end();
         })
+    } else {
+        res.writeHead(303, {
+            Location: "/node/"+id
+        });
+        res.end();
     }
 });
 

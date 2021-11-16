@@ -1,5 +1,6 @@
 const express = require("express");
 const mustache = require('mustache');
+const uuid = require('uuid');
 
 const settings = require("../config");
 const appUtils = require("../lib/utils");
@@ -222,8 +223,22 @@ app.post("/collection/:id/delete/:scope(@[^\\/]{1,})?/:thingId([^@][^\\/]{1,})",
 
 app.post("/collection/:id/rate", appUtils.csrfProtection(),function(req,res) {
     var id = req.params.id;
-    if (req.session.user) {
-        ratings.rateThing(id,req.session.user.login,Number(req.body.rating)).then(function() {
+    try {
+        var cc_cookie = JSON.parse(req.cookies.cc_cookie)
+    } catch (e) {
+        var cc_cookie = false
+    }   
+    if (req.cookies.rateID) {
+        ratings.rateThing(id,req.cookies.rateID,Number(req.body.rating)).then(function() {
+            res.writeHead(303, {
+                Location: "/collection/"+id
+            });
+            res.end();
+        })
+    } else if (cc_cookie && cc_cookie.level.includes("functionality")) {
+        var rateID = uuid.v4()
+        res.cookie('rateID', rateID, { maxAge : 31556952000})
+        ratings.rateThing(id,rateID,Number(req.body.rating)).then(function() {
             res.writeHead(303, {
                 Location: "/collection/"+id
             });

@@ -14,8 +14,13 @@
         $("#form-rate").submit();
     };
 
-    $("#set-stars").raty({
+    if (cookieconsent.allowedCategory('functionality')) { 
+        $("#set-stars").raty({
         {{#rating}}{{#userRating}}score: {{.}},{{/userRating}}{{/rating}}
         cancel: true,
         click: utils.debounce(rate, 1000)});
+    }  else {
+        $("#form-rate" ).hide()
+    }
+    
 </script>

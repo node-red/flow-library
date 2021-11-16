@@ -19,7 +19,7 @@
               <h4>Owner</h4>
               <div class="flowinfo"><a href="/user/{{ owner.login }}">{{ owner.login }}</a></div>
           </div>
-          {{#sessionuser}}
+         
           <div class="flowmeta">
             <h4>Actions</h4>
             <form id="form-rate" action="/flow/{{_id}}/rate" method="POST">
@@ -27,13 +27,14 @@
                 <input name="rating" type="hidden">
                 <div class="flowinfo">Rate: <span id="set-stars"></span></div>
             </form>
+            {{#sessionuser}}
             <div class="flowinfo" style="text-align: right;"><a class="user-profile-action" href="#" onclick="javascript:addToCollection('{{_id}}');">add to collection</a></div>
             {{#owned}}
                 <div class="flowinfo" style="text-align: right;"><img id="refresh-flow-loader" class="loader" src="/images/loader.gif" />&nbsp;&nbsp;<a class="user-profile-action" id="refresh-flow" href="#">refresh from github</a></div>
                 <div class="flowinfo" style="text-align: right;"><a class="user-profile-action" id="remove-flow" href="#">remove flow</a></div>
             {{/owned}}
-          </div>
           {{/sessionuser}}
+        </div>
 
 
           <div class="flowmeta">
@@ -75,7 +76,7 @@
           </div>
     </div>
 </div>
-{{#sessionuser}}{{>_rateTools}}{{/sessionuser}}
+{{>_rateTools}}
 <script src="/js/tags.js"></script>
 <script>
 $(function() {

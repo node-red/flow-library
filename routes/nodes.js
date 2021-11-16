@@ -4,6 +4,7 @@ var marked = require('marked');
 var fs = require("fs");
 var path = require("path");
 var csrf = require('csurf');
+var uuid = require('uuid')
 
 var settings = require("../config");
 var appUtils = require("../lib/utils");
@@ -65,12 +66,12 @@ function getNode(id, scope, collection, req,res) {
         var collectionPromise;
         var ratingPromise;
 
-        if (req.session.user) {
+        if (req.cookies.rateID) {
             if (node.rating && !node.rating.hasOwnProperty("count")) {
                 delete node.rating;
                 ratingPromise = Promise.resolve();
             } else {
-                ratingPromise = ratings.getUserRating(id, req.session.user.login).then(function(userRating) {
+                ratingPromise = ratings.getUserRating(id, req.cookies.rateID).then(function(userRating) {
                     if (userRating) {
                         if (!node.rating) {
                             node.rating = {};
@@ -243,11 +244,25 @@ app.post("/node/:scope(@[^\\/]{1,})?/:id([^@][^\\/]{1,})/report",appUtils.csrfPr
 
 app.post("/node/:scope(@[^\\/]{1,})?/:id([^@][^\\/]{1,})/rate", appUtils.csrfProtection(),function(req,res) {
     var id = req.params.id;
+    try {
+        var cc_cookie = JSON.parse(req.cookies.cc_cookie)
+    } catch (e) {
+        var cc_cookie = false
+    }    
     if (req.params.scope) {
         id = req.params.scope+"/"+id;
     }
-    if (req.session.user) {
-        ratings.rateThing(id,req.session.user.login,Number(req.body.rating)).then(function() {
+    if (req.cookies.rateID) {
+        ratings.rateThing(id,req.cookies.rateID,Number(req.body.rating)).then(function() {
+            res.writeHead(303, {
+                Location: "/node/"+id
+            });
+            res.end();
+        })
+    } else if (cc_cookie && cc_cookie.level.includes("functionality")) {
+        var rateID = uuid.v4()
+        res.cookie('rateID', rateID, { maxAge : 31556952000})
+        ratings.rateThing(id,rateID,Number(req.body.rating)).then(function() {
             res.writeHead(303, {
                 Location: "/node/"+id
             });

@@ -1,0 +1,63 @@
+{{>_header}}
+
+<div class="grid thing-list-section main-content">
+    <div class="col-1-1 docs-content">
+        {{#message}}
+        <a href="#" onclick="return clearSystemMessage()" class="system-message">{{ . }} <i class="fa fa-close"></i></a>
+        <script>
+            window.history.replaceState({}, document.title, window.location.pathname);
+            function clearSystemMessage(){
+                $(".system-message").fadeOut()
+                return false;
+            }
+        </script>
+        {{/message}}
+        <h1 class="flow-title" style="margin-bottom: 10px;">{{ name }} <span class="flow-version">{{ versions.latest.version }}</span></h1>
+        <p class="flow-description">{{ description }}</p>
+        <div class="flowmeta">
+            <h4>Package</h4>
+            <div class="flowinfo">License: 
+                {{#license}}<i class="fa scorecard_true fa-check-square" aria-hidden="true" title="yes"></i>  ({{ license }}){{/license}}
+                {{^license}}<i class="fa fa-times-circle" aria-hidden="true" title="no"></i>{{/license}}
+            </div>
+            <div class="flowinfo">Name matches repository: 
+                {{#scorecard.package.name.test}}<i class="fa scorecard_true fa-check-square" aria-hidden="true" title="yes"></i>{{/scorecard.package.name.test}}
+                {{^scorecard.package.name.test}}<i class="fa scorecard_false fa-times-circle" aria-hidden="true" title="no"></i>{{/scorecard.package.name.test}}
+            </div>
+            <div class="flowinfo">Bugs URL Supplied: 
+                {{#scorecard.package.bugs.test}}<i class="fa scorecard_true fa-check-square" aria-hidden="true" title="yes"></i>{{/scorecard.package.bugs.test}}
+                {{^scorecard.package.bugs.test}}<i class="fa scorecard_false fa-times-circle" aria-hidden="true" title="no"></i>{{/scorecard.package.bugs.test}}
+            </div>
+            <div class="flowinfo">Package uses a unique Name: 
+                {{#scorecard.package.uniqname.test}}<i class="fa scorecard_true fa-check-square" aria-hidden="true" title="yes"></i>{{/scorecard.package.uniqname.test}}
+                {{^scorecard.package.uniqname.test}}<i class="fa scorecard_false fa-times-circle" aria-hidden="true" title="no"></i>{{/scorecard.package.uniqname.test}}
+            </div>
+            <div class="flowinfo">Node-RED keyword set: 
+                {{#scorecard.package.keyword.test}}<i class="fa scorecard_true fa-check-square" aria-hidden="true" title="yes"></i>{{/scorecard.package.keyword.test}}
+                {{^scorecard.package.keyword.test}}<i class="fa scorecard_false fa-times-circle" aria-hidden="true" title="no"></i>{{/scorecard.package.keyword.test}}
+            </div>
+        </div>
+        <div class="flowmeta">
+            <h4>Nodes</h4>
+            <div class="flowinfo">Nodes have unique names: 
+                {{#scorecard.nodes.uniqname.test}}<i class="fa scorecard_true fa-check-square" aria-hidden="true" title="yes"></i>{{/scorecard.nodes.uniqname.test}}
+                {{^scorecard.nodes.uniqname.test}}<i class="fa scorecard_false fa-times-circle" aria-hidden="true" title="no"></i>{{/scorecard.nodes.uniqname.test}}
+            </div>
+        </div>
+        <div class="flowmeta">
+            <h4>Dependencies</h4>
+            <div class="flowinfo">Dependencies use latest versions: 
+                {{#scorecard.dependencies.latest.test}}<i class="fa scorecard_true fa-check-square" aria-hidden="true" title="yes"></i>{{/scorecard.dependencies.latest.test}}
+                {{^scorecard.dependencies.latest.test}}<i class="fa scorecard_false fa-times-circle" aria-hidden="true" title="no"></i>{{/scorecard.dependencies.latest.test}}
+            </div>
+            <div class="flowinfo">Number of Dependencies:
+                
+                {{#scorecard.dependencies.count.test}}<i class="fa scorecard_true fa-check-square" aria-hidden="true" title="yes"></i>{{/scorecard.dependencies.count.test}}
+                {{^scorecard.dependencies.count.test}}<i class="fa scorecard_false fa-times-circle" aria-hidden="true" title="no"></i>{{/scorecard.dependencies.count.test}}
+                ({{scorecard.dependencies.count.total}})
+            </div>
+        </div>
+    </div>
+</div>
+
+{{>_footer}}

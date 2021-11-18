@@ -1491,7 +1491,12 @@ span.username {
     display: inline-block;
     bottom: 8px;
     right: 80px;
-
+}
+.scorecard_true {
+    color: green
+}
+.scorecard_false {
+    color: darkred
 }
 
 

@@ -306,6 +306,18 @@ app.post("/add/node",appUtils.csrfProtection(),function(req,res) {
     }
 });
 
-
+app.get("/node/scorecard/:scope(@[^\\/]{1,})?/:id([^@][^\\/]{1,})",appUtils.csrfProtection(),function(req,res) {
+    var id = req.params.id;
+    if (req.params.scope) {
+        id = req.params.scope+"/"+id;
+    }
+    npmNodes.get(id).then(function(node) {
+        node.sessionuser = req.session.user;
+        node.csrfToken = req.csrfToken();
+        node.pageTitle = req.params.id+" (node)";
+        res.send(mustache.render(templates.scorecard,node,templates.partials));
+    });
+    
+});
 
 module.exports = app;

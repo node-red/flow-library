@@ -213,3 +213,7 @@ function closeDialog() {
     $(".dialog-shade:not(.dialog-fixed)").remove();
     return false;
 }
+
+function showRule(ruleID){
+    
+}

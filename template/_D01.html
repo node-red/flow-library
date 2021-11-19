@@ -1,0 +1,11 @@
+<h4>Number of Dependencies</h4>
+<h5>Requirements</h5>
+<p>The tool will check the number of dependencies in the package.json and warn if there are more than 6.
+devDependencies are not counted.</p>
+<h5>Reason</h5>
+<p>6 was chosen as 95% of all published Node-RED modules had less than 6 dependencies when tested (Oct 2021)
+We do see occasionally packages including a large number of unused dependencies including the <code>node-red</code> package itself!
+This isn’t meant to be a hard limit just a warning to check that everything in your dependencies list is indeed needed, its is recognised that some packages may have a legitimate reason to have a lot of dependencies and this can be noted in the README</p>
+<h5>Reference</h5>
+<p><a href="https://docs.npmjs.com/cli/v7/configuring-npm/package-json#dependencies">https://docs.npmjs.com/cli/v7/configuring-npm/package-json#dependencies</a></p>
+

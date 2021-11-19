@@ -1,0 +1,14 @@
+<h4>Out of Date Dependencies</h4>
+<h5>Requirements</h5>
+<p>The tool will check the dependencies listed in the package.json and if there is a newer version that does not satisfy the stated version it will flag a warning.
+For example if your dependencies are:</p>
+<pre><code>{ &quot;acme&quot; : &quot;~1.0.0&quot;}
+</code></pre>
+<p>And the latest version of acme is 1.1.3 then this will not warn as the latest version will be installed when the package is added to node-red.
+However if acme is at 2.0.0 it would flag a warning.</p>
+<h5>Reason</h5>
+<p>Packages are often updated to include security fixes so users should be able to use the newest version available.
+Where your package needs to use an older version this should be noted in the README</p>
+<h5>Reference</h5>
+<p><a href="https://docs.npmjs.com/cli/v7/configuring-npm/package-json#dependencies">https://docs.npmjs.com/cli/v7/configuring-npm/package-json#dependencies</a></p>
+

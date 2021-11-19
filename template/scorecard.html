@@ -12,52 +12,55 @@
             }
         </script>
         {{/message}}
-        <h1 class="flow-title" style="margin-bottom: 10px;">{{ name }} <span class="flow-version">{{ versions.latest.version }}</span></h1>
+        <h1 class="flow-title" style="margin-bottom: 10px;"> 
+            {{ name }} <span class="flow-version">{{ versions.latest.version }}</span></h1>
         <p class="flow-description">{{ description }}</p>
         <div class="flowmeta">
             <h4>Package</h4>
-            <div class="flowinfo">License: 
+            <div class="flowinfo">License: <a href="#" onclick="showRule('P01');"><i class="ruleinfo fa fa-info-circle"></i></a> 
                 {{#license}}<i class="fa scorecard_true fa-check-square" aria-hidden="true" title="yes"></i>  ({{ license }}){{/license}}
                 {{^license}}<i class="fa fa-times-circle" aria-hidden="true" title="no"></i>{{/license}}
             </div>
-            <div class="flowinfo">Name matches repository: 
+            <div class="flowinfo">Name matches repository: <a href="#" onclick="showRule('P02');"><i class="ruleinfo fa fa-info-circle"></i></a>
                 {{#scorecard.package.name.test}}<i class="fa scorecard_true fa-check-square" aria-hidden="true" title="yes"></i>{{/scorecard.package.name.test}}
                 {{^scorecard.package.name.test}}<i class="fa scorecard_false fa-times-circle" aria-hidden="true" title="no"></i>{{/scorecard.package.name.test}}
             </div>
-            <div class="flowinfo">Bugs URL Supplied: 
+            <div class="flowinfo">Bugs URL supplied: <a href="#" onclick="showRule('P03');"><i class="ruleinfo fa fa-info-circle"></i></a>
                 {{#scorecard.package.bugs.test}}<i class="fa scorecard_true fa-check-square" aria-hidden="true" title="yes"></i>{{/scorecard.package.bugs.test}}
                 {{^scorecard.package.bugs.test}}<i class="fa scorecard_false fa-times-circle" aria-hidden="true" title="no"></i>{{/scorecard.package.bugs.test}}
             </div>
-            <div class="flowinfo">Package uses a unique Name: 
+            <div class="flowinfo">Package uses a unique name: <a href="#" onclick="showRule('P04');"><i class="ruleinfo fa fa-info-circle"></i></a>
                 {{#scorecard.package.uniqname.test}}<i class="fa scorecard_true fa-check-square" aria-hidden="true" title="yes"></i>{{/scorecard.package.uniqname.test}}
                 {{^scorecard.package.uniqname.test}}<i class="fa scorecard_false fa-times-circle" aria-hidden="true" title="no"></i>{{/scorecard.package.uniqname.test}}
             </div>
-            <div class="flowinfo">Node-RED keyword set: 
+            <div class="flowinfo">Node-RED keyword set: <a href="#" onclick="showRule('P05');"><i class="ruleinfo fa fa-info-circle"></i></a>
                 {{#scorecard.package.keyword.test}}<i class="fa scorecard_true fa-check-square" aria-hidden="true" title="yes"></i>{{/scorecard.package.keyword.test}}
                 {{^scorecard.package.keyword.test}}<i class="fa scorecard_false fa-times-circle" aria-hidden="true" title="no"></i>{{/scorecard.package.keyword.test}}
             </div>
         </div>
         <div class="flowmeta">
             <h4>Nodes</h4>
-            <div class="flowinfo">Nodes have unique names: 
+            <div class="flowinfo">Nodes have unique names: <a href="#" onclick="showRule('N01');"><i class="ruleinfo fa fa-info-circle"></i></a>
                 {{#scorecard.nodes.uniqname.test}}<i class="fa scorecard_true fa-check-square" aria-hidden="true" title="yes"></i>{{/scorecard.nodes.uniqname.test}}
                 {{^scorecard.nodes.uniqname.test}}<i class="fa scorecard_false fa-times-circle" aria-hidden="true" title="no"></i>{{/scorecard.nodes.uniqname.test}}
             </div>
         </div>
         <div class="flowmeta">
             <h4>Dependencies</h4>
-            <div class="flowinfo">Dependencies use latest versions: 
+            <div class="flowinfo">Dependencies use latest versions: <a href="#" onclick="showRule('D01');"><i class="ruleinfo fa fa-info-circle"></i></a>
                 {{#scorecard.dependencies.latest.test}}<i class="fa scorecard_true fa-check-square" aria-hidden="true" title="yes"></i>{{/scorecard.dependencies.latest.test}}
                 {{^scorecard.dependencies.latest.test}}<i class="fa scorecard_false fa-times-circle" aria-hidden="true" title="no"></i>{{/scorecard.dependencies.latest.test}}
             </div>
-            <div class="flowinfo">Number of Dependencies:
-                
+            <div class="flowinfo">Number of Dependencies: <a href="#" onclick="showRule('D02');"><i class="ruleinfo fa fa-info-circle"></i></a>
                 {{#scorecard.dependencies.count.test}}<i class="fa scorecard_true fa-check-square" aria-hidden="true" title="yes"></i>{{/scorecard.dependencies.count.test}}
                 {{^scorecard.dependencies.count.test}}<i class="fa scorecard_false fa-times-circle" aria-hidden="true" title="no"></i>{{/scorecard.dependencies.count.test}}
                 ({{scorecard.dependencies.count.total}})
             </div>
         </div>
+        <h5><a href="/node/{{name}}"><i class="fa fa-angle-double-left"></i> Back</a></h5>
     </div>
 </div>
+
+{{>_rulemodal}}
 
 {{>_footer}}

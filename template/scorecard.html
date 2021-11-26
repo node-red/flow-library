@@ -18,44 +18,66 @@
         <div class="flowmeta">
             <h4>Package</h4>
             <div class="flowinfo">License: <a href="#" onclick="showRule('P01');"><i class="ruleinfo fa fa-info-circle"></i></a> 
-                {{#license}}<i class="fa scorecard_true fa-check-square" aria-hidden="true" title="yes"></i>  ({{ license }}){{/license}}
-                {{^license}}<i class="fa fa-times-circle" aria-hidden="true" title="no"></i>{{/license}}
+                {{#scorecard.P01.test}}<i class="fa scorecard_true fa-check-square" aria-hidden="true" title="yes"></i>  ({{scorecard.P01.license}}){{/scorecard.P01.test}}
+                {{^scorecard.P01.test}}<i class="fa fa-times-circle" aria-hidden="true" title="no"></i>{{/scorecard.P01.test}}
             </div>
             <div class="flowinfo">Name matches repository: <a href="#" onclick="showRule('P02');"><i class="ruleinfo fa fa-info-circle"></i></a>
-                {{#scorecard.package.name.test}}<i class="fa scorecard_true fa-check-square" aria-hidden="true" title="yes"></i>{{/scorecard.package.name.test}}
-                {{^scorecard.package.name.test}}<i class="fa scorecard_false fa-times-circle" aria-hidden="true" title="no"></i>{{/scorecard.package.name.test}}
+                {{#scorecard.P02.test}}<i class="fa scorecard_true fa-check-square" aria-hidden="true" title="yes"></i>{{/scorecard.P02.test}}
+                {{^scorecard.P02.test}}<i class="fa scorecard_false fa-times-circle" aria-hidden="true" title="no"></i>{{/scorecard.P02.test}}
             </div>
             <div class="flowinfo">Bugs URL supplied: <a href="#" onclick="showRule('P03');"><i class="ruleinfo fa fa-info-circle"></i></a>
-                {{#scorecard.package.bugs.test}}<i class="fa scorecard_true fa-check-square" aria-hidden="true" title="yes"></i>{{/scorecard.package.bugs.test}}
-                {{^scorecard.package.bugs.test}}<i class="fa scorecard_false fa-times-circle" aria-hidden="true" title="no"></i>{{/scorecard.package.bugs.test}}
+                {{#scorecard.P03.test}}<i class="fa scorecard_true fa-check-square" aria-hidden="true" title="yes"></i>{{/scorecard.P03.test}}
+                {{^scorecard.P03.test}}<i class="fa scorecard_false fa-times-circle" aria-hidden="true" title="no"></i>{{/scorecard.P03.test}}
             </div>
-            <div class="flowinfo">Package uses a unique name: <a href="#" onclick="showRule('P04');"><i class="ruleinfo fa fa-info-circle"></i></a>
-                {{#scorecard.package.uniqname.test}}<i class="fa scorecard_true fa-check-square" aria-hidden="true" title="yes"></i>{{/scorecard.package.uniqname.test}}
-                {{^scorecard.package.uniqname.test}}<i class="fa scorecard_false fa-times-circle" aria-hidden="true" title="no"></i>{{/scorecard.package.uniqname.test}}
+            <div class="flowinfo">Naming Convention: <a href="#" onclick="showRule('P04');"><i class="ruleinfo fa fa-info-circle"></i></a>
+                {{#scorecard.P04.test}}<i class="fa scorecard_true fa-check-square" aria-hidden="true" title="yes"></i>{{/scorecard.P04.test}}
+                {{^scorecard.P04.test}}<i class="fa scorecard_false fa-times-circle" aria-hidden="true" title="no"></i>{{/scorecard.P04.test}}
             </div>
             <div class="flowinfo">Node-RED keyword set: <a href="#" onclick="showRule('P05');"><i class="ruleinfo fa fa-info-circle"></i></a>
-                {{#scorecard.package.keyword.test}}<i class="fa scorecard_true fa-check-square" aria-hidden="true" title="yes"></i>{{/scorecard.package.keyword.test}}
-                {{^scorecard.package.keyword.test}}<i class="fa scorecard_false fa-times-circle" aria-hidden="true" title="no"></i>{{/scorecard.package.keyword.test}}
+                {{#scorecard.P05.test}}<i class="fa scorecard_true fa-check-square" aria-hidden="true" title="yes"></i>{{/scorecard.P05.test}}
+                {{^scorecard.P05.test}}<i class="fa scorecard_false fa-times-circle" aria-hidden="true" title="no"></i>{{/scorecard.P05.test}}
+            </div>
+            <div class="flowinfo">Supported Node-RED Version: <a href="#" onclick="showRule('P06');"><i class="ruleinfo fa fa-info-circle"></i></a>
+                {{#scorecard.P06.test}}<i class="fa scorecard_true fa-check-square" aria-hidden="true" title="yes"></i> {{#scorecard.P06.versions}} {{.}}, {{/scorecard.P06.versions}} {{/scorecard.P06.test}}
+                {{^scorecard.P06.test}}<i class="fa scorecard_false fa-times-circle" aria-hidden="true" title="no"></i>{{/scorecard.P06.test}}
+            </div>
+            <div class="flowinfo">Node Version: <a href="#" onclick="showRule('P07');"><i class="ruleinfo fa fa-info-circle"></i></a>
+                {{#scorecard.P07.test}}<i class="fa scorecard_true fa-check-square" aria-hidden="true" title="yes"></i> {{scorecard.P07.version}}{{/scorecard.P07.test}}
+                {{^scorecard.P07.test}}<i class="fa scorecard_false fa-times-circle" aria-hidden="true" title="no"></i>{{/scorecard.P07.test}}
+            </div>
+            <div class="flowinfo">Package uses a Unique Name: <a href="#" onclick="showRule('P08');"><i class="ruleinfo fa fa-info-circle"></i></a>
+                {{#scorecard.P08.test}}<i class="fa scorecard_true fa-check-square" aria-hidden="true" title="yes"></i> {{/scorecard.P08.test}}
+                {{^scorecard.P08.test}}<i class="fa scorecard_false fa-times-circle" aria-hidden="true" title="no"></i> Similar Named Packages: {{#scorecard.P08.similar}} {{.}}, {{/scorecard.P08.similar}} {{/scorecard.P08.test}}
             </div>
         </div>
         <div class="flowmeta">
             <h4>Nodes</h4>
             <div class="flowinfo">Nodes have unique names: <a href="#" onclick="showRule('N01');"><i class="ruleinfo fa fa-info-circle"></i></a>
-                {{#scorecard.nodes.uniqname.test}}<i class="fa scorecard_true fa-check-square" aria-hidden="true" title="yes"></i>{{/scorecard.nodes.uniqname.test}}
-                {{^scorecard.nodes.uniqname.test}}<i class="fa scorecard_false fa-times-circle" aria-hidden="true" title="no"></i>{{/scorecard.nodes.uniqname.test}}
+                {{#scorecard.N01.test}}<i class="fa scorecard_true fa-check-square" aria-hidden="true" title="yes"></i>{{/scorecard.N01.test}}
+                {{^scorecard.N01.test}}<i class="fa scorecard_false fa-times-circle" aria-hidden="true" title="no"></i> Conflicting Nodes in Packages:: {{#scorecard.N01.nodes}} {{.}}, {{/scorecard.N01.nodes}}  {{/scorecard.N01.test}}
+            </div>
+            <div class="flowinfo">Nodes have examples: <a href="#" onclick="showRule('N01');"><i class="ruleinfo fa fa-info-circle"></i></a>
+                {{#scorecard.N02.test}}<i class="fa scorecard_true fa-check-square" aria-hidden="true" title="yes"></i> Nodes with examples: {{#scorecard.N02.nodes}} {{.}}, {{/scorecard.N02.nodes}}  {{/scorecard.N02.test}}
+                {{^scorecard.N02.test}}<i class="fa scorecard_false fa-times-circle" aria-hidden="true" title="no"></i>{{/scorecard.N02.test}}
             </div>
         </div>
         <div class="flowmeta">
             <h4>Dependencies</h4>
-            <div class="flowinfo">Dependencies use latest versions: <a href="#" onclick="showRule('D01');"><i class="ruleinfo fa fa-info-circle"></i></a>
-                {{#scorecard.dependencies.latest.test}}<i class="fa scorecard_true fa-check-square" aria-hidden="true" title="yes"></i>{{/scorecard.dependencies.latest.test}}
-                {{^scorecard.dependencies.latest.test}}<i class="fa scorecard_false fa-times-circle" aria-hidden="true" title="no"></i>{{/scorecard.dependencies.latest.test}}
+            <div class="flowinfo">Number of Dependencies: <a href="#" onclick="showRule('D01');"><i class="ruleinfo fa fa-info-circle"></i></a>
+                {{#scorecard.D01.test}}<i class="fa scorecard_true fa-check-square" aria-hidden="true" title="yes"></i>{{/scorecard.D01.test}}
+                {{^scorecard.D01.test}}<i class="fa scorecard_false fa-times-circle" aria-hidden="true" title="no"></i>{{/scorecard.D01.test}}
+                ({{scorecard.D01.total}})
             </div>
-            <div class="flowinfo">Number of Dependencies: <a href="#" onclick="showRule('D02');"><i class="ruleinfo fa fa-info-circle"></i></a>
-                {{#scorecard.dependencies.count.test}}<i class="fa scorecard_true fa-check-square" aria-hidden="true" title="yes"></i>{{/scorecard.dependencies.count.test}}
-                {{^scorecard.dependencies.count.test}}<i class="fa scorecard_false fa-times-circle" aria-hidden="true" title="no"></i>{{/scorecard.dependencies.count.test}}
-                ({{scorecard.dependencies.count.total}})
+            <div class="flowinfo">No known incompatible pacakges: <a href="#" onclick="showRule('D02');"><i class="ruleinfo fa fa-info-circle"></i></a>
+                {{#scorecard.D02.test}}<i class="fa scorecard_true fa-check-square" aria-hidden="true" title="yes"></i>{{/scorecard.D02.test}}
+                {{^scorecard.D02.test}}<i class="fa scorecard_false fa-times-circle" aria-hidden="true" title="no"></i> Packages:: {{#scorecard.D02.packages}} {{.}}, {{/scorecard.D02.packages}} {{/scorecard.D02.test}}
             </div>
+
+            <div class="flowinfo">Dependencies use latest versions: <a href="#" onclick="showRule('D03');"><i class="ruleinfo fa fa-info-circle"></i></a>
+                {{#scorecard.D03.test}}<i class="fa scorecard_true fa-check-square" aria-hidden="true" title="yes"></i>{{/scorecard.D03.test}}
+                {{^scorecard.D03.test}}<i class="fa scorecard_false fa-times-circle" aria-hidden="true" title="no"></i>{{/scorecard.D03.test}}
+            </div>
+           
         </div>
         <h5><a href="/node/{{name}}"><i class="fa fa-angle-double-left"></i> Back</a></h5>
     </div>

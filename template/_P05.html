@@ -4,8 +4,11 @@
 <pre><code>    &quot;keywords&quot;: [ &quot;node-red&quot; ],
 </code></pre>
 <h5>Reason</h5>
-<p>This identifies the package as Node-RED modules rather than a more generic node package.</p>
-<p>Without this keyword set, it will not be listed on the Flow Library.</p>
+<p>This identifies the package as a Node-RED module rather than a more generic node package.</p>
+<p>Without this keyword set, it will not be listed on the Flow Library, but it will still be npm installable.
+<br>
+If the module is not yet ready for wider use by the Node-RED community, you should not include the keyword.
+</p>
 <h5>Reference</h5>
 <p><a href="https://nodered.org/docs/creating-nodes/packaging#packagejson">https://nodered.org/docs/creating-nodes/packaging#packagejson</a></p>
 

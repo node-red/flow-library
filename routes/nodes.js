@@ -52,6 +52,8 @@ function getNode(id, scope, collection, req,res) {
         node.csrfToken = req.csrfToken();
         node.pageTitle = req.params.id+" (node)";
 
+        prepareScorecard(node)
+
         if (req.query.m) {
             try {
                 node.message = Buffer.from(req.query.m, 'base64').toString();
@@ -306,7 +308,7 @@ app.post("/add/node",appUtils.csrfProtection(),function(req,res) {
     }
 });
 
-app.get("/node/scorecard/:scope(@[^\\/]{1,})?/:id([^@][^\\/]{1,})",appUtils.csrfProtection(),function(req,res) {
+app.get("/node/:scope(@[^\\/]{1,})?/:id([^@][^\\/]{1,})/scorecard",appUtils.csrfProtection(),function(req,res) {
     var id = req.params.id;
     if (req.params.scope) {
         id = req.params.scope+"/"+id;
@@ -315,9 +317,42 @@ app.get("/node/scorecard/:scope(@[^\\/]{1,})?/:id([^@][^\\/]{1,})",appUtils.csrf
         node.sessionuser = req.session.user;
         node.csrfToken = req.csrfToken();
         node.pageTitle = req.params.id+" (node)";
+
+        prepareScorecard(node);
+
         res.send(mustache.render(templates.scorecard,node,templates.partials));
     });
 
 });
+
+
+function prepareScorecard(node) {
+    if (node.scorecard) {
+        if (node.scorecard.N01 && node.scorecard.N01.nodes) {
+            node.scorecard.N01.nodes = [... new Set(node.scorecard.N01.nodes)]
+            node.scorecard.N01.nodes.sort()
+        }
+        const summary = {
+            pass: 0,
+            fail: 0,
+            warn: 0
+        }
+        for (const [rule,result] of Object.entries(node.scorecard)) {
+            if (result.test) {
+                result.pass = true
+                summary.pass++
+            } else {
+                if (rule in ['P01','P04','P05','D02']) {
+                    result.fail = true
+                    summary.fail++
+                } else {
+                    result.warn = true
+                    summary.warn++
+                }
+            }
+        }
+        node.scorecard.summary = summary
+    }
+}
 
 module.exports = app;

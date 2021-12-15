@@ -315,6 +315,16 @@ app.get("/node/scorecard/:scope(@[^\\/]{1,})?/:id([^@][^\\/]{1,})",appUtils.csrf
         node.sessionuser = req.session.user;
         node.csrfToken = req.csrfToken();
         node.pageTitle = req.params.id+" (node)";
+
+        if (node.scorecard) {
+            if (node.scorecard.N01 && node.scorecard.N01.nodes) {
+                node.scorecard.N01.nodes = [... new Set(node.scorecard.N01.nodes)]
+                node.scorecard.N01.nodes.sort()
+            }
+            console.log(node.scorecard.D03)
+        }
+
+
         res.send(mustache.render(templates.scorecard,node,templates.partials));
     });
 

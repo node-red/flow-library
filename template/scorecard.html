@@ -1,0 +1,190 @@
+{{>_header}}
+
+<div class="grid thing-list-section main-content">
+    <div class="col-1-1 docs-content">
+        {{#message}}
+        <a href="#" onclick="return clearSystemMessage()" class="system-message">{{ . }} <i class="fa fa-close"></i></a>
+        <script>
+            window.history.replaceState({}, document.title, window.location.pathname);
+            function clearSystemMessage(){
+                $(".system-message").fadeOut()
+                return false;
+            }
+        </script>
+        {{/message}}
+        <h1 class="flow-title" style="margin-bottom: 10px;">
+            {{ name }} <span class="flow-version">{{ versions.latest.version }}</span></h1>
+        <p class="flow-description">{{ description }}</p>
+        {{ #scorecard }}
+        <div class="flowmeta">
+            <h4>Package</h4>
+            <div style="display:flex; align-items: center; padding:15px; border-bottom: 2px solid #ccc;">
+                <div style="width: 100px">
+                    {{#scorecard.P01}}{{>_scorecardResult}}{{/scorecard.P01}}
+                </div>
+                <div style="flex-grow:1;font-size:1.3em">License:
+                    <span style="color: #aaa">
+                    {{#scorecard.P01.test}}{{scorecard.P01.license}}{{/scorecard.P01.test}}
+                    {{^scorecard.P01.test}}Missing{{/scorecard.P01.test}}
+                    </span>
+                </div>
+                <div style="font-size: 1.3em"><a href="#" onclick="showRule('P01');"><i class="ruleinfo fa fa-info-circle"></i></a></div>
+            </div>
+        <!--
+            <div class="flowinfo">Name matches repository: <a href="#" onclick="showRule('P02');"><i class="ruleinfo fa fa-info-circle"></i></a>
+                {{#scorecard.P02.test}}<i class="fa scorecard_true fa-check-square" aria-hidden="true" title="yes"></i>{{/scorecard.P02.test}}
+                {{^scorecard.P02.test}}<i class="fa scorecard_false fa-times-circle" aria-hidden="true" title="no"></i>{{/scorecard.P02.test}}
+            </div>
+        -->
+
+            <div style="display:flex; align-items: center; padding:15px; border-bottom: 2px solid #ccc;">
+                <div style="width: 100px">
+                    {{#scorecard.P03}}{{>_scorecardResult}}{{/scorecard.P03}}
+                </div>
+                <div style="flex-grow:1;font-size:1.3em">Bugs URL supplied</div>
+                <div style="font-size: 1.3em"><a href="#" onclick="showRule('P03');"><i class="ruleinfo fa fa-info-circle"></i></a></div>
+            </div>
+
+            <div style="display:flex; align-items: center; padding:15px; border-bottom: 2px solid #ccc;">
+                <div style="width: 100px">
+                    {{#scorecard.P04}}{{>_scorecardResult}}{{/scorecard.P04}}
+                </div>
+                <div style="flex-grow:1;font-size:1.3em">Package name follows guidelines</div>
+                <div style="font-size: 1.3em"><a href="#" onclick="showRule('P04');"><i class="ruleinfo fa fa-info-circle"></i></a></div>
+            </div>
+
+            <div style="display:flex; align-items: center; padding:15px; border-bottom: 2px solid #ccc;">
+                <div style="width: 100px">
+                    {{#scorecard.P05}}{{>_scorecardResult}}{{/scorecard.P05}}
+                </div>
+                <div style="flex-grow:1;font-size:1.3em">Node-RED keyword set</div>
+                <div style="font-size: 1.3em"><a href="#" onclick="showRule('P05');"><i class="ruleinfo fa fa-info-circle"></i></a></div>
+            </div>
+
+            <div style="display:flex; align-items: center; padding:15px; border-bottom: 2px solid #ccc;">
+                <div style="width: 100px">
+                    {{#scorecard.P06}}{{>_scorecardResult}}{{/scorecard.P06}}
+                </div>
+                <div style="flex-grow:1;font-size:1.3em">Supported Node-RED Version:
+                    <span style="color: #aaa">
+                    {{#scorecard.P06.test}}{{scorecard.P06.versions}}{{/scorecard.P06.test}}
+                    {{^scorecard.P06.test}}Missing{{/scorecard.P06.test}}
+                    </span>
+                </div>
+                <div style="font-size: 1.3em"><a href="#" onclick="showRule('P06');"><i class="ruleinfo fa fa-info-circle"></i></a></div>
+            </div>
+
+            <div style="display:flex; align-items: center; padding:15px; border-bottom: 2px solid #ccc;">
+                <div style="width: 100px">
+                    {{#scorecard.P07}}{{>_scorecardResult}}{{/scorecard.P07}}
+                </div>
+                <div style="flex-grow:1;font-size:1.3em">Node.js Version:
+                    <span style="color: #aaa">
+                    {{#scorecard.P07.test}}{{scorecard.P07.version}}{{/scorecard.P07.test}}
+                    {{^scorecard.P07.test}}Missing{{/scorecard.P07.test}}
+                    </span>
+                </div>
+                <div style="font-size: 1.3em"><a href="#" onclick="showRule('P07');"><i class="ruleinfo fa fa-info-circle"></i></a></div>
+            </div>
+
+            <div style="display:flex; align-items: center; padding:15px; border-bottom: 2px solid #ccc;">
+                <div style="width: 100px">
+                    {{#scorecard.P08}}{{>_scorecardResult}}{{/scorecard.P08}}
+                </div>
+                <div style="flex-grow:1;font-size:1.3em">Package uses a unique name
+                    {{#scorecard.P08.similar}}
+                        <span style="color: #aaa">{{scorecard.P08.similar}}</span>
+                    {{/scorecard.P08.similar}}
+                </div>
+                <div style="font-size: 1.3em"><a href="#" onclick="showRule('P08');"><i class="ruleinfo fa fa-info-circle"></i></a></div>
+            </div>
+        </div>
+        <div class="flowmeta">
+            <h4>Nodes</h4>
+
+            <div style="display:flex; align-items: center; padding:15px; border-bottom: 2px solid #ccc;">
+                <div style="width: 100px">
+                    {{#scorecard.N01}}{{>_scorecardResult}}{{/scorecard.N01}}
+                </div>
+                <div style="flex-grow:1;font-size:1.3em">Nodes have unique names
+                    {{^scorecard.N01.test}}
+                        <div style="color: #aaa; font-size: 0.8em">
+                            <div style="color:#666">The following modules contain nodes using the same types as this module:</div>
+
+                        {{#scorecard.N01.nodes}} <a href="/node/{{.}}" target="_blank" style="white-space: nowrap; padding: 2px 8px; border-radius: 10px; background: #eee">{{.}}</a> {{/scorecard.N01.nodes}}
+                        </div>
+                    {{/scorecard.N01.test}}
+                </div>
+                <div style="font-size: 1.3em"><a href="#" onclick="showRule('N01');"><i class="ruleinfo fa fa-info-circle"></i></a></div>
+            </div>
+
+            <div style="display:flex; align-items: center; padding:15px;">
+                <div style="width: 100px">
+                    {{#scorecard.N02}}{{>_scorecardResult}}{{/scorecard.N02}}
+                </div>
+                <div style="flex-grow:1;font-size:1.3em">Nodes have examples
+                    {{#scorecard.N02.test}}
+                        <div style="color: #aaa; font-size: 0.8em">
+                        {{#scorecard.N02.nodes}} {{.}}, {{/scorecard.N02.nodes}}
+                        </div>
+                    {{/scorecard.N02.test}}
+                </div>
+                <div style="font-size: 1.3em"><a href="#" onclick="showRule('N02');"><i class="ruleinfo fa fa-info-circle"></i></a></div>
+            </div>
+        </div>
+        <div class="flowmeta">
+            <h4>Dependencies</h4>
+
+            <div style="display:flex; align-items: center; padding:15px; border-bottom: 2px solid #ccc;">
+                <div style="width: 100px">
+                    {{#scorecard.D01}}{{>_scorecardResult}}{{/scorecard.D01}}
+                </div>
+                <div style="flex-grow:1;font-size:1.3em">Number of Dependencies:
+                    <span style="color: #aaa;">
+                    {{scorecard.D01.total}}
+                    </span>
+                </div>
+                <div style="font-size: 1.3em"><a href="#" onclick="showRule('D01');"><i class="ruleinfo fa fa-info-circle"></i></a></div>
+            </div>
+
+            <div style="display:flex; align-items: center; padding:15px; border-bottom: 2px solid #ccc;">
+                <div style="width: 100px">
+                    {{#scorecard.D02}}{{>_scorecardResult}}{{/scorecard.D02}}
+                </div>
+                <div style="flex-grow:1;font-size:1.3em">No known incompatible packages
+                    {{^scorecard.D02.test}}
+                    <div style="color: #aaa;font-size: 0.8em">
+                        {{#scorecard.D02.packages}} {{.}}, {{/scorecard.D02.packages}}
+                    </div>
+                    {{/scorecard.D02.test}}
+                </div>
+                <div style="font-size: 1.3em"><a href="#" onclick="showRule('D02');"><i class="ruleinfo fa fa-info-circle"></i></a></div>
+            </div>
+
+            <div style="display:flex; align-items: center; padding:15px;">
+                <div style="width: 100px">
+                    {{#scorecard.D03}}{{>_scorecardResult}}{{/scorecard.D03}}
+                </div>
+                <div style="flex-grow:1;font-size:1.3em">Dependencies use latest versions</div>
+                <div style="font-size: 1.3em"><a href="#" onclick="showRule('D03');"><i class="ruleinfo fa fa-info-circle"></i></a></div>
+            </div>
+        </div>
+        {{/scorecard}}
+        {{^scorecard}}
+        <div class="flowmeta" style="text-align: center">
+            <div class="margin: auto; width: 800px">
+                <p style="font-size: 1.2em">No scorecard data available for this node.</p>
+                <p style="font-size: 1.2em">Scorecards are generated when nodes are updated.</p>
+            </div>
+        </div>
+
+        {{/scorecard}}
+
+
+        <h5><a href="/node/{{name}}"><i class="fa fa-angle-double-left"></i> Back</a></h5>
+    </div>
+</div>
+
+{{>_rulemodal}}
+
+{{>_footer}}

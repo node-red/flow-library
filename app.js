@@ -10,7 +10,6 @@ var settings = require('./config');
 var templates = require("./lib/templates");
 // var morgan = require('morgan');
 // var rfs = require('rotating-file-stream');
-
 var app = express();
 
 // var accessLogStream = rfs('access.log', {

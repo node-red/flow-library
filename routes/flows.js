@@ -1,6 +1,6 @@
 var express = require("express");
 var mustache = require('mustache');
-var marked = require('marked');
+var {marked} = require('marked');
 var fs = require("fs");
 
 var settings = require("../config");
@@ -219,7 +219,7 @@ app.post("/flow/:id/rate", appUtils.csrfProtection(),function(req,res) {
         var cc_cookie = JSON.parse(req.cookies.cc_cookie)
     } catch (e) {
         var cc_cookie = false
-    }   
+    }
      if (req.cookies.rateID) {
         ratings.rateThing(id,req.cookies.rateID,Number(req.body.rating)).then(function() {
             res.writeHead(303, {

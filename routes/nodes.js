@@ -1,6 +1,6 @@
 var express = require("express");
 var mustache = require('mustache');
-var marked = require('marked');
+var {marked} = require('marked');
 var fs = require("fs");
 var path = require("path");
 var csrf = require('csurf');
@@ -51,6 +51,8 @@ function getNode(id, scope, collection, req,res) {
         node.sessionuser = req.session.user;
         node.csrfToken = req.csrfToken();
         node.pageTitle = req.params.id+" (node)";
+
+        prepareScorecard(node)
 
         if (req.query.m) {
             try {
@@ -248,7 +250,7 @@ app.post("/node/:scope(@[^\\/]{1,})?/:id([^@][^\\/]{1,})/rate", appUtils.csrfPro
         var cc_cookie = JSON.parse(req.cookies.cc_cookie)
     } catch (e) {
         var cc_cookie = false
-    }    
+    }
     if (req.params.scope) {
         id = req.params.scope+"/"+id;
     }
@@ -306,6 +308,51 @@ app.post("/add/node",appUtils.csrfProtection(),function(req,res) {
     }
 });
 
+app.get("/node/:scope(@[^\\/]{1,})?/:id([^@][^\\/]{1,})/scorecard",appUtils.csrfProtection(),function(req,res) {
+    var id = req.params.id;
+    if (req.params.scope) {
+        id = req.params.scope+"/"+id;
+    }
+    npmNodes.get(id).then(function(node) {
+        node.sessionuser = req.session.user;
+        node.csrfToken = req.csrfToken();
+        node.pageTitle = req.params.id+" (node)";
 
+        prepareScorecard(node);
+
+        res.send(mustache.render(templates.scorecard,node,templates.partials));
+    });
+
+});
+
+
+function prepareScorecard(node) {
+    if (node.scorecard) {
+        if (node.scorecard.N01 && node.scorecard.N01.nodes) {
+            node.scorecard.N01.nodes = [... new Set(node.scorecard.N01.nodes)]
+            node.scorecard.N01.nodes.sort()
+        }
+        const summary = {
+            pass: 0,
+            fail: 0,
+            warn: 0
+        }
+        for (const [rule,result] of Object.entries(node.scorecard)) {
+            if (result.test) {
+                result.pass = true
+                summary.pass++
+            } else {
+                if (rule in ['P01','P04','P05','D02']) {
+                    result.fail = true
+                    summary.fail++
+                } else {
+                    result.warn = true
+                    summary.warn++
+                }
+            }
+        }
+        node.scorecard.summary = summary
+    }
+}
 
 module.exports = app;

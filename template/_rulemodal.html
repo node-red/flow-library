@@ -1,0 +1,48 @@
+
+
+
+<div id="rulemodal" class="rulemodal">
+    <div class="rulemodal-content">
+      <span class="rulemodal-close">&times;</span>
+      <span id="ruletext"></span>
+      
+    </div>
+</div>
+
+<script>
+    var P01 = `{{>_P01}}`
+    var P02 = `{{>_P02}}`
+    var P03 = `{{>_P03}}`
+    var P04 = `{{>_P04}}`
+    var P05 = `{{>_P05}}`
+    var P06 = `{{>_P06}}`
+    var P07 = `{{>_P07}}`
+    var P08 = `{{>_P08}}`
+    var N01 = `{{>_N01}}`
+    var N02 = `{{>_N02}}`
+    var D01 = `{{>_D01}}`
+    var D02 = `{{>_D02}}`
+    var D03 = `{{>_D03}}`
+    var modal = document.getElementById("rulemodal");
+    function showRule(rule) {
+        document.getElementById("ruletext").innerHTML = eval(rule)
+        modal.style.display = "block";
+    }
+
+
+    // When the user clicks on <span> (x), close the modal
+    var span = document.getElementsByClassName("rulemodal-close")[0];
+        var span = document.getElementsByClassName("rulemodal-close")[0];
+
+    span.onclick = function() {
+        modal.style.display = "none";
+    }
+    
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function(event) {
+      if (event.target == modal) {
+        modal.style.display = "none";
+      }
+    }
+
+</script>

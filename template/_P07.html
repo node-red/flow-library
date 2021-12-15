@@ -1,0 +1,14 @@
+<h4>Min node version</h4>
+<h5>Requirements</h5>
+<p>Within the <code>engines</code> section of the package.json file you SHOULD declare the minimum version of Node that your package works on.
+This SHOULD satisfy the current minimum supported version of the latest node-red release.</p>
+<pre><code>
+{
+  &quot;engines&quot;: {
+    &quot;node&quot;: &quot;&gt;=12.0.0&quot;
+  }
+}</code></pre>
+<h5>Reason</h5>
+<p>Node-RED has supported multiple versions of Node in its history and some of these have become end of life, this helps users identify if a node will run on their installation.</p>
+<h5>Reference</h5>
+<p><a href="https://docs.npmjs.com/cli/v7/configuring-npm/package-json#engines">https://docs.npmjs.com/cli/v7/configuring-npm/package-json#engines</a></p>

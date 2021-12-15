@@ -1,8 +1,11 @@
-<div style="width: 100px">
-{{#test}}
-    <i class="fa scorecard_true fa-check fa-2x" aria-hidden="true" title="yes"></i>
-{{/test}}
-{{^test}}
-    <i class="fa scorecard_false fa-times fa-2x" aria-hidden="true" title="no"></i>
-{{/test}}
+<div style="width: 50px; text-align: center; margin-right: 50px;">
+{{#pass}}
+    <i class="fa scorecard_pass fa-check fa-2x" aria-hidden="true" title="yes"></i>
+{{/pass}}
+{{#warn}}
+    <i class="fa scorecard_warn fa-exclamation fa-2x" aria-hidden="true" title="no"></i>
+{{/warn}}
+{{#fail}}
+    <i class="fa scorecard_fail fa-cross fa-2x" aria-hidden="true" title="no"></i>
+{{/fail}}
 </div>

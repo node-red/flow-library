@@ -49,7 +49,7 @@
                 <div style="width: 100px">
                     {{#scorecard.P04}}{{>_scorecardResult}}{{/scorecard.P04}}
                 </div>
-                <div style="flex-grow:1;font-size:1.3em">Naming Convention</div>
+                <div style="flex-grow:1;font-size:1.3em">Package name follows guidelines</div>
                 <div style="font-size: 1.3em"><a href="#" onclick="showRule('P04');"><i class="ruleinfo fa fa-info-circle"></i></a></div>
             </div>
 
@@ -78,7 +78,7 @@
                 <div style="width: 100px">
                     {{#scorecard.P07}}{{>_scorecardResult}}{{/scorecard.P07}}
                 </div>
-                <div style="flex-grow:1;font-size:1.3em">Node-RED Version:
+                <div style="flex-grow:1;font-size:1.3em">Node.js Version:
                     <span style="color: #aaa">
                     {{#scorecard.P07.test}}{{scorecard.P07.version}}{{/scorecard.P07.test}}
                     {{^scorecard.P07.test}}Missing{{/scorecard.P07.test}}
@@ -109,7 +109,9 @@
                 <div style="flex-grow:1;font-size:1.3em">Nodes have unique names
                     {{^scorecard.N01.test}}
                         <div style="color: #aaa; font-size: 0.8em">
-                        {{#scorecard.N01.nodes}} {{.}}, {{/scorecard.N01.nodes}}
+                            <div style="color:#666">The following modules contain nodes using the same types as this module:</div>
+
+                        {{#scorecard.N01.nodes}} <a href="/node/{{.}}" target="_blank" style="white-space: nowrap; padding: 2px 8px; border-radius: 10px; background: #eee">{{.}}</a> {{/scorecard.N01.nodes}}
                         </div>
                     {{/scorecard.N01.test}}
                 </div>

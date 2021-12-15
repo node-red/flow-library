@@ -9,24 +9,24 @@
         "docker": "docker-compose -f docker-compose.yml up --build"
     },
     "dependencies": {
-        "acorn": "8.1.0",
+        "acorn": "8.6.0",
         "acorn-walk": "^8.0.2",
-        "aws-sdk": "^2.786.0",
-        "body-parser": "1.19.0",
+        "aws-sdk": "^2.1046.0",
+        "body-parser": "1.19.1",
         "connect-mongo": "2.0.3",
-        "cookie-parser": "1.4.5",
+        "cookie-parser": "1.4.6",
         "csurf": "1.11.0",
         "express": "4.x",
-        "express-session": "1.17.1",
+        "express-session": "1.17.2",
         "fs-extra": "9.0.1",
-        "marked": "*",
+        "marked": "4.0.7",
         "mongojs": "2.6.0",
-        "mustache": "4.0.1",
+        "mustache": "4.2.0",
         "node-red-dev": "^0.1.0",
         "oauth": "0.9.15",
         "request": "2.88.2",
         "serve-static": "1.14.1",
-        "tar": "6.0.5",
+        "tar": "6.1.11",
         "twitter": "1.7.1",
         "uuid": "^8.3.2"
     },
@@ -35,6 +35,6 @@
         "nodemon": "2.0.6",
         "should": "13.2.3",
         "sinon": "9.2.1",
-        "vanilla-cookieconsent": "^2.6.1"
+        "vanilla-cookieconsent": "^2.7.1"
     }
 }

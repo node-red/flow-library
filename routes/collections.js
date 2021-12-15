@@ -10,7 +10,7 @@ const viewster = require("../lib/view");
 const collections = require("../lib/collections");
 const users = require("../lib/users");
 const app = express();
-const marked = require("marked");
+const {marked} = require("marked");
 const ratings = require("../lib/ratings");
 
 
@@ -227,7 +227,7 @@ app.post("/collection/:id/rate", appUtils.csrfProtection(),function(req,res) {
         var cc_cookie = JSON.parse(req.cookies.cc_cookie)
     } catch (e) {
         var cc_cookie = false
-    }   
+    }
     if (req.cookies.rateID) {
         ratings.rateThing(id,req.cookies.rateID,Number(req.body.rating)).then(function() {
             res.writeHead(303, {

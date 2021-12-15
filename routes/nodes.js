@@ -1,6 +1,6 @@
 var express = require("express");
 var mustache = require('mustache');
-var marked = require('marked');
+var {marked} = require('marked');
 var fs = require("fs");
 var path = require("path");
 var csrf = require('csurf');
@@ -248,7 +248,7 @@ app.post("/node/:scope(@[^\\/]{1,})?/:id([^@][^\\/]{1,})/rate", appUtils.csrfPro
         var cc_cookie = JSON.parse(req.cookies.cc_cookie)
     } catch (e) {
         var cc_cookie = false
-    }    
+    }
     if (req.params.scope) {
         id = req.params.scope+"/"+id;
     }
@@ -317,7 +317,7 @@ app.get("/node/scorecard/:scope(@[^\\/]{1,})?/:id([^@][^\\/]{1,})",appUtils.csrf
         node.pageTitle = req.params.id+" (node)";
         res.send(mustache.render(templates.scorecard,node,templates.partials));
     });
-    
+
 });
 
 module.exports = app;

@@ -143,8 +143,8 @@ function getFlow(id,collection,req,res) {
             function completeRender(data) {
                 marked(data,{},function(err,content) {
                     gist.readme = content;
-                    ratingPromise.then(()=>collectionPromise).then(function(collectionSiblings){
-                        if (collection && collectionSiblings) {
+                    ratingPromise.then(()=>collectionPromise).then(function(collectionSiblings) {
+                        if (collection && collectionSiblings && collectionSiblings.length > 0) {
                             gist.collectionName = collectionSiblings[0].name;
                             gist.collectionPrev = collectionSiblings[0].prev;
                             gist.collectionPrevType = collectionSiblings[0].prevType;

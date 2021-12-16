@@ -163,7 +163,9 @@ function getFlow(id,collection,req,res) {
             }
         });
     }).catch(function(err) {
-        console.log("Error loading flow:",err);
+        // TODO: better error logging without the full stack trace
+        console.log("Error loading flow:",id);
+        console.log(err);
         try {
             res.status(404).send(mustache.render(templates['404'],{sessionuser:req.session.user},templates.partials));
         } catch(err2) {

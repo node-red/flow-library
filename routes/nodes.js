@@ -346,7 +346,7 @@ function prepareScorecard(node) {
                 result.pass = true
                 summary.pass++
             } else {
-                if (rule in ['P01','P04','P05','D02']) {
+                if (['P01','P04','P05','D02'].includes(rule)) {
                     result.fail = true
                     summary.fail++
                 } else {

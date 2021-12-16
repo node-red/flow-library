@@ -131,7 +131,7 @@ app.get("/collection/:id",  appUtils.csrfProtection(), function(req,res) {
         });
     }).catch(function(err) {
         console.log(err);
-        res.send(404).end();
+        res.sendStatus(404);
     })
 });
 
@@ -145,7 +145,7 @@ app.get("/collection/:id/edit", appUtils.csrfProtection(), verifyOwner, function
         res.end();
     }).catch(function(err) {
         console.log("err",err)
-        res.send(400,err).end();
+        res.sendStatus(400);
     })
 })
 
@@ -191,7 +191,7 @@ app.post("/collection/:id/delete", appUtils.csrfProtection(), verifyOwner, funct
         res.end();
     }).catch(function(err) {
         console.log("err",err)
-        res.send(400,err).end();
+        res.sendStatus(400);
     })
 })
 
@@ -204,7 +204,7 @@ app.post("/collection/:id/add/:scope(@[^\\/]{1,})?/:thingId([^@][^\\/]{1,})", ve
         res.sendStatus(200).end();
     }).catch(function(err) {
         console.log("err",err)
-        res.send(400,err).end();
+        res.sendStatus(400);
     })
 });
 
@@ -217,7 +217,7 @@ app.post("/collection/:id/delete/:scope(@[^\\/]{1,})?/:thingId([^@][^\\/]{1,})",
         res.sendStatus(200).end();
     }).catch(function(err) {
         console.log("err",err)
-        res.send(400,err).end();
+        res.sendStatus(400);
     })
 });
 

@@ -189,7 +189,7 @@ function getNode(id, scope, collection, req,res) {
             }
 
             ratingPromise.then(() => collectionPromise).then(function(collectionSiblings) {
-                if (collection && collectionSiblings) {
+                if (collection && collectionSiblings && collectionSiblings.length > 0) {
                     node.collectionName = collectionSiblings[0].name;
                     node.collectionPrev = collectionSiblings[0].prev;
                     node.collectionPrevType = collectionSiblings[0].prevType;
@@ -202,7 +202,11 @@ function getNode(id, scope, collection, req,res) {
 
     }).catch(function(err) {
         if (err) {
-            console.log("error loading node:",err);
+            if (err.code === "NODE_NOT_FOUND") {
+                console.log(`404: ${id}`)
+            } else {
+                console.log("error loading node:",err);
+            }
         }
         res.status(404).send(mustache.render(templates['404'],{sessionuser:req.session.user},templates.partials));
     });

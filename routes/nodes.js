@@ -325,6 +325,15 @@ app.get("/node/:scope(@[^\\/]{1,})?/:id([^@][^\\/]{1,})/scorecard",appUtils.csrf
         prepareScorecard(node);
 
         res.send(mustache.render(templates.scorecard,node,templates.partials));
+    }).catch(function(err) {
+        if (err) {
+            if (err.code === "NODE_NOT_FOUND") {
+                console.log(`404 [scorecard]: ${id}`)
+            } else {
+                console.log("error loading node scorecard:",err);
+            }
+        }
+        res.status(404).send(mustache.render(templates['404'],{sessionuser:req.session.user},templates.partials));
     });
 
 });

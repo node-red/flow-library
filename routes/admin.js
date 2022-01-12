@@ -25,12 +25,7 @@ app.get("/admin/timeout/:time", function(req,res) {
     setTimeout(function(){ 
         res.send('ok'); 
     }, t)
+    
 });
-
-app.get("/admin/error", function(req,res) {
-    new Error('badgers')
-    res.send('ok'); 
-});
-
 
 module.exports = app;

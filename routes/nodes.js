@@ -288,7 +288,8 @@ app.get("/add/node",appUtils.csrfProtection(),function(req,res) {
     context.csrfToken = req.csrfToken();
     res.send(mustache.render(templates.addNode,context,templates.partials));
 });
-app.post("/add/node",appUtils.csrfProtection(),function(req,res) {
+//app.post("/add/node",appUtils.csrfProtection(),function(req,res) {
+app.post("/add/node",function(req,res) {
     var context = {};
     context.sessionuser = req.session.user;
     var name = req.body.module;

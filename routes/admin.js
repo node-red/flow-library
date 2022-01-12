@@ -20,4 +20,17 @@ app.get("/admin/log",function(req,res) {
 });
 
 
+app.get("/admin/timeout/:time", function(req,res) {
+    var t = req.params.time;
+    setTimeout(function(){ 
+        res.send('ok'); 
+    }, t)
+});
+
+app.get("/admin/error", function(req,res) {
+    throw new Error('badgers')
+    res.send('ok'); 
+});
+
+
 module.exports = app;

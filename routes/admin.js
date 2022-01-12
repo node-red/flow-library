@@ -19,13 +19,4 @@ app.get("/admin/log",function(req,res) {
     });
 });
 
-
-app.get("/admin/timeout/:time", function(req,res) {
-    var t = req.params.time;
-    setTimeout(function(){ 
-        res.send(mustache.render(templates.events,context,templates.partials)); 
-    }, t)
-    
-});
-
 module.exports = app;

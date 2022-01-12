@@ -28,7 +28,7 @@ app.get("/admin/timeout/:time", function(req,res) {
 });
 
 app.get("/admin/error", function(req,res) {
-    new Error('badgers')
+    throw new Error('badgers')
     res.send('ok'); 
 });
 

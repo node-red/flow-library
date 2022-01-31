@@ -351,16 +351,18 @@ function prepareScorecard(node) {
             warn: 0
         }
         for (const [rule,result] of Object.entries(node.scorecard)) {
-            if (result.test) {
-                result.pass = true
-                summary.pass++
-            } else {
-                if (['P01','P04','P05','D02'].includes(rule)) {
-                    result.fail = true
-                    summary.fail++
+            if (rule !== 'package') {
+                if (result.test) {
+                    result.pass = true
+                    summary.pass++
                 } else {
-                    result.warn = true
-                    summary.warn++
+                    if (['P01','P04','P05','D02'].includes(rule)) {
+                        result.fail = true
+                        summary.fail++
+                    } else {
+                        result.warn = true
+                        summary.warn++
+                    }
                 }
             }
         }

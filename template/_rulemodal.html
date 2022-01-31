@@ -5,7 +5,7 @@
     <div class="rulemodal-content">
       <span class="rulemodal-close">&times;</span>
       <span id="ruletext"></span>
-      
+
     </div>
 </div>
 
@@ -37,12 +37,20 @@
     span.onclick = function() {
         modal.style.display = "none";
     }
-    
+
     // When the user clicks anywhere outside of the modal, close it
     window.onclick = function(event) {
       if (event.target == modal) {
         modal.style.display = "none";
       }
     }
+    document.addEventListener('keyup', function (event) {
+      if ( event.keyCode == 27 )   {
+         modal.style.display = "none";
+      }
+    })
+
+
+
 
 </script>

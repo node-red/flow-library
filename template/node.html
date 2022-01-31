@@ -30,9 +30,20 @@
             <div class="flowinfo">Rating: {{#rating}} {{score}}<i class="icon-star"></i> {{count}}<i class="icon-user"></i>{{/rating}}{{^rating}}<i>not yet rated</i>{{/rating}}</div>
             <div class="flowinfo"><a target="_blank" href="https://npmjs.org/package/{{ name }}">View on npm</a></div>
             {{#githubUrl}}<div class="flowinfo"><a target="_blank" href="{{githubUrl}}">View on GitHub</a></div>{{/githubUrl}}
-            {{#scorecard}}<div class="flowinfo"><a  href="/node/{{ name }}/scorecard">View Scorecard</a></div>{{/scorecard}}
+            {{#scorecard}}
+                <div class="flowinfo" >
+                    <a class="scorecard-summary" style="display: flex" href="/node/{{ name }}/scorecard">
+                        <span class="scorecard-link" style="flex-grow:1">View Scorecard</span>
+                        <span style="text-align: right;">
+                            {{#summary.pass}}<span class="scorecard_pass"><i class="fa scorecard_pass fa-check" aria-hidden="true" title="yes"></i> {{ summary.pass }}</span>{{/summary.pass}}
+                            {{#summary.warn}}<span class="scorecard_warn"><i class="fa scorecard_warn fa-exclamation" aria-hidden="true" title="no"></i> {{ summary.warn }}</span>{{/summary.warn}}
+                            {{#summary.fail}}<span class="scorecard_fail"><i class="fa scorecard_fail fa-times" aria-hidden="true" title="no"></i> {{ summary.fail }}</span>{{/summary.fail}}
+                        </span>
+                    </a>
+                </div>
+            {{/scorecard}}
           </div>
-          
+
           <div class="flowmeta">
             <h4>Actions</h4>
             <form id="form-rate" action="/node/{{_id}}/rate" method="POST">
@@ -51,9 +62,9 @@
                     <div id="refresh-node-error" class="dialog-warning" style="position:relative"></div>
                 </form>
             </div>
-            {{/sessionuser}} 
+            {{/sessionuser}}
           </div>
-         
+
 
           <div class="flowmeta">
             <h4>Downloads</h4>

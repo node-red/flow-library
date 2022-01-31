@@ -321,7 +321,13 @@ button.copy-button:active {
     margin-left: 10px;
     display:inline-block;
 }
+.flowinfo a.scorecard-summary:hover {
+    text-decoration: none;
+}
 
+.flowinfo a.scorecard-summary:hover .scorecard-link {
+    text-decoration: underline;
+}
 
 .small {
     font-size: 11px;

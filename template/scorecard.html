@@ -80,8 +80,7 @@
                 </div>
                 <div style="flex-grow:1;font-size:1.3em">Node.js Version:
                     <span style="color: #aaa">
-                    {{#scorecard.P07.test}}{{scorecard.P07.version}}{{/scorecard.P07.test}}
-                    {{^scorecard.P07.test}}Missing{{/scorecard.P07.test}}
+                        {{scorecard.P07.version}}{{^scorecard.P07.version}}Missing{{/scorecard.P07.version}}                      
                     </span>
                 </div>
                 <div style="font-size: 1.3em"><a href="#" onclick="showRule('P07');"><i class="ruleinfo fa fa-info-circle"></i></a></div>

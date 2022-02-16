@@ -2,7 +2,7 @@ var path = require("path");
 var mustache = require('mustache');
 var express = require('express');
 var session = require('express-session');
-var MongoStore = require('connect-mongo');
+var MongoStore = require('connect-mongo')(session);
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var serveStatic = require('serve-static');
@@ -19,18 +19,28 @@ var app = express();
 // app.use(morgan(':date[iso] :method :url :status :res[content-length] - :response-time ms', { stream: accessLogStream }))
 
 app.use(cookieParser());
+
 if (!settings.maintenance) {
-    app.use(session({
-        store: MongoStore.create({
-            mongoUrl: settings.mongo.url,
-            touchAfter: 24 * 3600,
-            collectionName: settings.session.collection || "sessions_new"
-        }),
-        key: settings.session.key,
-        secret: settings.session.secret,
-        saveUninitialized: false,
-        resave: false,
-    }));
+    if (process.env.FLOW_ENV == "PRODUCTION") {
+        app.use(session({
+            store: new MongoStore({
+                url: settings.mongo.url,
+                touchAfter: 24 * 3600,
+                collection: settings.session.collection || "sessions_new"
+            }),
+            key: settings.session.key,
+            secret: settings.session.secret,
+            saveUninitialized: false,
+            resave: false,
+        }));
+    } else {
+        app.use(session({
+            key: settings.session.key,
+            secret: settings.session.secret,
+            saveUninitialized: false,
+            resave: false
+        }));
+    }
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({extended: true}));
 }

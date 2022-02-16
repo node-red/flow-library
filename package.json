@@ -20,7 +20,6 @@
         "express-session": "1.17.2",
         "fs-extra": "10.0.0",
         "marked": "4.0.12",
-        "mongojs": "3.1.0",
         "mustache": "4.2.0",
         "node-red-dev": "^0.1.5",
         "oauth": "0.9.15",

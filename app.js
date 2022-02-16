@@ -2,7 +2,7 @@ var path = require("path");
 var mustache = require('mustache');
 var express = require('express');
 var session = require('express-session');
-var MongoStore = require('connect-mongo')(session);
+var MongoStore = require('connect-mongo');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var serveStatic = require('serve-static');
@@ -23,7 +23,7 @@ app.use(cookieParser());
 if (!settings.maintenance) {
     if (process.env.FLOW_ENV == "PRODUCTION") {
         app.use(session({
-            store: new MongoStore({
+            store: MongoStore.create({
                 url: settings.mongo.url,
                 touchAfter: 24 * 3600,
                 collection: settings.session.collection || "sessions_new"

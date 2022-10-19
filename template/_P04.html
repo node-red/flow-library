@@ -1,7 +1,7 @@
 <h4>Naming</h4>
 <h5>Requirements</h5>
-<p>New pacakges published to npm after 1st December 2021 should use a scoped name, they may then use any value in their pacakge name eg <code>@devname/acme-node-red</code></p>
-<p>Packages first published before this date can use unscoped names, however where the package name starts with <code>node-red</code> (or <code>nodered</code> then it MUST use <code>node-red-contrib</code></p>
+<p>New packages published to npm after 1st December 2021 should use a scoped name, they may then use any value in their package name eg <code>@devname/acme-node-red</code></p>
+<p>Packages first published before this date can use unscoped names, however when the package name starts with <code>node-red</code> (or <code>nodered</code> then it MUST use <code>node-red-contrib</code></p>
 <p>The following names would be allowed:
 <code>node-red-contrib-acme</code>
 <code>nodered-contrib-acme</code>
@@ -11,8 +11,8 @@
 <code>nodered-acme</code></p>
 <h5>Reason</h5>
 <p>Initially the contrib formatting was used to distinguish 3rd party nodes from core nodes created by the project.
-As the number of nodes has grown the namespace has become more cluttered, a move to scoped names will allow for cleaner naming of nodes by service provides.
-Scoped names also allow for a developer to fork an abandoned node and publish a new version with the same pacakge name but within their scope. This makes it clearer to users where multiple pacakges exist.</p>
+As the number of nodes has grown the namespace has become more cluttered, a move to scoped names will allow for cleaner naming of nodes by service providers.
+Scoped names also allow for a developer to fork an abandoned node and publish a new version with the same pacakge name but within their scope. This makes it clearer to users where multiple packages exist.</p>
 <h5>Reference</h5>
 <p><a href="https://nodered.org/docs/creating-nodes/packaging#naming">https://nodered.org/docs/creating-nodes/packaging#naming</a></p>
 

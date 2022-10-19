@@ -1,11 +1,11 @@
 <h4>Check package name in repository is the same name as the package.json</h4>
 <h5>Requirement</h5>
-<p>The name field in the package.json SHOULD match the name field in the package.json hosted within the respository specified in the package.json.</p>
+<p>The name field in the package.json SHOULD match the name field in the package.json hosted within the repository specified in the package.json.</p>
 <h5>Reason</h5>
-<p>This is to check for forked nodes where the publisher has forked an original repo and publihsed the node under a new name but not updated the repo to point to their own new copy. This can result in authors of the original node getting issues raised against their repoisitory for a downstream fork.</p>
+<p>This is to check for forked nodes where the publisher has forked an original repo and published the node under a new name but not updated the repo to point to their own new copy. This can result in authors of the original node getting issues raised against their repository for a downstream fork.</p>
 <h5>Note</h5>
-<p>This test may fail where you are validating a local copy of the package and it has not yet been published, or where the code has not been published in a repoository.</p>
-<p>Where code is part of a mono-repo you should use the <code>directory</code> key within <code>repository</code> to point to the path where the package.json is location</p>
+<p>This test may fail when you are validating a local copy of the package and it has not yet been published, or when the code has not been published in a repository.</p>
+<p>Where code is part of a mono-repo you should use the <code>directory</code> key within <code>repository</code> to point to the path where the package.json is located.</p>
 <h5>Reference</h5>
 <p><a href="https://docs.npmjs.com/cli/v7/configuring-npm/package-json#name">https://docs.npmjs.com/cli/v7/configuring-npm/package-json#name</a></p>
 

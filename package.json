@@ -20,6 +20,7 @@
         "express-session": "1.17.3",
         "fs-extra": "10.1.0",
         "marked": "4.1.1",
+        "mastodon": "1.2.2",
         "mongojs": "3.1.0",
         "mustache": "4.2.0",
         "node-red-dev": "^0.1.5",

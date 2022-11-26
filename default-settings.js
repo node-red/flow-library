@@ -22,6 +22,10 @@ var settings = {
         access_token_key: '',
         access_token_secret: ''
     },
+    mastodon: {
+        url: '',
+        token: ''
+    },
     slack: {
         webhook: ''
     },

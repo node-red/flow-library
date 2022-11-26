@@ -20,6 +20,10 @@ try {
     module.exports.twitter.consumer_secret = process.env.NR_TWITTER_CONSUMER_SECRET || module.exports.twitter.consumer_secret;
     module.exports.twitter.access_token_key = process.env.NR_TWITTER_ACCESS_TOKEN_KEY || module.exports.twitter.access_token_key;
     module.exports.twitter.access_token_secret = process.env.NR_TWITTER_ACCESS_TOKEN_SECRET || module.exports.twitter.access_token_secret;
+
+    module.exports.mastodon.url = process.env.NR_MASTODON_URL || module.exports.mastodon.url
+    module.exports.mastodon.token = process.env.NR_MASTODON_TOKEN || module.exports.mastodon.token
+
     module.exports.slack.webhook = process.env.NR_SLACK_WEBHOOK || module.exports.slack.webhook;
 
     if (process.env.NR_MODULE_BLOCKLIST) {

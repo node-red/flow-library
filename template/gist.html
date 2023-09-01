@@ -3,8 +3,9 @@
 <div class="grid thing-list-section main-content">
     <div class="col-9-12 docs-content">
         <h1 class="flow-title">{{ description }}</h1>
-          {{{ readme }}}
-          <pre id="flow" class="highlight language-javascript"><button class="copy-button" type="button">Copy</button><span>{{ flow }}</span></pre>
+        {{{ readme }}}
+        {{>_flowViewer}}
+        <pre id="flow" class="highlight language-javascript"><button class="copy-button" type="button">Copy</button><span>{{ flow }}</span></pre>
     </div>
     <div class="col-3-12">
         {{>_collectionNavBox}}

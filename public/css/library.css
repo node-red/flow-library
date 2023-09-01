@@ -1093,7 +1093,81 @@ a:hover .gistbox-footer {
 .gistbox-collection > a:hover { border-color: var(--collection-type-secondary-color); }
 .gistbox-collection > a:hover .gistbox-footer { background: var(--collection-type-secondary-color); }
 
+/**
+*  Node-RED Flow Preview
+*/
+.flow-preview {
+    --red-ui-view-grid-color: #eee;
+    --red-ui-view-border: 1px solid #bbbbbb;
+    --red-ui-node-border: #999;
+    --red-ui-node-background-default: #eee;
+    --red-ui-node-icon-background-color-fill: black;
+    --red-ui-node-icon-background-color-opacity: 0.1;
+    --red-ui-node-label-color: #333;
+    --red-ui-node-port-background: #d9d9d9;
+    --red-ui-link-color: #999;
+    min-height: 450px;
+    border: var(--red-ui-view-border);
+    border-radius: 3px;
+    position: relative;
+}
 
+.flow-preview svg {
+    width: 100%;
+    height: 100%;
+    min-height: 450px;
+    margin: auto;
+    display: block;
+    border-radius: 2px;
+}
+
+.flow-preview-grid line {
+    fill: none;
+    shape-rendering: crispEdges;
+    stroke: var(--red-ui-view-grid-color);
+    stroke-width: 1px;
+}
+
+.flow-preview-node-base {
+    fill: var(--red-ui-node-background-default);
+    stroke: var(--red-ui-node-border);
+    stroke-width: 1;
+}
+
+.flow-preview-node-icongroup {
+    fill: var(--red-ui-node-icon-background-color-fill);
+    fill-opacity: var(--red-ui-node-icon-background-color-opacity);
+}
+
+.flow-preview-node-port {
+    stroke: var(--red-ui-node-border);
+    stroke-width: 1;
+    fill: var(--red-ui-node-port-background);
+}
+
+.flow-preview-node-label {
+    stroke-width: 0;
+    fill: var(--red-ui-node-label-color);
+    font-size: 14px;
+    pointer-events: none;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.flow-preview-node-label text {
+    dominant-baseline: middle;
+}
+
+.flow-preview-wire {
+    stroke: var(--red-ui-link-color);
+    stroke-width: 3;
+    fill: none;
+    pointer-events: none;
+}
 
 .thing-list-nav {
     text-align: center;

@@ -1485,9 +1485,7 @@ function renderFlow(flowId, flowdata, svgjQueryObj, renderOpts = {
                         rx: 5,
                         ry: 5,
                         fill: obj.color || clr.fill,
-                        "fill-opacity": 1,
-                        "stroke-width": 2,
-                        class: (" node-" + obj.id)
+                        class: "node " + (" node-" + obj.id)
                     }));
 
                     $(grpObj).attr("transform", "translate(" + (obj.x - dimensions.width/2) + "," + (obj.y - dimensions.height/2) + ")");
@@ -1542,7 +1540,7 @@ function renderFlow(flowId, flowdata, svgjQueryObj, renderOpts = {
 
                     var grpText = document.createElementNS("http://www.w3.org/2000/svg", 'g');
                     grpText.setAttributeNS(null, "id", grpTextId);
-                    grpText.setAttributeNS(null, "transform", "translate(38," + (textLabels.lines.length > 1 ? "19" : "17") + ")");
+                    grpText.setAttributeNS(null, "transform", "translate(38," + (textLabels.lines.length > 1 ? 18 : 16) + ")");
 
                     var ypos = 0;
                     textLabels.lines.forEach( function(lne){
@@ -1562,8 +1560,8 @@ function renderFlow(flowId, flowdata, svgjQueryObj, renderOpts = {
                     $(grpObj).append(grpText);
 
                     var txtBBox    = document.getElementById(grpTextId).getBBox();
-                    var txtWidth   = txtBBox.width + 45;
-                    var txtHeight  = txtBBox.height + 16;
+                    var txtWidth   = txtBBox.width + 60;
+                    var txtHeight  = txtBBox.height + 13.5;
                     var rectWidth  = (dimensions.width > txtWidth ? dimensions.width : txtWidth);
                     var rectHeight = (dimensions.height > txtHeight ? dimensions.height : txtHeight);
 
@@ -1575,7 +1573,7 @@ function renderFlow(flowId, flowdata, svgjQueryObj, renderOpts = {
                         /* move the text block into the middle */
                         if ( rectHeight > txtHeight ) {
                             var offsetHeight = ( rectHeight - txtHeight) / 2;
-                            grpText.setAttributeNS(null, "transform", "translate(38," + ( (textLabels.lines.length > 1 ? 18 : 16) + offsetHeight) + ")");
+                            grpText.setAttributeNS(null, "transform", "translate(38," + ( (textLabels.lines.length > 1 ? 16 : 14) + offsetHeight) + ")");
                         }
                     }
                     
@@ -1584,11 +1582,9 @@ function renderFlow(flowId, flowdata, svgjQueryObj, renderOpts = {
                         rx: 5,
                         ry: 5,
                         fill: obj.color || subflowObj.color || clr.fill,
-                        "fill-opacity": 1,
                         width: rectWidth,
-                        height: rectHeight, 
-                        "stroke-width": 2,
-                        class: (" node-" + obj.id)
+                        height: rectHeight,
+                        class: "node " + (" node-" + obj.id)
                     }));
 
                     $(grpObj).append(getNode('path', {
@@ -1840,10 +1836,7 @@ function renderFlow(flowId, flowdata, svgjQueryObj, renderOpts = {
 
                 $(svgObj).append(getNode('path', {
                     d: generateLinkPath(startX, startY, endX, endY, 1),
-                    stroke: 'grey',
-                    "stroke-width": 4,
-                    "fill": 'transparent',
-                    class: (otherNode.d ? "link-disabled" : "") + (" link-from-" + sfObj.id + "-to-" + otherNode.id)
+                    class: "link " + (otherNode.d ? "link-disabled" : "") + (" link-from-" + sfObj.id + "-to-" + otherNode.id)
                 }));
             }
         }
@@ -1863,10 +1856,7 @@ function renderFlow(flowId, flowdata, svgjQueryObj, renderOpts = {
 
                 $(svgObj).append(getNode('path', {
                     d: generateLinkPath(startX, startY, endX, endY, 1),
-                    stroke: 'grey',
-                    "stroke-width": 4,
-                    "fill": 'transparent',
-                    class: (otherNode.d ? "link-disabled" : "") + (" link-from-" + sfObj.id + "-to-" + otherNode.id)
+                    class: "link " + (otherNode.d ? "link-disabled" : "") + (" link-from-" + sfObj.id + "-to-" + otherNode.id)
                 }));
             }
         }
@@ -1892,10 +1882,7 @@ function renderFlow(flowId, flowdata, svgjQueryObj, renderOpts = {
 
                     $(svgObj).append(getNode('path', {
                         d: generateLinkPath(startX, startY, endX, endY, 1),
-                        stroke: 'grey',
-                        "stroke-width": 4,
-                        "fill": 'transparent',
-                        class: (otherNode.d || nde.d ? "link-disabled" : "") + (" link-from-" + nde.id + "-to-" + otherNode.id)
+                        class: "link " + (otherNode.d || nde.d ? "link-disabled" : "") + (" link-from-" + nde.id + "-to-" + otherNode.id)
                     }));
                 }
             });
@@ -1917,11 +1904,8 @@ function renderFlow(flowId, flowdata, svgjQueryObj, renderOpts = {
 
                     $(svgObj).append(getNode('path', {
                         d: generateLinkPath(startX, startY, endX, endY, 1),
-                        stroke: 'rgb(170, 170, 170)',
-                        "stroke-width": 2,
                         "stroke-dasharray": "25,4",
-                        "fill": 'transparent',
-                        class: (otherNode.d || nde.d ? "link-disabled" : "") + (" link-from-" + nde.id + "-to-" + otherNode.id)
+                        class: "link " + (otherNode.d || nde.d ? "link-disabled" : "") + (" link-from-" + nde.id + "-to-" + otherNode.id)
                     }));
 
                     $(svgObj).append(getNode('circle', {

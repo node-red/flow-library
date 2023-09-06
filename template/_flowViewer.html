@@ -1,3 +1,104 @@
+<style>
+    .group-text-label {
+    font-family: Helvetica Neue, Arial, Helvetica, sans-serif;
+	font-size: 14px;
+}
+
+.node-text-label {
+	font-family: Helvetica Neue, Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	dominant-baseline: middle;
+}
+
+.subflow-node-text-label {
+    color: rgb(85, 85, 85);
+    dominant-baseline: middle;
+    font-family: Helvetica Neue, Arial, Helvetica, sans - serif;
+    font-size: 10px;
+    line-height: 20px;
+    pointer-events: none;
+    text-anchor: middle;
+    user-select: none
+}
+
+.subflow-node-text-label-number {
+    color: rgb(85, 85, 85);
+    dominant-baseline: middle;
+    font-family: Helvetica Neue, Arial, Helvetica, sans-serif;
+    font-size: 16px;
+    line-height: 20px;
+    pointer-events: none;
+    text-anchor: middle;
+    user-select: none
+}
+
+.flow-download-link {
+    font-size: 70%;
+}
+
+.flow-copy-to-clipboard-link {
+    font-size: 70%;
+}
+
+.node {
+    fill-opacity: 1;
+    stroke-width: 1px;
+}
+
+.link {
+    stroke: #999;
+    stroke-width: 3;
+    fill: none;
+}
+
+.link-highlight, .node-highlight {
+    stroke: rgb(255, 127, 14);
+}
+.node-highlight {
+    stroke-width: 3px;
+}
+
+.node-disabled {
+	stroke-dasharray: 8,3;
+	fill-opacity: 0.5;
+}
+
+.group-highlight {
+    stroke: rgb(255, 127, 14);
+    stroke-width: 4px;
+    fill: rgb(255, 127, 14);
+    fill-opacity: 0.2;
+}
+
+.link-disabled {
+	stroke-dasharray: 10,8 !important;
+	stroke-width: 2 !important;
+	stroke: rgb(204, 204, 204);
+}
+
+.grid-line {
+    shape-rendering: crispedges;
+    stroke: rgb(238, 238, 238);
+    stroke-width: 1px;
+    fill: none;
+}
+.output-deco {
+    stroke-width: 2px; 
+    stroke-miterlimit: 4;
+}
+
+.input-deco {
+    stroke-width: 2px;
+    stroke-miterlimit: 4;
+}
+
+.flow-render-error {
+    background-color: rgb(54, 52, 52); 
+    color: rgb(196, 59, 59); 
+    width: 100%;
+}
+</style>
+
 <div>
     <div class="flow-preview">
         <svg>
@@ -18,7 +119,6 @@
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js" integrity="sha512-M7nHCiNUOwFt6Us3r8alutZLm9qMt4s9951uo8jqO4UwJ1hziseL6O3ndFyigx6+LREfZqnhHxYjKRJ8ZQ69DQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js" integrity="sha512-M7nHCiNUOwFt6Us3r8alutZLm9qMt4s9951uo8jqO4UwJ1hziseL6O3ndFyigx6+LREfZqnhHxYjKRJ8ZQ69DQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 <head>
     <script type="text/javascript" src="/js/flowviewer.js"></script>
@@ -28,11 +128,7 @@
         const flow = {{{flow}}}
         console.log(flow)
         console.log($('.flowviewer svg'))
-        renderFlow("46186ccb85f93a93", flow, $('.flowviewer svg'), { 
-            gridlines: true, 
-            images: true, 
-            linklines: true 
-        });
+        renderFlow("46186ccb85f93a93", flow, $('.flowviewer svg'));
     })()
 </script>
 

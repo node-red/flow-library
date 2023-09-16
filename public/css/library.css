@@ -1096,8 +1096,7 @@ a:hover .gistbox-footer {
 /**
 *  Node-RED Flow Preview
 */
-.flow-preview,
-.flowviewer {
+.flowviewer svg {
     --red-ui-view-grid-color: #eee;
     --red-ui-view-border: 1px solid #bbbbbb;
     --red-ui-node-border: #999;
@@ -1113,7 +1112,6 @@ a:hover .gistbox-footer {
     position: relative;
 }
 
-.flow-preview svg,
 .flowviewer svg {
     width: 100%;
     height: 100%;
@@ -1123,52 +1121,34 @@ a:hover .gistbox-footer {
     border-radius: 2px;
 }
 
-.flow-preview-grid line {
-    fill: none;
-    shape-rendering: crispEdges;
-    stroke: var(--red-ui-view-grid-color);
-    stroke-width: 1px;
+.flowviewer-tabs {
+    display: flex;
 }
-
-.flow-preview-node-base {
-    fill: var(--red-ui-node-background-default);
-    stroke: var(--red-ui-node-border);
-    stroke-width: 1;
+.flowviewer-tab {
+    padding: 6px 12px;
+    box-sizing: border-box;
+    display: inline-block;
+    border: 1px solid #bbbbbb;
+    border-right: none;
+    background-color: #f0f0f0;
+    max-width: 200px;
+    width: 14%;
+    overflow: hidden;
+    white-space: nowrap;
+    position: relative;
+    margin-top: -1px;
+    transition: 0.2s background-color;
 }
-
-.flow-preview-node-icongroup {
-    fill: var(--red-ui-node-icon-background-color-fill);
-    fill-opacity: var(--red-ui-node-icon-background-color-opacity);
+.flowviewer-tab.active {
+    background-color: white;
+    border-top-color: white;
 }
-
-.flow-preview-node-port {
-    stroke: var(--red-ui-node-border);
-    stroke-width: 1;
-    fill: var(--red-ui-node-port-background);
+.flowviewer-tab:hover {
+    cursor: pointer;
+    background-color: white;
 }
-
-.flow-preview-node-label {
-    stroke-width: 0;
-    fill: var(--red-ui-node-label-color);
-    font-size: 14px;
-    pointer-events: none;
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-}
-
-.flow-preview-node-label text {
-    dominant-baseline: middle;
-}
-
-.flow-preview-wire {
-    stroke: var(--red-ui-link-color);
-    stroke-width: 3;
-    fill: none;
-    pointer-events: none;
+.flowviewer-tab:last-child {
+    border-right: 1px solid #bbbbbb;
 }
 
 .thing-list-nav {

@@ -1340,8 +1340,7 @@ function renderFlow(flowId, flowdata, svgjQueryObj, renderOpts = {
                             ...portDimensions,
                             ...portRadius,
                             class: "output-deco",
-                            "stroke-linecap": "round",
-                            "stroke-linejoin": "round",
+                            transform: "translate(15, -5)"
                         }));
 
                         var textElem = getNode('text', {
@@ -1381,10 +1380,7 @@ function renderFlow(flowId, flowdata, svgjQueryObj, renderOpts = {
                             ...portDimensions,
                             ...portRadius,
                             class: "input-deco",
-                            "stroke-linecap": "round",
-                            "stroke-linejoin": "round",
-                            rx: 3,
-                            ry: 3,
+                            transform: "translate(-25, -5)",
                         }));
 
                         /* text that goes "output\n(idx+1)\n" i.e. two lines */
@@ -1401,7 +1397,7 @@ function renderFlow(flowId, flowdata, svgjQueryObj, renderOpts = {
                             x: 0,
                             class: 'subflow-node-text-label-number'
                         });
-                        textElem.textContent = ""+(idx+1);
+                        textElem.textContent = "" + (idx + 1);
                         $(grpObj).append(textElem);
                     }
 
@@ -1433,8 +1429,7 @@ function renderFlow(flowId, flowdata, svgjQueryObj, renderOpts = {
                             ...portDimensions,
                             ...portRadius,
                             class: "input-deco",
-                            "stroke-linecap": "round",
-                            "stroke-linejoin": "round",
+                            transform: "translate(-25, -5)"
                         }));
 
                         var textElem = getNode('text', {
@@ -1736,13 +1731,13 @@ function renderFlow(flowId, flowdata, svgjQueryObj, renderOpts = {
                 id: grpRectId,
             });
 
-            $(grpSvgObj).attr("transform", "translate(" + (grpObj.x - 5) + "," + (grpObj.y - 5) + ")");
+            $(grpSvgObj).attr("transform", "translate(" + (grpObj.x) + "," + (grpObj.y) + ")");
 
             $(grpSvgObj).append(getNode('rect', {
                 rx: 5,
                 ry: 5,
-                width: width + 20,
-                height: height + 20,
+                width: grpObj.w,
+                height: grpObj.h,
                 fill: "none",
                 "fill-opacity": 0,
                 "stroke-width": 2,

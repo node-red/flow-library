@@ -1525,6 +1525,7 @@ function renderFlow(flowId, flowdata, svgjQueryObj, renderOpts = {
                         class: (obj.type == "link in" ? "output-deco" : ("input-deco" + (renderOpts.arrows ? " input-arrows" : ""))),
                         "stroke-linecap": "round",
                         "stroke-linejoin": "round",
+                        ...transAndPath
                     }));
 
                     break;

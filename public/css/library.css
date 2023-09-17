@@ -1151,6 +1151,12 @@ a:hover .gistbox-footer {
     border-right: 1px solid #bbbbbb;
 }
 
+.flowviewer-note {
+    margin-top: 12px;
+    font-size: 0.875rem;
+    font-style: italic;
+}
+
 .thing-list-nav {
     text-align: center;
     margin-bottom: 30px;

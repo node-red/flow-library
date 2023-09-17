@@ -109,6 +109,7 @@
             <g class="flowNodes"></g>
         </svg>
         <div class="flowviewer-tabs"></div>
+        <label class="flowviewer-note">Note: some third-party nodes may appear with blank styling, and not as they appear in the Node-RED Editor.</label>
     </div>
 </div>
 
@@ -132,7 +133,7 @@
                         label: d.name,
                         type: 'subslow'
                     })
-                } else {
+                } else if (d.z) {
                     if (tabids.indexOf(d.z) === -1) {
                         tabids.push(d.z)
                         tabs.push({

@@ -67,6 +67,7 @@ var imgByType = {
     "batch":         "batch.svg",
     "catch":         "alert.svg",
     "change":        "swap.svg",
+    "complete":      "alert.svg",
     "rbe":           "rbe.png",
     "comment":       "comment.svg",
     "csv":           "parser-csv.svg",
@@ -333,7 +334,8 @@ var clrByType = {
     "batch":         _hshClr("#E2D96E"),
     "catch":         _hshClr("#e49191"),
     "change":        _hshClr("#E2D96E"),
-    "rbe":           _hshClr("#E2D96E"), 
+    "rbe":           _hshClr("#E2D96E"),
+    "complete":      _hshClr("#C0EDC0"),
     "comment":       _hshClr(),
     "csv":           _hshClr("#DEBD5C"),
     "debug":         _hshClr("#87a980"),
@@ -362,6 +364,7 @@ var clrByType = {
     "subflow":       _hshClr("#ddd"),
     "switch":        _hshClr("#E2D96E"),
     "trigger":       _hshClr("#E6E0F8"),
+    // Dashboard 1.0
     ui_button:       _hshClr("rgb(176, 223, 227)"),
     ui_list:         _hshClr("rgb( 63, 173, 181)"),
     ui_svg_graphics: _hshClr("rgb( 63, 173, 181)"),
@@ -440,7 +443,7 @@ var clrByType = {
 
     'cronplus': _hshClr('#a6bbcf'),
     
-    "_default":      _hshClr("rgb(243, 181, 103)"),
+    "_default": _hshClr(),
 };
   
 /**

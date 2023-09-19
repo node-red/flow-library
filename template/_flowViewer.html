@@ -97,20 +97,40 @@
     color: rgb(196, 59, 59); 
     width: 100%;
 }
+.flowviewer-share-details {
+    padding: 5px;
+    border: 1px solid #aa6767;
+    background: white;
+    border-bottom-right-radius: 3px;
+    border-top-left-radius: 3px;
+    font-size: 0.8em;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+}
 </style>
 
 <div>
     <div class="flowviewer">
-        <svg>
-            <g class="flowGridlines"></g>
-            <g class="containerGroup"></g>
-            <g class="flowGroups"></g>
-            <g class="flowWires"></g>
-            <g class="flowNodes"></g>
-        </svg>
-        <button id="copy-flow" class="copy-button">Copy JSON</button>
+        <div style="position: relative">
+            <svg>
+                <g class="flowGridlines"></g>
+                <g class="containerGroup"></g>
+                <g class="flowGroups"></g>
+                <g class="flowWires"></g>
+                <g class="flowNodes"></g>
+            </svg>
+            <button id="copy-flow" class="copy-button">Copy JSON</button>
+{{#isShare}}
+            <label class="flowviewer-share-details">
+                <a href="/flow/{{ id }}" target="_blank">{{description}}</a> by <a href="/user/{{ owner.login }}">{{ owner.login }}</a>
+            </label>
+{{/isShare}}
+        </div>
         <div class="flowviewer-tabs"></div>
+{{^isShare}}
         <label class="flowviewer-note">Note: some third-party nodes may appear with blank styling, and not as they appear in the Node-RED Editor.</label>
+{{/isShare}}
     </div>
 </div>
 
@@ -144,7 +164,7 @@
                         tabs.push({
                             id: d.z,
                             label: d.z,
-                            type: 'tab'
+                            type: 'tab',
                         })
                     }
                 }
@@ -199,7 +219,7 @@
 
         function addTab (tab, index) {
             const classes = 'flowviewer-tab flowviewer-' + tab.type
-            const name = tab.type === 'tab' ? 'Tab ' + (index + 1) : tab.label
+            const name = tab.type === 'tab' ? 'Flow ' + (index + 1) : tab.label
             const tabDOM = $('.flowviewer-tabs')
                 .append(`<div id="flowviewer-tab-${index}" class="${classes}">${name}</div>`)
                 .on('click', `#flowviewer-tab-${index}`, function () {

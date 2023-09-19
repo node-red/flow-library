@@ -234,7 +234,7 @@ h1 {
     color: #f3f3f3;
 }
 
-#flow {
+.flow {
     margin-top: 30px;
     margin-bottom: 30px;
     padding: 10px;
@@ -1367,7 +1367,7 @@ body.flowviewer-share {
 .dialog  > div:not(:last-child) {
     margin-bottom: 20px;
 }
-.dialog button {
+.dialog button:not(.copy-button) {
     line-height: 1.3em;
     border: 1px solid #aa6767;
     text-align: center;

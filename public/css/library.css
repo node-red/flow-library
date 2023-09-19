@@ -243,6 +243,9 @@ h1 {
     font-family: monospace;
     cursor: pointer;
     position:relative;
+    background: #564848;
+    color: #eee;
+    border-radius: 3px;
 }
 button.copy-button {
     position: absolute;
@@ -1096,6 +1099,9 @@ a:hover .gistbox-footer {
 /**
 *  Node-RED Flow Preview
 */
+.flowviewer {
+    position: relative;
+}
 .flowviewer svg {
     --red-ui-view-grid-color: #eee;
     --red-ui-view-border: 1px solid #bbbbbb;
@@ -1106,6 +1112,7 @@ a:hover .gistbox-footer {
     --red-ui-node-label-color: #333;
     --red-ui-node-port-background: #d9d9d9;
     --red-ui-link-color: #999;
+    background-color: white;
     min-height: 450px;
     border: var(--red-ui-view-border);
     border-radius: 3px;
@@ -1164,6 +1171,10 @@ a:hover .gistbox-footer {
     margin-top: 12px;
     font-size: 0.875rem;
     font-style: italic;
+}
+
+body.flowviewer-share {
+    background-color: inherit;
 }
 
 .thing-list-nav {

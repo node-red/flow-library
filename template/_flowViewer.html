@@ -108,6 +108,7 @@
             <g class="flowWires"></g>
             <g class="flowNodes"></g>
         </svg>
+        <button id="copy-flow" class="copy-button">Copy JSON</button>
         <div class="flowviewer-tabs"></div>
         <label class="flowviewer-note">Note: some third-party nodes may appear with blank styling, and not as they appear in the Node-RED Editor.</label>
     </div>
@@ -217,5 +218,8 @@
         renderFlow(tabs[0].id, flow, $('.flowviewer svg'));
         addPanZoom();
         $('#flowviewer-tab-0').addClass('active')
+        $('#copy-flow').on('click', function() {
+            navigator.clipboard.writeText(JSON.stringify(flow));
+        })
     })()
 </script>

@@ -5,12 +5,7 @@
         <h1 class="flow-title">{{ description }}</h1>
         {{{ readme }}}
         {{>_flowViewer}}
-        <h2><code>flow.json</code></h2>
-        <pre id="flow" class="highlight language-javascript"><button class="copy-button" type="button">Copy</button><span>{{ flow }}</span></pre>
-        <h2>Embed Flow Viewer</h2>
-        <p>If you would like to share this flow inside an article, or on your own website, you can include the following code in your site. This will render the above Flow Viewer.</p>
-        <pre id="flow" class="highlight language-html"><button class="copy-button" type="button">Copy</button><span id="flowviewer-embedcode"></span>
-        </pre>
+        <pre id="flow" class="flow highlight language-javascript"><button class="copy-button copy-flow-button" type="button">Copy</button><span>{{ flow }}</span></pre>
     </div>
     <div class="col-3-12">
         {{>_collectionNavBox}}
@@ -33,11 +28,12 @@
                 <input name="rating" type="hidden">
                 <div class="flowinfo">Rate: <span id="set-stars"></span></div>
             </form>
+            <div class="flowinfo" style="text-align: left;"><a class="user-profile-action" href="#" id="embed-flow">share flow</a></div>            
             {{#sessionuser}}
-            <div class="flowinfo" style="text-align: right;"><a class="user-profile-action" href="#" onclick="javascript:addToCollection('{{_id}}');">add to collection</a></div>
+            <div class="flowinfo" style="text-align: left;"><a class="user-profile-action" href="#" onclick="javascript:addToCollection('{{_id}}');">add to collection</a></div>
             {{#owned}}
-                <div class="flowinfo" style="text-align: right;"><img id="refresh-flow-loader" class="loader" src="/images/loader.gif" />&nbsp;&nbsp;<a class="user-profile-action" id="refresh-flow" href="#">refresh from github</a></div>
-                <div class="flowinfo" style="text-align: right;"><a class="user-profile-action" id="remove-flow" href="#">remove flow</a></div>
+                <div class="flowinfo" style="text-align: left;"><a class="user-profile-action" id="refresh-flow" href="#">refresh from github</a>&nbsp;&nbsp;<img id="refresh-flow-loader" class="loader" src="/images/loader.gif" /></div>
+                <div class="flowinfo" style="text-align: left;"><a class="user-profile-action" id="remove-flow" href="#">remove flow</a></div>
             {{/owned}}
           {{/sessionuser}}
         </div>
@@ -86,24 +82,38 @@
 <script src="/js/tags.js"></script>
 <script>
 $(function() {
-    $(".copy-button").on("click", function(evt) {
+    function attachCopy(selector) {
+        $(selector).on("click", function(evt) {
+            evt.preventDefault();
+            var ta = document.createElement('textarea');
+            ta.value = $(this).next()[0].innerText;
+            ta.style.position = 'absolute';
+            ta.style.left = '-3000px';
+            document.body.appendChild(ta);
+            ta.select();
+            document.execCommand('copy');
+            document.body.removeChild(ta);
+            $(this).text("Copied!");
+            var self = $(this);
+            setTimeout(function() {
+                self.text("Copy");
+            },3000)
+        });
+    }
+    attachCopy(".copy-flow-button")
+    
+    $('#embed-flow').click(function(evt) {
         evt.preventDefault();
-        var ta = document.createElement('textarea');
-        ta.value = $(this).next()[0].innerText;
-        ta.style.position = 'absolute';
-        ta.style.left = '-3000px';
-        document.body.appendChild(ta);
-        ta.select();
-        document.execCommand('copy');
-        document.body.removeChild(ta);
-        $(this).text("Copied!");
-        var self = $(this);
-        setTimeout(function() {
-            self.text("Copy");
-        },3000)
+        var dialog = $('<div class="dialog-shade"><div class="dialog">'+
+            '<h4>Share this flow</h4>'+
+            '<p>Use the following code to embed the flow viewer on your own site.</p>'+
+            '<pre class="flow highlight language-html"><button class="copy-button copy-embed-button" type="button">Copy</button><span id="flowviewer-embedcode">'+
+            '&lt;iframe width="100%" height="100%" src="' + window.location + '/share" allow="clipboard-read; clipboard-write" style="border: none;"&gt&lt;/iframe&gt;'+
+            '</span></pre>'+
+            '<div class="dialog-buttons"><button type="button" onclick="return closeDialog();">Done</button></div>'+
+            '</div></div>').appendTo('body').show();
+        attachCopy(".copy-embed-button")
     });
-    $('#flowviewer-embedcode').html('&lt;iframe width="100%" height="100%" src="' + window.location + '/share" allow="clipboard-read; clipboard-write" style="border: none;"&gt&lt;/iframe&gt;');
-
 {{#owned}}
     $('#refresh-flow').click(function(event) {
         $("#refresh-flow-loader").show();

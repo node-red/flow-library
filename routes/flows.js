@@ -81,6 +81,7 @@ function getShareableFlow (id, collection, req, res) {
     gister.get(id)
         .then(function(gist) {
             gist.flow = parseGistFlow(gist)
+            gist.isShare = true
             res.send(mustache.render(templates.gistShare, gist, templates.partials));
         }).catch(function(err) {
             // TODO: better error logging without the full stack trace

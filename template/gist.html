@@ -5,7 +5,12 @@
         <h1 class="flow-title">{{ description }}</h1>
         {{{ readme }}}
         {{>_flowViewer}}
+        <h2><code>flow.json</code></h2>
         <pre id="flow" class="highlight language-javascript"><button class="copy-button" type="button">Copy</button><span>{{ flow }}</span></pre>
+        <h2>Embed Flow Viewer</h2>
+        <p>If you would like to share this flow inside an article, or on your own website, you can include the following code in your site. This will render the above Flow Viewer.</p>
+        <pre id="flow" class="highlight language-html"><button class="copy-button" type="button">Copy</button><span id="flowviewer-embedcode"></span>
+        </pre>
     </div>
     <div class="col-3-12">
         {{>_collectionNavBox}}
@@ -97,6 +102,8 @@ $(function() {
             self.text("Copy");
         },3000)
     });
+    $('#flowviewer-embedcode').html('&lt;iframe width="100%" height="100%" src="' + window.location + '/share" allow="clipboard-read; clipboard-write" style="border: none;"&gt&lt;/iframe&gt;');
+
 {{#owned}}
     $('#refresh-flow').click(function(event) {
         $("#refresh-flow-loader").show();

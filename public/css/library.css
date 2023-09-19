@@ -1121,6 +1121,15 @@ a:hover .gistbox-footer {
     border-radius: 2px;
 }
 
+.flowviewer svg {
+    cursor: move;
+    cursor: grab;
+}
+
+.flowviewer .dragging {
+    cursor: grabbing;
+}
+
 .flowviewer-tabs {
     display: flex;
 }

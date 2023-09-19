@@ -120,8 +120,12 @@
 </head>
 <script type="text/javascript">
     (function () {
+        // pull Flow into JS
         const flow = {{{flow}}}
-        console.log(flow)
+        
+        /**
+         * Parse the flow.json to get the details on the tabs/subflows present
+         */
         const processFlow = function (flow) {
             const tabids = []
             const tabs = []
@@ -147,6 +151,29 @@
             return tabs
         }
 
+        function addPanZoom () {
+            var svgs = d3.selectAll('.flowviewer svg');
+            svgs.each(function() {
+                var svg = d3.select(this);
+                
+                svg.html('<g>' + svg.html() + '</g>');
+                var inner = svg.select('g');
+                var zoom = d3.zoom()
+                    .translateExtent([[0, 0], [3000, 3000]])
+                    .scaleExtent([0.5, 1])
+                    .on("start", function () {
+                        svg.classed("dragging", true);
+                    })
+                    .on('zoom', function(event) {
+                        inner.attr('transform', event.transform);
+                    })
+                    .on("end", function () {
+                        svg.classed("dragging", false);
+                    });
+                svg.call(zoom);
+            });
+        }
+
         const clearFlow = function () {
             $('.flowviewer svg .flowGridlines').empty()
             $('.flowviewer svg .containerGroup').empty()
@@ -154,15 +181,19 @@
             $('.flowviewer svg .flowWires').empty()
             $('.flowviewer svg .flowNodes').empty()
         }
-
+        // get the tabs/subflows for our provided flow
         const tabs = processFlow(flow)
+        // sort them such that tabs render first
         tabs.sort((a, b) => {
             return a.type > b.type ? -1 : (a.type < b.type) ? 1 : 0
         })
 
         function openTab (id) {
+            // clear any existing flow
             clearFlow()
+            // draw the new flow - uses function from `public/js/flowviewer.js`
             renderFlow(id, flow, $('.flowviewer svg'));
+            addPanZoom()
         }
 
         function addTab (tab, index) {
@@ -184,6 +215,7 @@
 
         clearFlow();
         renderFlow(tabs[0].id, flow, $('.flowviewer svg'));
+        addPanZoom();
         $('#flowviewer-tab-0').addClass('active')
     })()
 </script>

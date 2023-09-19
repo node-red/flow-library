@@ -102,7 +102,7 @@ $(function() {
             self.text("Copy");
         },3000)
     });
-    $('#flowviewer-embedcode').html('&lt;iframe height="100%" src="' + window.location + '/share" allow="clipboard-read; clipboard-write" style="border: none;" /&gt');
+    $('#flowviewer-embedcode').html('&lt;iframe width="100%" height="100%" src="' + window.location + '/share" allow="clipboard-read; clipboard-write" style="border: none;"&gt&lt;/iframe&gt;');
 
 {{#owned}}
     $('#refresh-flow').click(function(event) {

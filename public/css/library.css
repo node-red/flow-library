@@ -1093,7 +1093,78 @@ a:hover .gistbox-footer {
 .gistbox-collection > a:hover { border-color: var(--collection-type-secondary-color); }
 .gistbox-collection > a:hover .gistbox-footer { background: var(--collection-type-secondary-color); }
 
+/**
+*  Node-RED Flow Preview
+*/
+.flowviewer svg {
+    --red-ui-view-grid-color: #eee;
+    --red-ui-view-border: 1px solid #bbbbbb;
+    --red-ui-node-border: #999;
+    --red-ui-node-background-default: #eee;
+    --red-ui-node-icon-background-color-fill: black;
+    --red-ui-node-icon-background-color-opacity: 0.1;
+    --red-ui-node-label-color: #333;
+    --red-ui-node-port-background: #d9d9d9;
+    --red-ui-link-color: #999;
+    min-height: 450px;
+    border: var(--red-ui-view-border);
+    border-radius: 3px;
+    position: relative;
+}
 
+.flowviewer svg {
+    width: 100%;
+    height: 100%;
+    min-height: 450px;
+    margin: auto;
+    display: block;
+    border-radius: 2px;
+}
+
+.flowviewer svg {
+    cursor: move;
+    cursor: grab;
+}
+
+.flowviewer .dragging {
+    cursor: grabbing;
+}
+
+.flowviewer-tabs {
+    display: flex;
+}
+.flowviewer-tab {
+    padding: 6px 12px;
+    box-sizing: border-box;
+    display: inline-block;
+    border: 1px solid #bbbbbb;
+    border-right: none;
+    background-color: #f0f0f0;
+    max-width: 200px;
+    width: 14%;
+    overflow: hidden;
+    white-space: nowrap;
+    position: relative;
+    margin-top: -1px;
+    transition: 0.2s background-color;
+}
+.flowviewer-tab.active {
+    background-color: white;
+    border-top-color: white;
+}
+.flowviewer-tab:hover {
+    cursor: pointer;
+    background-color: white;
+}
+.flowviewer-tab:last-child {
+    border-right: 1px solid #bbbbbb;
+}
+
+.flowviewer-note {
+    margin-top: 12px;
+    font-size: 0.875rem;
+    font-style: italic;
+}
 
 .thing-list-nav {
     text-align: center;

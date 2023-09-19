@@ -28,7 +28,6 @@
         "request": "2.88.2",
         "serve-static": "1.15.0",
         "tar": "6.1.11",
-        "twitter": "1.7.1",
         "uuid": "^8.3.2"
     },
     "devDependencies": {

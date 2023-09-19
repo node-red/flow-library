@@ -40,8 +40,63 @@ app.post("/flow", function(req,res) {
 });
 
 app.get("/flow/:id",appUtils.csrfProtection(),function(req,res) { getFlow(req.params.id,null,req,res); });
+app.get("/flow/:id/share", appUtils.csrfProtection(), function(req,res) { getShareableFlow(req.params.id, null, req, res); });
 app.get("/flow/:id/in/:collection",appUtils.csrfProtection(),function(req,res) { getFlow(req.params.id,req.params.collection,req,res); });
-function getFlow(id,collection,req,res) {
+
+function parseGistFlow(gist) {
+    if (!gist.flow) {
+        gist.flow = [];
+    } else if (gist.flow) {
+        try {
+            var nodes = JSON.parse(gist.flow);
+            var nodeTypes = {};
+            for (var n in nodes) {
+                var node = nodes[n];
+                nodeTypes[node.type] = (nodeTypes[node.type]||0)+1;
+            }
+            gist.nodeTypes = [];
+            for (var nt in nodeTypes) {
+                gist.nodeTypes.push({type:nt,count:nodeTypes[nt]});
+            }
+            gist.nodeTypes.sort(function(a,b) {
+                if (a.type in npmNodes.CORE_NODES && !(b.type in npmNodes.CORE_NODES)) {
+                    return -1;
+                }
+                if (!(a.type in npmNodes.CORE_NODES) && b.type in npmNodes.CORE_NODES) {
+                    return 1;
+                }
+                if (a.type>b.type) return 1;
+                if (a.type<b.type) return -1;
+                return 0;
+            });
+            gist.flow = JSON.stringify(nodes);
+        } catch(err) {
+            gist.flow = "Invalid JSON";
+        }
+    }
+    return gist.flow
+}
+
+function getShareableFlow (id, collection, req, res) {
+    gister.get(id)
+        .then(function(gist) {
+            gist.flow = parseGistFlow(gist)
+            gist.isShare = true
+            res.send(mustache.render(templates.gistShare, gist, templates.partials));
+        }).catch(function(err) {
+            // TODO: better error logging without the full stack trace
+            console.log("Error loading flow:", id);
+            console.log(err);
+            try {
+                res.status(404).send(mustache.render(templates['404'],{sessionuser:req.session.user},templates.partials));
+            } catch(err2) {
+                console.log(err2);
+            }
+        })
+}
+
+
+function getFlow(id, collection, req, res) {
     gister.get(id).then(function(gist) {
         gist.sessionuser = req.session.user;
         gist.csrfToken = req.csrfToken();
@@ -89,36 +144,7 @@ function getFlow(id,collection,req,res) {
             ));
 
         gist.nodeTypes = [];
-        if (!gist.flow) {
-            gist.flow = [];
-        } else if (gist.flow) {
-            try {
-                var nodes = JSON.parse(gist.flow);
-                var nodeTypes = {};
-                for (var n in nodes) {
-                    var node = nodes[n];
-                    nodeTypes[node.type] = (nodeTypes[node.type]||0)+1;
-                }
-                gist.nodeTypes = [];
-                for (var nt in nodeTypes) {
-                    gist.nodeTypes.push({type:nt,count:nodeTypes[nt]});
-                }
-                gist.nodeTypes.sort(function(a,b) {
-                    if (a.type in npmNodes.CORE_NODES && !(b.type in npmNodes.CORE_NODES)) {
-                        return -1;
-                    }
-                    if (!(a.type in npmNodes.CORE_NODES) && b.type in npmNodes.CORE_NODES) {
-                        return 1;
-                    }
-                    if (a.type>b.type) return 1;
-                    if (a.type<b.type) return -1;
-                    return 0;
-                });
-                gist.flow = JSON.stringify(nodes);
-            } catch(err) {
-                gist.flow = "Invalid JSON";
-            }
-        }
+        gist.flow = parseGistFlow(gist)
         npmNodes.findTypes(gist.nodeTypes.map(function(t) { return t.type; })).then(function(typeMap) {
             var nodeTypes = gist.nodeTypes;
             gist.nodeTypes = {core:[], other:[]};
@@ -151,7 +177,7 @@ function getFlow(id,collection,req,res) {
                             gist.collectionNext = collectionSiblings[0].next;
                             gist.collectionNextType = collectionSiblings[0].nextType;
                         }
-                        res.send(mustache.render(templates.gist,gist,templates.partials));
+                        res.send(mustache.render(templates.gist, gist, templates.partials));
                     });
                 });
             }

@@ -1,0 +1,245 @@
+<style>
+.group-text-label {
+    font-family: Helvetica Neue, Arial, Helvetica, sans-serif;
+	font-size: 14px;
+}
+
+.node-text-label {
+	font-family: Helvetica Neue, Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	dominant-baseline: middle;
+}
+
+.subflow-node-text-label {
+    color: rgb(85, 85, 85);
+    dominant-baseline: middle;
+    font-family: Helvetica Neue, Arial, Helvetica, sans - serif;
+    font-size: 10px;
+    line-height: 20px;
+    pointer-events: none;
+    text-anchor: middle;
+    user-select: none
+}
+
+.subflow-node-text-label-number {
+    color: rgb(85, 85, 85);
+    dominant-baseline: middle;
+    font-family: Helvetica Neue, Arial, Helvetica, sans-serif;
+    font-size: 16px;
+    line-height: 20px;
+    pointer-events: none;
+    text-anchor: middle;
+    user-select: none
+}
+
+.flow-download-link {
+    font-size: 70%;
+}
+
+.flow-copy-to-clipboard-link {
+    font-size: 70%;
+}
+
+.node {
+    fill-opacity: 1;
+    stroke-width: 1px;
+}
+
+.link {
+    stroke: #999;
+    stroke-width: 3;
+    fill: none;
+}
+
+.link-highlight, .node-highlight {
+    stroke: rgb(255, 127, 14);
+}
+.node-highlight {
+    stroke-width: 3px;
+}
+
+.node-disabled {
+	stroke-dasharray: 8,3;
+	fill-opacity: 0.5;
+}
+
+.group-highlight {
+    stroke: rgb(255, 127, 14);
+    stroke-width: 4px;
+    fill: rgb(255, 127, 14);
+    fill-opacity: 0.2;
+}
+
+.link-disabled {
+	stroke-dasharray: 10,8 !important;
+	stroke-width: 2 !important;
+	stroke: rgb(204, 204, 204);
+}
+
+.grid-line {
+    shape-rendering: crispedges;
+    stroke: rgb(238, 238, 238);
+    stroke-width: 1px;
+    fill: none;
+}
+.output-deco {
+    stroke-width: 2px; 
+    stroke-miterlimit: 4;
+}
+
+.input-deco {
+    stroke-width: 2px;
+    stroke-miterlimit: 4;
+}
+
+.flow-render-error {
+    background-color: rgb(54, 52, 52); 
+    color: rgb(196, 59, 59); 
+    width: 100%;
+}
+.flowviewer-share-details {
+    padding: 5px;
+    border: 1px solid #aa6767;
+    background: white;
+    border-bottom-right-radius: 3px;
+    border-top-left-radius: 3px;
+    font-size: 0.8em;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+}
+</style>
+
+<div>
+    <div class="flowviewer">
+        <div style="position: relative">
+            <svg>
+                <g class="flowGridlines"></g>
+                <g class="containerGroup"></g>
+                <g class="flowGroups"></g>
+                <g class="flowWires"></g>
+                <g class="flowNodes"></g>
+            </svg>
+            <button id="copy-flow" class="copy-button">Copy JSON</button>
+{{#isShare}}
+            <label class="flowviewer-share-details">
+                <a href="/flow/{{ id }}" target="_blank">{{description}}</a> by <a href="/user/{{ owner.login }}">{{ owner.login }}</a>
+            </label>
+{{/isShare}}
+        </div>
+        <div class="flowviewer-tabs"></div>
+{{^isShare}}
+        <label class="flowviewer-note">Note: some third-party nodes may appear with blank styling, and not as they appear in the Node-RED Editor.</label>
+{{/isShare}}
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js" integrity="sha512-M7nHCiNUOwFt6Us3r8alutZLm9qMt4s9951uo8jqO4UwJ1hziseL6O3ndFyigx6+LREfZqnhHxYjKRJ8ZQ69DQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<head>
+    <script type="text/javascript" src="/js/flowviewer.js"></script>
+</head>
+<script type="text/javascript">
+    (function () {
+        // pull Flow into JS
+        const flow = {{{flow}}}
+        
+        /**
+         * Parse the flow.json to get the details on the tabs/subflows present
+         */
+        const processFlow = function (flow) {
+            const tabids = []
+            const tabs = []
+            flow.forEach((d) => {
+                if (d.type === 'subflow') {
+                    tabids.push(d.id)
+                    tabs.push({
+                        id: d.id,
+                        label: d.name,
+                        type: 'subslow'
+                    })
+                } else if (d.z) {
+                    if (tabids.indexOf(d.z) === -1) {
+                        tabids.push(d.z)
+                        tabs.push({
+                            id: d.z,
+                            label: d.z,
+                            type: 'tab',
+                        })
+                    }
+                }
+            })
+            return tabs
+        }
+
+        function addPanZoom () {
+            var svgs = d3.selectAll('.flowviewer svg');
+            svgs.each(function() {
+                var svg = d3.select(this);
+                
+                svg.html('<g>' + svg.html() + '</g>');
+                var inner = svg.select('g');
+                var zoom = d3.zoom()
+                    .translateExtent([[0, 0], [3000, 3000]])
+                    .scaleExtent([0.5, 1])
+                    .on("start", function () {
+                        svg.classed("dragging", true);
+                    })
+                    .on('zoom', function(event) {
+                        inner.attr('transform', event.transform);
+                    })
+                    .on("end", function () {
+                        svg.classed("dragging", false);
+                    });
+                svg.call(zoom);
+            });
+        }
+
+        const clearFlow = function () {
+            $('.flowviewer svg .flowGridlines').empty()
+            $('.flowviewer svg .containerGroup').empty()
+            $('.flowviewer svg .flowGroups').empty()
+            $('.flowviewer svg .flowWires').empty()
+            $('.flowviewer svg .flowNodes').empty()
+        }
+        // get the tabs/subflows for our provided flow
+        const tabs = processFlow(flow)
+        // sort them such that tabs render first
+        tabs.sort((a, b) => {
+            return a.type > b.type ? -1 : (a.type < b.type) ? 1 : 0
+        })
+
+        function openTab (id) {
+            // clear any existing flow
+            clearFlow()
+            // draw the new flow - uses function from `public/js/flowviewer.js`
+            renderFlow(id, flow, $('.flowviewer svg'));
+            addPanZoom()
+        }
+
+        function addTab (tab, index) {
+            const classes = 'flowviewer-tab flowviewer-' + tab.type
+            const name = tab.type === 'tab' ? 'Flow ' + (index + 1) : tab.label
+            const tabDOM = $('.flowviewer-tabs')
+                .append(`<div id="flowviewer-tab-${index}" class="${classes}">${name}</div>`)
+                .on('click', `#flowviewer-tab-${index}`, function () {
+                    // add on click to each new tab
+                    $('.flowviewer-tab').removeClass('active')
+                    $(this).addClass('active')
+                    openTab(tab.id)
+                })
+        }
+        
+        tabs.forEach((tab, index) => {
+            addTab(tab, index)
+        })
+
+        clearFlow();
+        renderFlow(tabs[0].id, flow, $('.flowviewer svg'));
+        addPanZoom();
+        $('#flowviewer-tab-0').addClass('active')
+        $('#copy-flow').on('click', function() {
+            navigator.clipboard.writeText(JSON.stringify(flow));
+        })
+    })()
+</script>

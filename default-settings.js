@@ -16,12 +16,6 @@ var settings = {
         secret: 'giraffe'
     },
     admins: ["knolleary","dceejay"],
-    twitter: {
-        consumer_key: '',
-        consumer_secret: '',
-        access_token_key: '',
-        access_token_secret: ''
-    },
     mastodon: {
         url: '',
         token: ''

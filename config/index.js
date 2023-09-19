@@ -16,10 +16,6 @@ try {
     if (process.env.NR_ADMINS) {
         module.exports.admins = process.env.NR_ADMINS.split(",").map(t =>t.trim())
     }
-    module.exports.twitter.consumer_key = process.env.NR_TWITTER_CONSUMER_KEY || module.exports.twitter.consumer_key;
-    module.exports.twitter.consumer_secret = process.env.NR_TWITTER_CONSUMER_SECRET || module.exports.twitter.consumer_secret;
-    module.exports.twitter.access_token_key = process.env.NR_TWITTER_ACCESS_TOKEN_KEY || module.exports.twitter.access_token_key;
-    module.exports.twitter.access_token_secret = process.env.NR_TWITTER_ACCESS_TOKEN_SECRET || module.exports.twitter.access_token_secret;
 
     module.exports.mastodon.url = process.env.NR_MASTODON_URL || module.exports.mastodon.url
     module.exports.mastodon.token = process.env.NR_MASTODON_TOKEN || module.exports.mastodon.token

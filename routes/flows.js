@@ -82,6 +82,7 @@ function getShareableFlow (id, collection, req, res) {
         .then(function(gist) {
             gist.flow = parseGistFlow(gist)
             gist.isShare = true
+            gist.minHeight = req.query.height || 450
             res.send(mustache.render(templates.gistShare, gist, templates.partials));
         }).catch(function(err) {
             // TODO: better error logging without the full stack trace

@@ -23,7 +23,7 @@
         "mastodon": "1.2.2",
         "mongojs": "3.1.0",
         "mustache": "4.2.0",
-        "node-red-dev": "^0.1.5",
+        "node-red-dev": "^0.1.6",
         "oauth": "0.10.0",
         "request": "2.88.2",
         "serve-static": "1.15.0",

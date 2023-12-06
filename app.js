@@ -88,7 +88,7 @@ if (!settings.maintenance) {
     app.use(function(req, res) {
         // We see lots of requests to these paths that we don't want to flood
         // the logs with so we missing more interesting things
-        if (!/^\/(css|font|jquery|images|font-awesome)\/?$/.test(req.url)) {
+        if (!/^\/(js|flow|node|css|font|jquery|images|font-awesome)\/?$/i.test(req.url)) {
             console.log(`404: ${req.method} ${req.url} ${req.ip}`)
         }
         res.status(404).send(mustache.render(templates['404'],{sessionuser:req.session.user},templates.partials));

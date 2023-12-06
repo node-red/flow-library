@@ -66,12 +66,29 @@ if (!settings.maintenance) {
         // handle CSRF token errors here
         res.status(403)
         res.send('Invalid request')
-        console.log(`CSRF Error: ${req.method} ${req.url} ${req.ip} `)
+        let stringBody = ''
+        if (req.method === 'POST') {
+            stringBody = req.body
+            if (typeof req.body === 'object') {
+                try {
+                    stringBody = JSON.stringify(req.body)
+                } catch (err) {
+                }
+            }
+            if (typeof stringBody !== 'string') {
+                stringBody = ''+stringBody
+            }
+            if (stringBody.length > 30) {
+                const l = stringBody.length
+                stringBody = stringBody.substring(0, 30) + `...[length:${l}]`
+            }
+        }
+        console.log(`CSRF Error: ${req.method} ${req.url} ${req.ip} ${stringBody} `)
     })
     app.use(function(req, res) {
         // We see lots of requests to these paths that we don't want to flood
         // the logs with so we missing more interesting things
-        if (!/^\/(css|font|jquery|images|font-awesome)\//.test(req.url)) {
+        if (!/^\/(css|font|jquery|images|font-awesome)\/?$/.test(req.url)) {
             console.log(`404: ${req.method} ${req.url} ${req.ip}`)
         }
         res.status(404).send(mustache.render(templates['404'],{sessionuser:req.session.user},templates.partials));

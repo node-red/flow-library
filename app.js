@@ -20,7 +20,6 @@ const limiter = rateLimit({
     }
 })
 var app = express();
-app.use(limiter)
 
 app.use(cookieParser());
 if (!settings.maintenance) {
@@ -46,6 +45,8 @@ if (process.env.FLOW_ENV !== "PRODUCTION") {
         next();
     })
 }
+
+app.use(limiter)
 
 if (!settings.maintenance) {
     app.set('trust proxy', 1)

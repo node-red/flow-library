@@ -5,6 +5,7 @@ var fs = require("fs");
 var path = require("path");
 var csrf = require('csurf');
 var uuid = require('uuid')
+const validatePackage = require('validate-npm-package-name')
 
 var settings = require("../config");
 var appUtils = require("../lib/utils");
@@ -46,6 +47,11 @@ app.get("/node/:scope(@[^\\/]{1,})?/:id([^@][^\\/]{1,})/in/:collection",appUtils
 function getNode(id, scope, collection, req,res) {
     if (scope) {
         id = scope+"/"+id;
+    }
+    const isValid = validatePackage(id)
+    if (!id.validForNewPackages && !id.validForOldPackages) {
+        res.status(404).send(mustache.render(templates['404'],{sessionuser:req.session.user},templates.partials));
+        return
     }
     npmNodes.get(id).then(function(node) {
         node.sessionuser = req.session.user;
@@ -234,6 +240,12 @@ app.post("/node/:scope(@[^\\/]{1,})?/:id([^@][^\\/]{1,})/report",appUtils.csrfPr
     if (req.params.scope) {
         id = req.params.scope+"/"+id;
     }
+    const isValid = validatePackage(id)
+    if (!id.validForNewPackages && !id.validForOldPackages) {
+        res.status(404).send()
+        return
+    }
+
     if (req.session.user) {
         events.add({
             action:"module_report",
@@ -258,6 +270,12 @@ app.post("/node/:scope(@[^\\/]{1,})?/:id([^@][^\\/]{1,})/rate", appUtils.csrfPro
     if (req.params.scope) {
         id = req.params.scope+"/"+id;
     }
+    const isValid = validatePackage(id)
+    if (!id.validForNewPackages && !id.validForOldPackages) {
+        res.status(404).send()
+        return
+    }
+
     if (req.cookies.rateID) {
         ratings.rateThing(id,req.cookies.rateID,Number(req.body.rating)).then(function() {
             res.writeHead(303, {
@@ -295,6 +313,11 @@ app.post("/add/node",appUtils.csrfProtection(),function(req,res) {
     var name = req.body.module;
     if (name) {
         name = name.trim();
+        const isValid = validatePackage(name)
+        if (!isValid.validForNewPackages) {
+            res.status(400).send("Invalid module name")
+            return
+        }
         npmModules.refreshModule(name).then(function(results) {
             console.log(results);
             results.forEach(function(result) {

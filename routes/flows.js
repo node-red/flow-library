@@ -234,8 +234,12 @@ app.post("/flow/:id/refresh",verifyOwner,function(req,res) {
     gister.refresh(req.params.id).then(function () {
         res.send("/flow/"+req.params.id);
     }).catch(function(exists) {
-        if (exists) {
+        if (exists === true) {
             res.status(304).end();
+        } else if (exists) {
+            console.log('Error refreshing gist', req.params.id, exists.toString())
+            // An error object
+            res.status(405).send(exists.toString())
         } else {
             res.status(404).send(mustache.render(templates['404'],{sessionuser:req.session.user},templates.partials));
         }

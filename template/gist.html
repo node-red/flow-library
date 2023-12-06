@@ -32,7 +32,10 @@
             {{#sessionuser}}
             <div class="flowinfo" style="text-align: left;"><a class="user-profile-action" href="#" onclick="javascript:addToCollection('{{_id}}');">add to collection</a></div>
             {{#owned}}
-                <div class="flowinfo" style="text-align: left;"><a class="user-profile-action" id="refresh-flow" href="#">refresh from github</a>&nbsp;&nbsp;<img id="refresh-flow-loader" class="loader" src="/images/loader.gif" /></div>
+                <div class="flowinfo" style="text-align: left;">
+                    <a class="user-profile-action" id="refresh-flow" href="#">refresh from github</a>&nbsp;&nbsp;<img id="refresh-flow-loader" class="loader" src="/images/loader.gif" />
+                    <div id="refresh-gist-error" class="dialog-warning" style="position:relative">blah</div>
+                </div>
                 <div class="flowinfo" style="text-align: left;"><a class="user-profile-action" id="remove-flow" href="#">remove flow</a></div>
             {{/owned}}
           {{/sessionuser}}
@@ -117,13 +120,17 @@ $(function() {
 {{#owned}}
     $('#refresh-flow').click(function(event) {
         $("#refresh-flow-loader").show();
+        $("#refresh-gist-error").hide();
         $.post("/flow/{{ id }}/refresh",function(data,textStatus,jqXHR) {
             if (jqXHR.status != 304) {
                 window.location.reload();
             }
             $("#refresh-flow-loader").hide();
         }).fail(function(err) {
-            window.location.reload();
+            if (err.status === 405) {
+                $("#refresh-gist-error").text(err.responseText).show();
+            }
+            $("#refresh-flow-loader").hide();
         });
         event.preventDefault();
     });

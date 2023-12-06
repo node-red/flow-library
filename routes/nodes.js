@@ -49,7 +49,8 @@ function getNode(id, scope, collection, req,res) {
         id = scope+"/"+id;
     }
     const isValid = validatePackage(id)
-    if (!id.validForNewPackages && !id.validForOldPackages) {
+    if (!isValid.validForNewPackages && !isValid.validForOldPackages) {
+        console.log(`404 (invalid package): ${id}`)
         res.status(404).send(mustache.render(templates['404'],{sessionuser:req.session.user},templates.partials));
         return
     }
@@ -209,7 +210,7 @@ function getNode(id, scope, collection, req,res) {
     }).catch(function(err) {
         if (err) {
             if (err.code === "NODE_NOT_FOUND") {
-                console.log(`404: ${id}`)
+                console.log(`404 (node not found): ${id}`)
             } else {
                 console.log("error loading node:",err);
             }
@@ -241,7 +242,7 @@ app.post("/node/:scope(@[^\\/]{1,})?/:id([^@][^\\/]{1,})/report",appUtils.csrfPr
         id = req.params.scope+"/"+id;
     }
     const isValid = validatePackage(id)
-    if (!id.validForNewPackages && !id.validForOldPackages) {
+    if (!isValid.validForNewPackages && !isValid.validForOldPackages) {
         res.status(404).send()
         return
     }
@@ -271,7 +272,7 @@ app.post("/node/:scope(@[^\\/]{1,})?/:id([^@][^\\/]{1,})/rate", appUtils.csrfPro
         id = req.params.scope+"/"+id;
     }
     const isValid = validatePackage(id)
-    if (!id.validForNewPackages && !id.validForOldPackages) {
+    if (!isValid.validForNewPackages && !isValid.validForOldPackages) {
         res.status(404).send()
         return
     }

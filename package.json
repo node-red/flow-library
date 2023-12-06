@@ -17,6 +17,7 @@
         "cookie-parser": "1.4.6",
         "csurf": "1.11.0",
         "express": "4.17.3",
+        "express-rate-limit": "7.1.5",
         "express-session": "1.17.3",
         "fs-extra": "10.1.0",
         "marked": "4.1.1",

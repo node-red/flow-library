@@ -8,15 +8,19 @@ var bodyParser = require('body-parser');
 var serveStatic = require('serve-static');
 var settings = require('./config');
 var templates = require("./lib/templates");
-// var morgan = require('morgan');
-// var rfs = require('rotating-file-stream');
+const { rateLimit } = require('express-rate-limit')
+const limiter = rateLimit({
+	windowMs: 15 * 60 * 1000, // 5 minutes
+	max: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
+	standardHeaders: false, // Return rate limit info in the `RateLimit-*` headers
+	legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+    handler: (req, res, next, options) => {
+        console.log(`Rate Limit: ${req.method} ${req.url} ${req.ip} `)
+		res.status(options.statusCode).send(options.message)
+    }
+})
 var app = express();
-
-// var accessLogStream = rfs('access.log', {
-//     interval: '1d', // rotate daily
-//     path: path.join(__dirname, 'logs')
-// })
-// app.use(morgan(':date[iso] :method :url :status :res[content-length] - :response-time ms', { stream: accessLogStream }))
+app.use(limiter)
 
 app.use(cookieParser());
 if (!settings.maintenance) {
@@ -44,6 +48,7 @@ if (process.env.FLOW_ENV !== "PRODUCTION") {
 }
 
 if (!settings.maintenance) {
+    app.set('trust proxy', 1)
     app.use(require("./routes/index"));
     app.use(require("./routes/auth"));
     app.use(require("./routes/flows"));
@@ -52,7 +57,18 @@ if (!settings.maintenance) {
     app.use(require("./routes/users"));
     app.use(require("./routes/api"));
     app.use(require("./routes/collections"));
+    app.use(function (err, req, res, next) {
+        if (err.code !== 'EBADCSRFTOKEN') {
+            console.log('here', err)
+            return next(err)
+        }
+        // handle CSRF token errors here
+        res.status(403)
+        res.send('Invalid request')
+        console.log(`CSRF Error: ${req.method} ${req.url} ${req.ip} `)
+    })
     app.use(function(req, res) {
+        console.log(`404: ${req.method} ${req.url} ${req.ip}`)
         res.status(404).send(mustache.render(templates['404'],{sessionuser:req.session.user},templates.partials));
     });
 } else {

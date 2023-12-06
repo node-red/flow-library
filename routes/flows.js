@@ -39,9 +39,18 @@ app.post("/flow", function(req,res) {
     }
 });
 
-app.get("/flow/:id",appUtils.csrfProtection(),function(req,res) { getFlow(req.params.id,null,req,res); });
-app.get("/flow/:id/share", appUtils.csrfProtection(), function(req,res) { getShareableFlow(req.params.id, null, req, res); });
-app.get("/flow/:id/in/:collection",appUtils.csrfProtection(),function(req,res) { getFlow(req.params.id,req.params.collection,req,res); });
+const checkFlowId = (req, res, next) => {
+    if (!/^[a-zA-Z0-9]+$/.test(req.params.id)) {
+        console.log(`404 [invalid flow id]: ${req.params.id}`, req.ip)
+        res.status(404).send(mustache.render(templates['404'],{sessionuser:req.session.user},templates.partials));
+    } else {
+        next()
+    }
+}
+
+app.get("/flow/:id", checkFlowId, appUtils.csrfProtection(), function(req,res) { getFlow(req.params.id,null,req,res); });
+app.get("/flow/:id/share", checkFlowId, appUtils.csrfProtection(), function(req,res) { getShareableFlow(req.params.id, null, req, res); });
+app.get("/flow/:id/in/:collection", checkFlowId, appUtils.csrfProtection(),function(req,res) { getFlow(req.params.id,req.params.collection,req,res); });
 
 function parseGistFlow(gist) {
     if (!gist.flow) {
@@ -86,9 +95,11 @@ function getShareableFlow (id, collection, req, res) {
             res.send(mustache.render(templates.gistShare, gist, templates.partials));
         }).catch(function(err) {
             // TODO: better error logging without the full stack trace
-            console.log("Error loading flow:", id);
-            console.log(err);
+            if (err) {
+                console.log("Error loading flow:", id, err);
+            }
             try {
+                console.log(`404 [flow not found]: ${id}`, req.ip)
                 res.status(404).send(mustache.render(templates['404'],{sessionuser:req.session.user},templates.partials));
             } catch(err2) {
                 console.log(err2);
@@ -191,9 +202,12 @@ function getFlow(id, collection, req, res) {
         });
     }).catch(function(err) {
         // TODO: better error logging without the full stack trace
-        console.log("Error loading flow:",id);
-        console.log(err);
+        if (err) {
+            console.log("Error loading flow:",id);
+            console.log(err);
+        }
         try {
+            console.log(`404 [flow not found]: ${id}`, req.ip)
             res.status(404).send(mustache.render(templates['404'],{sessionuser:req.session.user},templates.partials));
         } catch(err2) {
             console.log(err2);
@@ -246,7 +260,7 @@ app.post("/flow/:id/refresh",verifyOwner,function(req,res) {
     });
 });
 
-app.post("/flow/:id/rate", appUtils.csrfProtection(),function(req,res) {
+app.post("/flow/:id/rate", checkFlowId, appUtils.csrfProtection(),function(req,res) {
     var id = req.params.id;
     try {
         var cc_cookie = JSON.parse(req.cookies.cc_cookie)
@@ -277,7 +291,7 @@ app.post("/flow/:id/rate", appUtils.csrfProtection(),function(req,res) {
     }
 });
 
-app.post("/flow/:id/delete",appUtils.csrfProtection(),verifyOwner,function(req,res) {
+app.post("/flow/:id/delete",checkFlowId,appUtils.csrfProtection(),verifyOwner,function(req,res) {
     gister.remove(req.params.id).then(function() {
         res.writeHead(303, {
             Location: "/"

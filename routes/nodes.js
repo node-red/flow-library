@@ -50,7 +50,7 @@ function getNode(id, scope, collection, req,res) {
     }
     const isValid = validatePackage(id)
     if (!isValid.validForNewPackages && !isValid.validForOldPackages) {
-        console.log(`404 (invalid package): ${id}`)
+        console.log(`404 [invalid package name]: ${id}`)
         res.status(404).send(mustache.render(templates['404'],{sessionuser:req.session.user},templates.partials));
         return
     }
@@ -210,7 +210,7 @@ function getNode(id, scope, collection, req,res) {
     }).catch(function(err) {
         if (err) {
             if (err.code === "NODE_NOT_FOUND") {
-                console.log(`404 (node not found): ${id}`)
+                console.log(`404 [node not found]: ${id}`, req.ip)
             } else {
                 console.log("error loading node:",err);
             }
@@ -341,6 +341,11 @@ app.get("/node/:scope(@[^\\/]{1,})?/:id([^@][^\\/]{1,})/scorecard",appUtils.csrf
     if (req.params.scope) {
         id = req.params.scope+"/"+id;
     }
+    const isValid = validatePackage(name)
+    if (!isValid.validForNewPackages) {
+        res.status(400).send("Invalid module name")
+        return
+    }
     npmNodes.get(id).then(function(node) {
         node.sessionuser = req.session.user;
         node.csrfToken = req.csrfToken();
@@ -352,7 +357,7 @@ app.get("/node/:scope(@[^\\/]{1,})?/:id([^@][^\\/]{1,})/scorecard",appUtils.csrf
     }).catch(function(err) {
         if (err) {
             if (err.code === "NODE_NOT_FOUND") {
-                console.log(`404 [scorecard]: ${id}`)
+                console.log(`404 [scorecard]: ${id}`, req.ip)
             } else {
                 console.log("error loading node scorecard:",err);
             }

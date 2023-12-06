@@ -341,7 +341,7 @@ app.get("/node/:scope(@[^\\/]{1,})?/:id([^@][^\\/]{1,})/scorecard",appUtils.csrf
     if (req.params.scope) {
         id = req.params.scope+"/"+id;
     }
-    const isValid = validatePackage(name)
+    const isValid = validatePackage(id)
     if (!isValid.validForNewPackages) {
         res.status(400).send("Invalid module name")
         return

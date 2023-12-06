@@ -28,7 +28,8 @@
         "request": "2.88.2",
         "serve-static": "1.15.0",
         "tar": "6.1.11",
-        "uuid": "^8.3.2"
+        "uuid": "^8.3.2",
+        "validate-npm-package-name": "5.0.0"
     },
     "devDependencies": {
         "mocha": "8.2.1",

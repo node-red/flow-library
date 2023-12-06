@@ -69,7 +69,11 @@ if (!settings.maintenance) {
         console.log(`CSRF Error: ${req.method} ${req.url} ${req.ip} `)
     })
     app.use(function(req, res) {
-        console.log(`404: ${req.method} ${req.url} ${req.ip}`)
+        // We see lots of requests to these paths that we don't want to flood
+        // the logs with so we missing more interesting things
+        if (!/^\/(css|font|jquery|images|font-awesome)\//.test(req.url)) {
+            console.log(`404: ${req.method} ${req.url} ${req.ip}`)
+        }
         res.status(404).send(mustache.render(templates['404'],{sessionuser:req.session.user},templates.partials));
     });
 } else {

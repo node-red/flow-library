@@ -33,7 +33,7 @@
         "validate-npm-package-name": "5.0.0"
     },
     "devDependencies": {
-        "mocha": "8.2.1",
+        "mocha": "10.1.0",
         "nodemon": "2.0.20",
         "should": "13.2.3",
         "sinon": "9.2.1",

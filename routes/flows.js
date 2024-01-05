@@ -79,6 +79,13 @@ function parseGistFlow(gist) {
                 return 0;
             });
             gist.flow = JSON.stringify(nodes);
+            // For the flow viewer we need to embed the flow into JavaScript. If
+            // the flow contains HTML it needs to be escaped. We don't rely on mustache
+            // escaping as we need to be able to reverse the escaping and, well, I
+            // couldn't get it to work.
+            gist.escapedFlow = gist.flow.replace(/[&<>"]/g, c => { return {'"':'&quot;', '&':'&amp;', '<':'&lt;', '>':'&gt;'}[c] })
+                                        // replace any escaped quotes
+                                        .replace(/\\/g,'\\\\').replace()
         } catch(err) {
             gist.flow = "Invalid JSON";
         }

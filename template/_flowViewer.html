@@ -141,9 +141,21 @@
 </head>
 <script type="text/javascript">
     (function () {
-        // pull Flow into JS
-        const flow = {{{flow}}}
-        
+        // pull Flow into JS - but use our own escaping so we can cleanly unescape it
+        // prior to parsing
+        const escapedFlow = "{{{escapedFlow}}}"
+        let flow = escapedFlow
+        // Now unescape the flow
+        const entityMap = [
+            { r: /&lt;/g, c: '<' },
+            { r: /&gt;/g, c: '>' },
+            { r: /&quot;/g, c: '"' },
+            { r: /&amp;/g, c: '&' }
+        ]
+        entityMap.forEach(em => {
+            flow = flow.replace(em.r, em.c)
+        })
+        flow = JSON.parse(flow)
         /**
          * Parse the flow.json to get the details on the tabs/subflows present
          */

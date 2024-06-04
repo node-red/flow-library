@@ -13,6 +13,7 @@
         "acorn-walk": "^8.0.2",
         "aws-sdk": "^2.1237.0",
         "body-parser": "1.20.1",
+        "dompurify": "3.1.5",
         "connect-mongo": "4.6.0",
         "cookie-parser": "1.4.6",
         "csurf": "1.11.0",
@@ -20,6 +21,7 @@
         "express-rate-limit": "7.1.5",
         "express-session": "1.17.3",
         "fs-extra": "10.1.0",
+        "jsdom": "22.1.0",
         "marked": "4.1.1",
         "mastodon": "1.2.2",
         "mongojs": "3.1.0",
@@ -40,6 +42,6 @@
         "vanilla-cookieconsent": "^2.8.8"
     },
     "engines": {
-        "node": "16"
+        "node": "18"
     }
 }

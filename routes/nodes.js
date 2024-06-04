@@ -1,13 +1,10 @@
 var express = require("express");
 var mustache = require('mustache');
-var {marked} = require('marked');
 var fs = require("fs");
 var path = require("path");
-var csrf = require('csurf');
 var uuid = require('uuid')
 const validatePackage = require('validate-npm-package-name')
 
-var settings = require("../config");
 var appUtils = require("../lib/utils");
 var npmNodes = require("../lib/nodes");
 var npmModules = require("../lib/modules");
@@ -138,7 +135,7 @@ function getNode(id, scope, collection, req,res) {
         //console.log(node);
         node.readme = node.readme||"";
 
-        marked(node.readme,{},function(err,content) {
+        appUtils.renderMarkdown(node.readme,{},function(err,content) {
             node.readme = content.replace(/^<h1 .*?<\/h1>/gi,"");
             if (node.repository && node.repository.url && /github\.com/.test(node.repository.url)) {
                 var m;

@@ -1,7 +1,5 @@
 var express = require("express");
 var mustache = require('mustache');
-var {marked} = require('marked');
-var fs = require("fs");
 
 var settings = require("../config");
 var gister = require("../lib/gists");
@@ -186,7 +184,7 @@ function getFlow(id, collection, req, res) {
 
             });
             function completeRender(data) {
-                marked(data,{},function(err,content) {
+                appUtils.renderMarkdown(data,{},function(err,content) {
                     gist.readme = content;
                     ratingPromise.then(()=>collectionPromise).then(function(collectionSiblings) {
                         if (collection && collectionSiblings && collectionSiblings.length > 0) {

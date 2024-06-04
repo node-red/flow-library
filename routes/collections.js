@@ -10,7 +10,6 @@ const viewster = require("../lib/view");
 const collections = require("../lib/collections");
 const users = require("../lib/users");
 const app = express();
-const {marked} = require("marked");
 const ratings = require("../lib/ratings");
 
 
@@ -113,7 +112,7 @@ app.get("/collection/:id",  appUtils.csrfProtection(), function(req,res) {
         }
 
 
-        marked(collection.description,{},function(err,content) {
+        appUtils.renderMarkdown(collection.description,{},function(err,content) {
             collection.description = content;
             collection.updated_at_since = appUtils.formatDate(collection.updated_at);
             collection.item_count = collection.items.length;

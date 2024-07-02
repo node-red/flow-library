@@ -1,0 +1,26 @@
+{
+  "nodes": [
+    // Outros nodes...
+    {
+      "id": "save-and-read-custom-data",
+      "name": "save-and-read-custom-data",
+      "version": "1.0.0",
+      "description": "Custom Node-RED nodes for reading and saving data",
+      "repository": {
+        "type": "git",
+        "url": "https://github.com/kauanm-b/save-and-read-custom-data.git"
+      },
+      "keywords": [
+        "node-red",
+        "custom-save-data",
+        "custom-read-data",
+        "read-data",
+        "data",
+        "save-data",
+        "save"
+      ],
+      "author": "Kauan Moreira Barcellos <kauanbarcellos11@gmail.com>",
+      "license": "MIT"
+    }
+  ]
+}

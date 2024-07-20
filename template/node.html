@@ -61,6 +61,10 @@
                     <button id="refresh-button" type="button" class="user-profile-action" style="background: none; color: #aa6767"><span id="refresh-node-label">check for update</span><img id="refresh-node-loader" class="loader" src="/images/loader.gif" /></button>
                     <div id="refresh-node-error" class="dialog-warning" style="position:relative"></div>
                 </form>
+                {{#isAdmin}}
+                    <button id="remove-button" type="submit" class="user-profile-action" style="background: none; color: #aa6767"><span id="remove-node-label">remove from library</span><img id="remove-node-loader" class="loader" src="/images/loader.gif" /></button>
+                    <div id="remove-node-error" class="dialog-warning" style="position:relative"></div>
+                {{/isAdmin}}
             </div>
             {{/sessionuser}}
           </div>
@@ -167,6 +171,34 @@
             });
         });
 
+        var removeSubmitted = false;
+        $('#remove-button').click(function(e) {
+            if (confirm('Are you sure you want to remove this module?')) {
+                e.preventDefault();
+                if (refreshSubmitted) {
+                    return;
+                }
+                removeSubmitted = true;
+                $("#remove-node-error").hide();
+                $("#remove-node-label").hide();
+                $("#remove-button").addClass("submitted");
+                $("#remove-node-loader").show();
+                $.ajax({
+                    url: window.location.pathname + '?_csrf={{csrfToken}}',
+                    type: 'DELETE',
+                    success: function(data) {
+                        window.location = '/';
+                    }
+                }).fail(function(err) {
+                    removeSubmitted = false;
+                    console.log("ERROR",err);
+                    $("#remove-button").removeClass("submitted");
+                    $("#remove-node-loader").hide();
+                    $("#remove-node-label").show();
+                    $("#remove-node-error").text(err.responseText).show();
+                });
+            }
+        });
     });
 
 </script>

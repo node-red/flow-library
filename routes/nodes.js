@@ -12,6 +12,7 @@ var ratings = require("../lib/ratings");
 var templates = require("../lib/templates");
 var events = require("../lib/events");
 var collections = require("../lib/collections");
+var settings = require("../config");
 
 var app = express();
 
@@ -53,6 +54,8 @@ function getNode(id, scope, collection, req,res) {
     }
     npmNodes.get(id).then(function(node) {
         node.sessionuser = req.session.user;
+        node.isAdmin = node.sessionuser && (settings.admins.indexOf(req.session.user.login) != -1);
+        node.Admins = settings.admins
         node.csrfToken = req.csrfToken();
         node.pageTitle = req.params.id+" (node)";
 
@@ -304,6 +307,31 @@ app.get("/add/node",appUtils.csrfProtection(),function(req,res) {
     context.csrfToken = req.csrfToken();
     res.send(mustache.render(templates.addNode,context,templates.partials));
 });
+
+app.delete("/node/:scope(@[^\\/]{1,})?/:id([^@][^\\/]{1,})", appUtils.csrfProtection(),function(req,res) {
+    var id = req.params.id;
+    if (req.params.scope) {
+        id = req.params.scope+"/"+id;
+    }
+    const isValid = validatePackage(id)
+    if (!isValid.validForNewPackages && !isValid.validForOldPackages) {
+        res.status(404).send()
+        return
+    }
+    if (!req.session.user || settings.admins.indexOf(req.session.user.login) === -1) {
+        res.status(404).send()
+        return
+    }
+    npmNodes.remove(id).then(() => {
+        res.writeHead(303, {
+            Location: "/"
+        });
+        res.end();   
+    }).catch(err => {
+        res.status(400).send();
+    })
+});
+
 
 app.post("/add/node",appUtils.csrfProtection(),function(req,res) {
     var context = {};

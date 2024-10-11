@@ -1,29 +1,30 @@
 try {
-    module.exports = require("../settings.js");
-} catch(err) {
-    module.exports = require("../default-settings.js");
+    // eslint-disable-next-line n/no-unpublished-require
+    module.exports = require('../settings.js')
+} catch (err) {
+    module.exports = require('../default-settings.js')
     if (process.env.NR_MAINTENANCE !== undefined) {
         module.exports.maintenance = (process.env.NR_MAINTENANCE === 'true')
     }
-    module.exports.port = process.env.PORT || module.exports.port;
-    module.exports.github.clientId = process.env.NR_GITHUB_CLIENTID || module.exports.github.clientId;
-    module.exports.github.secret = process.env.NR_GITHUB_SECRET || module.exports.github.secret;
-    module.exports.github.authCallback = process.env.NR_GITHUB_CALLBACK || module.exports.github.authCallback;
-    module.exports.github.accessToken = process.env.NR_GITHUB_ACCESS_TOKEN || module.exports.github.accessToken;
-    module.exports.mongo.url = process.env.NR_MONGO_URL || module.exports.mongo.url;
-    module.exports.session.key = process.env.NR_SESSION_KEY || module.exports.session.key;
-    module.exports.session.secret = process.env.NR_SESSION_SECRET || module.exports.session.secret;
+    module.exports.port = process.env.PORT || module.exports.port
+    module.exports.github.clientId = process.env.NR_GITHUB_CLIENTID || module.exports.github.clientId
+    module.exports.github.secret = process.env.NR_GITHUB_SECRET || module.exports.github.secret
+    module.exports.github.authCallback = process.env.NR_GITHUB_CALLBACK || module.exports.github.authCallback
+    module.exports.github.accessToken = process.env.NR_GITHUB_ACCESS_TOKEN || module.exports.github.accessToken
+    module.exports.mongo.url = process.env.NR_MONGO_URL || module.exports.mongo.url
+    module.exports.session.key = process.env.NR_SESSION_KEY || module.exports.session.key
+    module.exports.session.secret = process.env.NR_SESSION_SECRET || module.exports.session.secret
     if (process.env.NR_ADMINS) {
-        module.exports.admins = process.env.NR_ADMINS.split(",").map(t =>t.trim())
+        module.exports.admins = process.env.NR_ADMINS.split(',').map(t => t.trim())
     }
 
     module.exports.mastodon.url = process.env.NR_MASTODON_URL || module.exports.mastodon.url
     module.exports.mastodon.token = process.env.NR_MASTODON_TOKEN || module.exports.mastodon.token
 
-    module.exports.slack.webhook = process.env.NR_SLACK_WEBHOOK || module.exports.slack.webhook;
+    module.exports.slack.webhook = process.env.NR_SLACK_WEBHOOK || module.exports.slack.webhook
 
     if (process.env.NR_MODULE_BLOCKLIST) {
-        module.exports.modules.block = process.env.NR_MODULE_BLOCKLIST.split(",").map(t =>t.trim())
+        module.exports.modules.block = process.env.NR_MODULE_BLOCKLIST.split(',').map(t => t.trim())
     }
     module.exports.aws.iconBucket = process.env.NR_AWS_BUCKET || module.exports.aws.iconBucket
     module.exports.aws.accessKeyId = process.env.NR_AWS_ACCESS_KEY_ID || module.exports.aws.accessKeyId

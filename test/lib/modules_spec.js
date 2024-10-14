@@ -1,60 +1,66 @@
-var should = require('should');
-var sinon = require('sinon');
-var nodes = require('../../lib/nodes');
-var ratings = require('../../lib/ratings');
-var events = require('../../lib/events');
-var sandbox = sinon.createSandbox();
+/* eslint-disable n/no-unpublished-require */
+// eslint-disable-next-line no-unused-vars
+const should = require('should')
+const sinon = require('sinon')
 
-var modules = require('../../lib/modules');
+const events = require('../../lib/events')
+const modules = require('../../lib/modules')
+const nodes = require('../../lib/nodes')
+const ratings = require('../../lib/ratings')
+const sandbox = sinon.createSandbox()
 
-describe("modules", function () {
-
+describe('modules', function () {
     afterEach(function () {
-        sandbox.restore();
-    });
+        sandbox.restore()
+    })
 
     it('#pruneRatings', function (done) {
-        var list = ['node-red-dashboard', 'node-red-contrib-influxdb', 'node-red-contrib-noble'];
-        sandbox.stub(ratings, 'getRatedModules').returns(Promise.resolve(list));
+        const list = ['node-red-dashboard', 'node-red-contrib-influxdb', 'node-red-contrib-noble']
+        sandbox.stub(ratings, 'getRatedModules').returns(Promise.resolve(list))
         sandbox.stub(nodes, 'get').returns(Promise.resolve({
             _id: 'node-red-dashboard'
         })).returns(Promise.resolve({
             _id: 'node-red-contrib-influxdb'
         })).returns(Promise.resolve({
             _id: 'node-red-contrib-noble'
-        }));
+        }))
 
         modules.pruneRatings().then(function (results) {
-            results.should.be.empty();
-            done();
-        });
-    });
+            results.should.be.empty()
+            done()
+            return null
+        }).catch(err => {
+            done(err)
+        })
+    })
 
     it('#pruneRatings module removed', function (done) {
-        var list = ['node-red-dashboard', 'node-red-contrib-influxdb', 'node-red-contrib-noble'];
-        sandbox.stub(ratings, 'getRatedModules').returns(Promise.resolve(list));
+        const list = ['node-red-dashboard', 'node-red-contrib-influxdb', 'node-red-contrib-noble']
+        sandbox.stub(ratings, 'getRatedModules').returns(Promise.resolve(list))
 
-        var nodesGet = sandbox.stub(nodes, 'get')
+        const nodesGet = sandbox.stub(nodes, 'get')
         nodesGet.withArgs('node-red-dashboard').returns(Promise.resolve({
             _id: 'node-red-dashboard'
-        }));
+        }))
         nodesGet.withArgs('node-red-contrib-influxdb').returns(Promise.resolve({
             _id: 'node-red-contrib-influxdb'
-        }));
+        }))
         nodesGet.withArgs('node-red-contrib-noble').returns(
-            Promise.reject(new Error('node not found: node-red-contrib-noble')));
+            Promise.reject(new Error('node not found: node-red-contrib-noble')))
 
-        var removeForModule = sandbox.stub(ratings, 'removeForModule').returns(Promise.resolve());
-        sandbox.stub(events, 'add').returns(Promise.resolve());
+        sandbox.stub(ratings, 'removeForModule').returns(Promise.resolve())
+        sandbox.stub(events, 'add').returns(Promise.resolve())
 
         modules.pruneRatings().then(function (results) {
-            results.should.have.length(1);
+            results.should.have.length(1)
             results[0].should.eql({
                 state: 'fulfilled',
                 value: 'node-red-contrib-noble ratings removed'
-            });
-            done();
-        });
-    });
-
-});
+            })
+            done()
+            return null
+        }).catch(err => {
+            done(err)
+        })
+    })
+})

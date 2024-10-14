@@ -49,5 +49,13 @@
 
         // plugin:promise
         "promise/catch-or-return": ["error", { "allowFinally": true }]
-    }
+    },
+    "overrides": [
+        {
+            "files": ["test/**"],
+            "env": {
+                "mocha": true
+            }
+        }
+    ]
 }

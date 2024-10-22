@@ -1,22 +1,22 @@
-var express = require("express");
-var mustache = require('mustache');
+const express = require('express')
+const mustache = require('mustache')
 
-var events = require("../lib/events");
-var templates = require("../lib/templates");
+const events = require('../lib/events')
+const templates = require('../lib/templates')
 
-var app = express();
-app.get("/admin/log",function(req,res) {
-    var context = {};
-    context.sessionuser = req.session.user;
-    events.get().then(function(events) {
-        context.events = events;
-        res.send(mustache.render(templates.events,context,templates.partials));
-    }).catch(function(err) {
-        console.log(err);
-        context.err = err;
-        context.events = [];
-        res.send(mustache.render(templates.events,context,templates.partials));
-    });
-});
+const app = express()
+app.get('/admin/log', async function (req, res) {
+    const context = {}
+    context.sessionuser = req.session.user
+    try {
+        context.events = await events.get()
+        res.send(mustache.render(templates.events, context, templates.partials))
+    } catch (err) {
+        console.log(err)
+        context.err = err
+        context.events = []
+        res.send(mustache.render(templates.events, context, templates.partials))
+    }
+})
 
-module.exports = app;
+module.exports = app

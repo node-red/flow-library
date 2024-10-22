@@ -1,19 +1,25 @@
-var settings = require("../config");
-var gists = require("../lib/gists");
-var id = process.argv[2];
-var db = require("../lib/db")
+const db = require('../lib/db')
+const gists = require('../lib/gists')
+
+const id = process.argv[2]
 
 if (!id) {
-    console.log("Usage: node refresh-gist.js <id>");
-    process.exit(1);
+    console.log('Usage: node refresh-gist.js <id>')
+    process.exitCode = 1
+    return
 }
 
-gists.refresh(id).then(function(result) {
-    console.log("Success");
-}).catch(function(err) {
-    if (err === true) {
-        console.log("No update needed")
-    } else {
-        console.log("Failed",err);
+;(async function () {
+    await db.init()
+    try {
+        const result = await gists.refresh(id)
+        if (result === null) {
+            console.log('No update needed')
+        } else {
+            console.log('Updated')
+        }
+    } catch (err) {
+        console.log(err)
     }
-}).then(() => { db.close() })
+    await db.close()
+})()

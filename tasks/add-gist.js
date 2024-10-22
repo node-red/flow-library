@@ -1,15 +1,20 @@
-var settings = require("../config");
-var gists = require("../lib/gists");
-var id = process.argv[2];
-var db = require("../lib/db")
+const db = require('../lib/db')
+const gists = require('../lib/gists')
+const id = process.argv[2]
 
 if (!id) {
-    console.log("Usage: node add-gist.js <id>");
-    process.exit(1);
+    console.log('Usage: node add-gist.js <id>')
+    process.exitCode = 1
+    return
 }
 
-gists.add(id).then(function(result) {
-    console.log("Success");
-}).catch(function(err) {
-    console.log(err)
-}).then(() => { db.close() })
+;(async function () {
+    try {
+        await gists.add(id)
+        console.log('Success')
+    } catch (err) {
+        console.log(err)
+    } finally {
+        db.close()
+    }
+})()

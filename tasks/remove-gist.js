@@ -1,15 +1,20 @@
-var settings = require("../config");
-var gists = require("../lib/gists");
-var id = process.argv[2];
-var db = require("../lib/db")
+const db = require('../lib/db')
+const gists = require('../lib/gists')
+
+const id = process.argv[2]
 
 if (!id) {
-    console.log("Usage: node remove-gist.js <id>");
-    process.exit(1);
+    console.log('Usage: node remove-gist.js <id>')
+    process.exitCode = 1
+    return
 }
 
-gists.remove(id).then(function(result) {
-    console.log("Success");
-}).catch(function(err) {
-    console.log("Failed",err);
-}).then(() => { db.close() })
+;(async function () {
+    await db.init()
+    try {
+        await gists.remove(id)
+    } catch (err) {
+        console.log('Failed', err)
+    }
+    await db.close()
+})()

@@ -1,84 +1,83 @@
-var express = require("express");
-const users = require("../lib/users");
-var github = require("../lib/github");
-var settings = require('../config');
-var OAuth2 = require("oauth").OAuth2;
-var oauth = new OAuth2(settings.github.clientId, settings.github.secret, "https://github.com/", "login/oauth/authorize", "login/oauth/access_token");
+const express = require('express')
+const OAuth2 = require('oauth').OAuth2
 
-var app = express();
+const settings = require('../config')
+const github = require('../lib/github')
+const users = require('../lib/users')
 
-function login(req,res) {
+const oauth = new OAuth2(settings.github.clientId, settings.github.secret, 'https://github.com/', 'login/oauth/authorize', 'login/oauth/access_token')
+
+const app = express()
+
+function login (req, res) {
     if (!req.session.accessToken) {
         if (req.query.return) {
-            req.session.returnPath = req.query.return;
+            req.session.returnPath = req.query.return
         } else {
-            delete req.session.returnPath;
+            delete req.session.returnPath
         }
         res.writeHead(303, {
             Location: oauth.getAuthorizeUrl({
                 redirect_uri: settings.github.authCallback,
-                scope: "gist"
+                scope: 'gist'
             })
-        });
-        res.end();
-        return;
+        })
+        res.end()
     } else {
         res.writeHead(302, {
-            Location: req.query.return||"/"
-        });
-        res.end();
-        return;
+            Location: req.query.return || '/'
+        })
+        res.end()
     }
 }
-function logout(req,res) {
-    req.session.destroy(function(err) {
-        res.redirect('/');
+function logout (req, res) {
+    req.session.destroy(function (_) {
+        res.redirect('/')
     })
 }
-function loginCallback(req,res) {
+function loginCallback (req, res) {
     if (!req.query.code) {
-        res.writeHead(403);
-        res.end();
-        return;
+        res.writeHead(403)
+        res.end()
+        return
     }
-    oauth.getOAuthAccessToken(req.query.code, {}, function (err, access_token, refresh_token) {
+    oauth.getOAuthAccessToken(req.query.code, {}, async function (err, accessToken, refreshToken) {
         if (err) {
-            console.log(err);
-            res.writeHead(500);
-            res.end(err + "");
-            return;
+            console.log(err)
+            res.writeHead(500)
+            res.end(err + '')
+            return
         }
-        if (!access_token) {
-            res.writeHead(403);
-            res.end();
-            return;
+        if (!accessToken) {
+            res.writeHead(403)
+            res.end()
+            return
         }
-        req.session.accessToken = access_token;
-
-        github.getAuthedUser(req.session.accessToken).then(function(user) {
-            return users.ensureExists(user.login,user).then(function() {
-                req.session.user = {
-                    login: user.login,
-                    avatar_url: user.avatar_url,
-                    url: user.html_url,
-                    name: user.name
-                };
-                res.writeHead(303, {
-                    Location: req.session.returnPath||"/"
-                });
-                res.end();
-            });
-        }).catch(function(err) {
-            if (err) {
-                res.writeHead(err.code);
-                res.end(err + "");
+        req.session.accessToken = accessToken
+        try {
+            const user = await github.getAuthedUser(req.session.accessToken)
+            await users.ensureExists(user.login, user)
+            req.session.user = {
+                login: user.login,
+                avatar_url: user.avatar_url,
+                url: user.html_url,
+                name: user.name
             }
-        });
-    });
+            res.writeHead(303, {
+                Location: req.session.returnPath || '/'
+            })
+            res.end()
+        } catch (err) {
+            if (err) {
+                res.writeHead(err.code)
+                res.end(err + '')
+            }
+        }
+    })
 }
 
-app.get("/login",login);
-app.get("/logout",logout);
-app.get("/login/callback",loginCallback);
+app.get('/login', login)
+app.get('/logout', logout)
+app.get('/login/callback', loginCallback)
 
-module.exports = app;
+module.exports = app

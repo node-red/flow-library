@@ -43,6 +43,21 @@
                 </div>
             {{/scorecard}}
           </div>
+          {{#isAdmin}}
+          <div class="flowmeta">
+            <h4>Categories</h4>
+            <ul class="flow-tags">
+            {{#categories}}
+                <li category="{{.}}"><a href="/search?type=node&category={{.}}">{{.}}</a></li>
+            {{/categories}}
+            </ul>
+            {{#sessionuser}}
+                {{#isAdmin}}
+                    <div class="flowinfo" style="text-align: right;"><a id="edit-categories" href="#">edit</a></div>
+                {{/isAdmin}}
+            {{/sessionuser}}
+          </div>
+          {{/isAdmin}}
 
           <div class="flowmeta">
             <h4>Actions</h4>
@@ -127,7 +142,22 @@
     </div>
 </div>
 
-
+{{#isAdmin}}
+<div class="dialog-shade dialog-fixed" id="edit-node-category-shade">
+    <div class="dialog" id="edit-node-category">
+        <form action="/node/{{_id}}/category" method="POST">
+            <input name="_csrf" type="hidden" value="{{csrfToken}}">
+            <h4>Update node categories</h4>
+            <ul style="list-style-type: none">
+                {{#allCategories}}<li><label style="cursor: pointer"><input type="checkbox" name="category" {{#selected}}checked{{/selected}} value="{{_id}}">{{name}}</label></li>{{/allCategories}}
+            </ul>
+            <div class="dialog-buttons">
+                <button type="button" onclick="return closeDialog();">Cancel</button> <button type="submit">Update</button>
+            </div>
+        </form>
+    </div>
+</div>
+{{/isAdmin}}
 
 
 
@@ -139,6 +169,13 @@
             e.preventDefault();
             $("#report-node-shade").show();
         });
+        {{#isAdmin}}
+        $("#edit-categories").click(function(e) {
+            $("body").css({height:"100%",overflow:"hidden"});
+            e.preventDefault();
+            $("#edit-node-category-shade").show();
+        });
+        {{/isAdmin}}
 
         var refreshSubmitted = false;
 

@@ -98,9 +98,8 @@ h1 {
 }
 .library .grid {
     background: #fff;
-    padding: 0 100px;
+    padding: 0 30px;
 }
-
 
 .library .grid.main-content {
     background: #fff;
@@ -138,10 +137,7 @@ h1 {
 }
 
 .buttons {
-    position: absolute;
-    top: -6px;
-    right: -80px;
-    height: 52px;
+    flex-grow: 0;
     display: inline-block;
     font-size: 13px;
     text-align: right;
@@ -803,55 +799,71 @@ input[type="text"].gist-filter-input {
 .filter-term-spinner {
     position: absolute;
     right: 8px;
-    top: 12px;
+    top: 5px;
     width: 32px;
     height: 32px;
     background: url(/images/spin.svg) no-repeat;
     display: none;
 }
 .filter-options {
-    background: #f0f0f0;
-    padding: 5px;
-    margin:3px 0 10px;
+    margin-top: 15px;
 }
+.filter-options-section {
+    font-size: 13px;
+}
+
+.filter-options-sort {
+    margin-top: 8px;
+    margin-right: 20px;
+    text-align: right;
+    font-size: 13px;
+}
+.filter-options-sort select {
+    color: #555;
+    display: inline-block;
+    font-size: 13px;
+    padding: 2px 5px;
+    border: none;
+    width: auto;
+    background-image: none;
+    cursor: pointer;
+}
+.filter-options-sort select:hover:not(:disabled) {
+    background-image: none;
+}
+
 .filter-options ul {
     list-style-type: none;
-    font-size: 14px;
+    font-size: 13px;
     padding: 0;
-    margin: 0;
+    margin: 5px 0;
     display: inline-block;
     vertical-align: middle;
 }
 .filter-options input {
-    display: none;
+    cursor: pointer;
 }
 
 .filter-options li {
+    display: flex;
+    align-items: center;
     color: #999;
-    display: inline-block;
-    margin-left: 5px;
-    margin-right: 10px;
-    height: 30px;
-    line-height: 30px;
+    margin: 4px 0;
 }
 .filter-options label {
     display: inline-block;
-    width: 100%;
-    height: 100%;
     cursor: pointer;
     padding: 3px 6px;
-    color: #999;
-    border: 2px solid #ddd;
+    color: #666;
     line-height: 20px;
 }
-
 
 input[name="sort"]:checked + label {
     background: white;
     border-color: #999;
     color: #666;
 }
-input[name="type"][value="node"]:checked + label {
+/* input[name="type"][value="node"]:checked + label {
     background: var(--node-type-primary-color);
     color: white;
     border-color: var(--node-type-secondary-color);
@@ -865,7 +877,7 @@ input[name="type"][value="collection"]:checked + label {
     background: var(--collection-type-primary-color);
     color: white;
     border-color: var(--collection-type-secondary-color);
-}
+} */
 
 
 .toolbar > div.grid {
@@ -886,10 +898,7 @@ input[name="type"][value="collection"]:checked + label {
     border-bottom-left-radius:6px;
 
 }
-.filter-sort {
-    display: inline-block;
-    float: right;
-}
+
 .gist-count {
     display: inline-block;
     text-align: right;
@@ -907,11 +916,8 @@ ul.gistlist {
     margin: 10px 0;
     padding: 0;
     list-style-type: none;
-}
-ul.gistlist:after {
-    content: '';
-    clear:both;
-    display: table;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
 }
 
 li.gistbox {
@@ -922,11 +928,9 @@ li.gistbox {
     border-top-left-radius:3px;
     display: inline-block;
     background: #fff;
-    height: 125px;
-    float: left;
+    height: 140px;
     margin-bottom: 15px;
     margin-right: 15px;
-    width: calc(33% - 13px);
     min-width: 150px;
     overflow: hidden;
 
@@ -955,14 +959,14 @@ li.gistbox.show {
     border-color: var(--node-type-secondary-color);
 }
 h1.gisttitle {
-    font-size: 16px;
+    font-size: 14px;
     margin: 0;
     font-weight: normal;
     color: #444;
 }
 p.gistdescription {
     font-size: 13px;
-    line-height: 1.5em;
+    line-height: 1.3em;
     color: #999;
     margin: 5px 0 0 0;
 }
@@ -977,7 +981,11 @@ p.gistdescription {
     background: var(--node-type-primary-color);
     color: #fff;
 }
+.gistbox:hover .gistbox-tools {
+    display: block;
+}
 .gistbox-tools {
+    display: none;
     position: absolute;
     top: 4px;
     right: 4px;
@@ -1662,12 +1670,18 @@ span.username {
         padding-left: 15px !important;
         padding-right: 15px !important;
     }
-    .filter-sort {
-        display: block;
-        float: none;
-        margin-top: 5px;
-        text-align: right;
+    .filter-options form {
+        flex-direction: column;
     }
+    .filter-options li {
+        margin-left: 0px;
+        margin-right: 0px;
+    }
+    .filter-options ul.filter-options-filter {
+        margin-bottom: 10px;
+    }
+
+   
 }
 
 
@@ -1680,6 +1694,10 @@ span.username {
     .gist-sort div {
         display: inline-block;
     }
+    ul.gistlist {
+        grid-template-columns: 1fr;
+    }
+
 }
 .system-message {
     display: block;

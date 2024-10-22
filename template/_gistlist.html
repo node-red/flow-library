@@ -1,29 +1,57 @@
-<div class="thing-list col-1-1 ">
-    <div class="filter-options"{{#hideOptions}} style="display: none"{{/hideOptions}}>
+{{^hideOptions}}
+<div class="thing-list">
+    <form>
+    <div class="col-2-12 ">
+        <div class="filter-options">
+{{/hideOptions}}
+{{#hideOptions}}
+<div class="thing-list col-1-1">
+    <form>
+    <div class="filter-options" style="display: none">
+        <input type="hidden" name="sort" value="{{sort}}">
+{{/hideOptions}}
         <input type="hidden" name="ignoreQueryParams" value="{{ignoreQueryParams}}">
         <input type="hidden" name="seedType" value="{{type}}">
-        <input type="hidden" name="seedSort" value="{{type}}">
-        <form>
-            <input type="hidden" name="collection" value="{{collection}}">
-            <input type="hidden" name="username" value="{{username}}">
-            <input type="hidden" name="npm_username" value="{{npm_username}}">
-            <input type="hidden" name="term" value="">
-            <input type="hidden" name="page" value="">
-            <input type="hidden" name="per_page" value="{{per_page}}">
+        <input type="hidden" name="seedSort" value="{{sort}}">
+        <input type="hidden" name="collection" value="{{collection}}">
+        <input type="hidden" name="category" value="{{category}}">
+        <input type="hidden" name="username" value="{{username}}">
+        <input type="hidden" name="npm_username" value="{{npm_username}}">
+        <input type="hidden" name="term" value="">
+        <input type="hidden" name="page" value="">
+        <input type="hidden" name="per_page" value="{{per_page}}">
+          
+        <span class="filter-options-section">
+            <div>Filter</div>
             <ul class="filter-options-filter">
-                <li><input name="type" value="node" type="checkbox" id="thing-list-{{id}}-type-node"/><label class="gistbox-filter-label" for="thing-list-{{id}}-type-node">nodes</label></li>
-                <li><input name="type" value="flow" type="checkbox" id="thing-list-{{id}}-type-flow"/><label class="gistbox-filter-label" for="thing-list-{{id}}-type-flow">flows</label></li>
-                <li><input name="type" value="collection" type="checkbox" id="thing-list-{{id}}-type-collection"/><label class="gistbox-filter-label" for="thing-list-{{id}}-type-collection">collections</label></li>
+                {{^hideTypeFilter}}
+                <li><input name="type" value="node" type="checkbox" id="thing-list-{{id}}-type-node"/><label class="gistbox-filter-label" for="thing-list-{{id}}-type-node">Nodes</label></li>
+                <li><input name="type" value="flow" type="checkbox" id="thing-list-{{id}}-type-flow"/><label class="gistbox-filter-label" for="thing-list-{{id}}-type-flow">Flows</label></li>
+                <li><input name="type" value="collection" type="checkbox" id="thing-list-{{id}}-type-collection"/><label class="gistbox-filter-label" for="thing-list-{{id}}-type-collection">Collections</label></li>
+                {{/hideTypeFilter}}
             </ul>
-            <span class="filter-sort">
-                <ul class="filter-options-filter">
-                    <li><input type="radio" name="sort" value="recent" id="thing-list-{{id}}-sort-recent"> <label class="gistbox-sort-label" for="thing-list-{{id}}-sort-recent">recent</label></li>
-                    <li><input type="radio" name="sort" value="downloads" id="thing-list-{{id}}-sort-downloads"> <label class="gistbox-sort-label" for="thing-list-{{id}}-sort-downloads">downloads</label></li>
-                    <li><input type="radio" name="sort" value="rating" id="thing-list-{{id}}-sort-rating"> <label class="gistbox-sort-label" for="thing-list-{{id}}-sort-rating">rating</label></li>
-                </ul>
-            </span>
-        </form>
+        </span>
+        <span class="filter-options-section" {{^isAdmin}}style="display: none;"{{/isAdmin}}>
+            <div>Category</div>
+            <ul class="filter-options-category">
+                {{#categories}}
+                <li><input name="category" value="{{_id}}" type="checkbox" id="thing-list-{{id}}-category-{{_id}}"/><label class="gistbox-filter-label" for="thing-list-{{id}}-category-{{_id}}">{{name}}</label></li>
+                {{/categories}}
+            </ul>
+        </span>
     </div>
+{{^hideOptions}}
+</div>
+<div class="col-10-12 ">
+    <div class="filter-options-sort">
+        Sort by: 
+        <select name="sort" id="thing-list-{{id}}-sort">
+            <option value="recent">Recently Updated</option>
+            <option value="downloads">Downloads</option>
+            <option value="rating">Rating</option>
+        </select>
+    </div>
+{{/hideOptions}}
     <div>
         <ul class="gistlist" style=" clear: both;">
             {{>_gistitems}}
@@ -40,3 +68,7 @@
     </div> -->
     </div>
 </div>
+{{^hideOptions}}
+</form>
+</div>
+{{/hideOptions}}

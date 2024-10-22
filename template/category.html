@@ -1,0 +1,30 @@
+{{>_header}}
+
+<div class="grid thing-list-section main-content">
+    <div class="col-1-1 docs-content">
+        {{#message}}
+        <a href="#" onclick="return clearSystemMessage()" class="system-message">{{ . }} <i class="fa fa-close"></i></a>
+        <script>
+            window.history.replaceState({}, document.title, window.location.pathname);
+            function clearSystemMessage(){
+                $(".system-message").fadeOut()
+                return false;
+            }
+        </script>
+        {{/message}}
+        <h1 class="flow-title" style="margin-bottom: 10px;">{{ category.name }}</h1>
+        {{ #isAdmin }}
+            <div class="flowinfo" style="text-align: right;"><a class="user-profile-action" href="/categories/{{category._id}}/edit">edit category</a></div>
+        {{/isAdmin}}
+        <p class="flow-description">{{{ category.description }}}</p>
+    </div>
+</div>
+<div class="grid thing-list-section">
+    {{#query}}{{>_gistlist}}{{/query}}
+</div>
+<script>
+    $(function() {
+    })
+</script>
+
+{{>_footer}}

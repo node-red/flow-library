@@ -82,7 +82,7 @@
     </div>
 </div>
 {{>_rateTools}}
-<script src="/js/tags.js"></script>
+{{>_tagTools}}
 <script>
 $(function() {
     function attachCopy(selector) {
@@ -144,50 +144,6 @@ $(function() {
             '<p>It will be removed from the library, but your GitHub Gist will not be affected.'+
             '<div class="dialog-buttons"><button type="button" onclick="return closeDialog();">Cancel</button><button type="submit">Delete</button></div>'+
             '</form></div></div>').appendTo('body').show();
-    });
-
-
-    var tagEditor = null;
-    $('#edit-tags').click(function(event) {
-        event.preventDefault();
-        $('ul.flow-tags').attr('id',"add-flow-tags");
-        tagEditor = tagger({lipre:'',lipost:''});
-        $('#edit-tags').hide();
-        $('#edit-tags-cancel').show();
-        $('#edit-tags-done').show();
-        $('ul.flow-tags').click();
-    });
-
-    $('#edit-tags-cancel').click(function(event) {
-        if (tagEditor) {
-            $('#edit-tags-cancel').hide();
-            $('#edit-tags-done').hide();
-            tagEditor.cancel();
-            $('ul.flow-tags').attr('id',"");
-            $('#edit-tags').show();
-        }
-        event.preventDefault();
-    });
-
-
-    $('#edit-tags-done').click(function(event) {
-        $("#edit-tags-done-loader").show();
-        if (tagEditor) {
-            $('#edit-tags-cancel').hide();
-            $('#edit-tags-done').hide();
-            var tags = tagEditor.get();
-            $.post("/flow/{{ id }}/tags",{tags:tags},function(data) {
-                tagEditor.strip();
-                $('ul.flow-tags').attr('id',"");
-                tagEditor = null;
-                $('#edit-tags').show();
-                $("#edit-tags-done-loader").hide();
-            }).fail(function(err) {
-                console.log(err);
-                $("#edit-tags-done-loader").hide();
-            });
-        }
-        event.preventDefault();
     });
 {{/owned}}
 

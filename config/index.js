@@ -16,6 +16,13 @@ try {
     module.exports.session.secret = process.env.NR_SESSION_SECRET || module.exports.session.secret
     if (process.env.NR_ADMINS) {
         module.exports.admins = process.env.NR_ADMINS.split(',').map(t => t.trim())
+    } else {
+        module.exports.admins = []
+    }
+    if (process.env.NR_MODERATORS) {
+        module.exports.moderators = process.env.NR_MODS.split(',').map(t => t.trim())
+    } else {
+        module.exports.moderators = []
     }
 
     module.exports.mastodon.url = process.env.NR_MASTODON_URL || module.exports.mastodon.url

@@ -65,6 +65,7 @@ const limiter = rateLimit({
         app.use(require('./routes/users'))
         app.use(require('./routes/api'))
         app.use(require('./routes/collections'))
+        app.use(require('./routes/categories'))
         app.use(function (err, req, res, next) {
             if (err.code !== 'EBADCSRFTOKEN') {
                 console.log('here', err)

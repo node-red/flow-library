@@ -1,0 +1,10 @@
+{{>_header}}
+<div class="grid" style="background: #fff;">
+    <h3 class="pagetitle">Tag: {{ tag }}</h3>
+</div>
+<div class="grid main-content">
+  <div id="readme" class="offset1 span10">
+      <ul>{{#gists}}{{>_gistlist}}{{/gists}}</ul>
+  </div>
+</div>
+{{>_footer}}

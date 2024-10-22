@@ -8,6 +8,7 @@ const uuid = require('uuid')
 const validatePackage = require('validate-npm-package-name')
 
 const settings = require('../config')
+const categories = require('../lib/categories')
 const collections = require('../lib/collections')
 const events = require('../lib/events')
 const npmModules = require('../lib/modules')
@@ -55,7 +56,8 @@ async function getNode (id, scope, collection, req, res) {
     try {
         const node = await npmNodes.get(id)
         node.sessionuser = req.session.user
-        node.isAdmin = node.sessionuser && (settings.admins.indexOf(req.session.user.login) !== -1)
+        node.isAdmin = node.sessionuser && req.session.user.isAdmin
+        node.isModerator = req.session.user?.isModerator
         node.Admins = settings.admins
         node.csrfToken = req.csrfToken()
         node.pageTitle = req.params.id + ' (node)'
@@ -195,6 +197,20 @@ async function getNode (id, scope, collection, req, res) {
             node.collectionNext = collectionSiblings[0].next
             node.collectionNextType = collectionSiblings[0].nextType
         }
+        if (node.isAdmin || node.isModerator) {
+            node.allCategories = await categories.getAll()
+            if (node.categories) {
+                const nodeCategories = new Set()
+                node.categories.forEach(cat => nodeCategories.add(cat))
+                node.allCategories = node.allCategories.map(cat => {
+                    if (nodeCategories.has(cat._id)) {
+                        return { selected: true, ...cat }
+                    }
+                    return cat
+                })
+            }
+        }
+
         res.send(mustache.render(templates.node, node, templates.partials))
     } catch (err) {
         if (err) {
@@ -289,14 +305,7 @@ app.post('/node/:scope(@[^\\/]{1,})?/:id([^@][^\\/]{1,})/rate', appUtils.csrfPro
     }
 })
 
-app.get('/add/node', appUtils.csrfProtection(), function (req, res) {
-    const context = {}
-    context.sessionuser = req.session.user
-    context.csrfToken = req.csrfToken()
-    res.send(mustache.render(templates.addNode, context, templates.partials))
-})
-
-app.delete('/node/:scope(@[^\\/]{1,})?/:id([^@][^\\/]{1,})', appUtils.csrfProtection(), async function (req, res) {
+app.post('/node/:scope(@[^\\/]{1,})?/:id([^@][^\\/]{1,})/category', appUtils.csrfProtection(), async function (req, res) {
     let id = req.params.id
     if (req.params.scope) {
         id = req.params.scope + '/' + id
@@ -306,7 +315,33 @@ app.delete('/node/:scope(@[^\\/]{1,})?/:id([^@][^\\/]{1,})', appUtils.csrfProtec
         res.status(404).send()
         return
     }
-    if (!req.session.user || settings.admins.indexOf(req.session.user.login) === -1) {
+    if (req.session.user?.isAdmin || req.session.user?.isModerator) {
+        let categories = req.body.category || []
+        if (!Array.isArray(categories)) {
+            categories = [categories]
+        }
+        await npmNodes.update(id, { categories })
+    }
+    res.writeHead(303, {
+        Location: '/node/' + id
+    })
+    res.end()
+})
+
+app.get('/add/node', appUtils.csrfProtection(), function (req, res) {
+    const context = {}
+    context.sessionuser = req.session.user
+    context.csrfToken = req.csrfToken()
+    res.send(mustache.render(templates.addNode, context, templates.partials))
+})
+
+app.delete('/node/:scope(@[^\\/]{1,})?/:id([^@][^\\/]{1,})', appUtils.csrfProtection(), appUtils.requireRole('admin'), async function (req, res) {
+    let id = req.params.id
+    if (req.params.scope) {
+        id = req.params.scope + '/' + id
+    }
+    const isValid = validatePackage(id)
+    if (!isValid.validForNewPackages && !isValid.validForOldPackages) {
         res.status(404).send()
         return
     }

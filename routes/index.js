@@ -3,6 +3,8 @@ const querystring = require('querystring')
 const express = require('express')
 const mustache = require('mustache')
 
+const settings = require('../config')
+const categories = require('../lib/categories')
 const templates = require('../lib/templates')
 const viewster = require('../lib/view')
 
@@ -29,11 +31,20 @@ function getPrevPageQueryString (count, query) {
     }
     return null
 }
-
+app.use(function (req, res, next) {
+    if (req.session.user) {
+        req.session.user.isAdmin = settings.admins.indexOf(req.session.user.login) !== -1
+        req.session.user.isModerator = req.session.user.isAdmin || settings.moderators.indexOf(req.session.user.login) !== -1
+    }
+    next()
+})
 app.get('/', async function (req, res) {
     const context = {}
 
+    context.categories = await categories.getAll()
     context.sessionuser = req.session.user
+    context.isAdmin = req.session.user?.isAdmin
+    context.isModerator = req.session.user?.isModerator
     context.nodes = {
         type: 'node',
         per_page: context.sessionuser ? 6 : 3,
@@ -137,10 +148,13 @@ app.get('/things', async function (req, res) {
     }
 })
 
-app.get('/search', function (req, res) {
+app.get('/search', async function (req, res) {
     const context = {}
     context.sessionuser = req.session.user
+    context.isAdmin = req.session.user?.isAdmin
+    context.isModerator = req.session.user?.isModerator
     context.fullsearch = true
+    context.categories = await categories.getAll()
     const query = queryFromRequest(req)
     context.query = query
     res.send(mustache.render(templates.search, context, templates.partials))

@@ -3,7 +3,6 @@ const mustache = require('mustache')
 
 const uuid = require('uuid')
 
-const settings = require('../config')
 const collections = require('../lib/collections')
 const gister = require('../lib/gists')
 const npmNodes = require('../lib/nodes')
@@ -152,7 +151,7 @@ async function getFlow (id, collection, req, res) {
         gist.owned = (gist.sessionuser &&
             (
                 (gist.owner.login === gist.sessionuser.login) ||
-                (settings.admins.indexOf(req.session.user.login) !== -1)
+                (gist.sessionuser.isAdmin)
             ))
 
         gist.nodeTypes = []
@@ -205,7 +204,7 @@ async function getFlow (id, collection, req, res) {
 async function verifyOwner (req, res, next) {
     if (!req.session.user) {
         res.status(403).end()
-    } else if (settings.admins.indexOf(req.session.user.login) !== -1) {
+    } else if (req.session.user.isAdmin) {
         next()
     } else {
         try {
@@ -222,7 +221,6 @@ async function verifyOwner (req, res, next) {
 }
 
 app.post('/flow/:id/tags', verifyOwner, async function (req, res) {
-    // TODO: verify req.session.user == gist owner
     try {
         await gister.updateTags(req.params.id, req.body.tags)
         res.status(200).end()

@@ -21,7 +21,7 @@ app.get('/user/:username', async function (req, res) {
         type: ''
     }
 
-    const user = await db.users.find({ _id: context.query.username })
+    const user = await db.users.find({ _id: context.query.username }).toArray()
     if (user && user.length > 0) {
         context.user = user[0]
         if (user[0].npm_login && user[0].npm_login !== context.username) {

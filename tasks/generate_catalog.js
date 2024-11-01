@@ -11,7 +11,8 @@ const viewster = require('../lib/view')
             official: 1,
             description: 1,
             keywords: 1,
-            types: 1
+            types: 1,
+            categories: 1
         })
         const modules = things.map(function (t) {
             return {
@@ -21,6 +22,7 @@ const viewster = require('../lib/view')
                 updated_at: t.updated_at,
                 types: t.types,
                 keywords: t.keywords,
+                categories: t.categories,
                 url: 'https://flows.nodered.org/node/' + t._id
             }
         })

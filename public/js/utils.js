@@ -86,7 +86,7 @@ const utils = (function () {
         if (!thingUrl) {
             thingUrl = '/things'
             let query = thingList.find('form').serialize()
-            console.log(query)
+            // console.log(query)
             let components = query.split('&')
             components = components.filter(function (part) {
                 return !/(ignoreQueryParams|seedType|seedSort)/.test(part) &&
@@ -102,17 +102,19 @@ const utils = (function () {
         if (updateUrl) {
             if (history.pushState) {
                 let historyUrl = thingUrl.split('?')[1]
-                // Need to remove username=xyz/collection=xyz/category=xyz if present
-                // If collection is present, remove type= as well
-                if (/collection=/.test(historyUrl)) {
-                    historyUrl = historyUrl.replace(/&?type=[^&]+/g, '')
+                if (historyUrl) {
+                    // Need to remove username=xyz/collection=xyz/category=xyz if present
+                    // If collection is present, remove type= as well
+                    if (/collection=/.test(historyUrl)) {
+                        historyUrl = historyUrl.replace(/&?type=[^&]+/g, '')
+                    }
+                    historyUrl = historyUrl.replace(/&?(username|collection)=[^&]+/g, '').replace(/^&/, '')
+                    if (historyUrl === 'page=1') {
+                        historyUrl = ''
+                    }
+                    historyUrl = location.pathname + (historyUrl.length > 0 ? ('?' + historyUrl) : '')
+                    window.history.pushState({}, '', historyUrl)
                 }
-                historyUrl = historyUrl.replace(/&?(username|collection)=[^&]+/g, '').replace(/^&/, '')
-                if (historyUrl === 'page=1') {
-                    historyUrl = ''
-                }
-                historyUrl = location.pathname + (historyUrl.length > 0 ? ('?' + historyUrl) : '')
-                window.history.pushState({}, '', historyUrl)
             }
         }
         $(list).children(':not(.gistbox-placeholder)').css('opacity', 0.3)

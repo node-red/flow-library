@@ -116,6 +116,11 @@ async function getShareableFlow (id, collection, req, res) {
 async function getFlow (id, collection, req, res) {
     try {
         const gist = await gister.get(id)
+        if (!gist) {
+            const err = new Error()
+            err.code = 404
+            throw err
+        }
         gist.sessionuser = req.session.user
         gist.csrfToken = req.csrfToken()
         gist.collection = collection
@@ -188,7 +193,7 @@ async function getFlow (id, collection, req, res) {
         res.send(mustache.render(templates.gist, gist, templates.partials))
     } catch (err) {
         // TODO: better error logging without the full stack trace
-        if (err) {
+        if (err && err.code !== 404) {
             console.log('Error loading flow:', id)
             console.log(err)
         }

@@ -69,7 +69,7 @@ function loginCallback (req, res) {
             res.end()
         } catch (err) {
             if (err) {
-                res.writeHead(err.code)
+                res.writeHead(400)
                 res.end(err + '')
             }
         }

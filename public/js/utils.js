@@ -121,14 +121,26 @@ const utils = (function () {
         let done
         $.getJSON(thingUrl, function (data) {
             if (data.links.prev) {
-                thingList.find('.thing-list-nav-prev').attr('href', data.links.prev).css('opacity', 1)
+                thingList.find('.thing-list-nav-prev').attr('href', data.links.prev).css({
+                    opacity: 1,
+                    'pointer-events': 'auto'
+                })
             } else {
-                thingList.find('.thing-list-nav-prev').css('opacity', 0)
+                thingList.find('.thing-list-nav-prev').css({
+                    opacity: 0,
+                    'pointer-events': 'none'
+                })
             }
             if (data.links.next) {
-                thingList.find('.thing-list-nav-next').attr('href', data.links.next).css('opacity', 1)
+                thingList.find('.thing-list-nav-next').attr('href', data.links.next).css({
+                    opacity: 1,
+                    'pointer-events': 'auto'
+                })
             } else {
-                thingList.find('.thing-list-nav-next').css('opacity', 0)
+                thingList.find('.thing-list-nav-next').css({
+                    opacity: 0,
+                    'pointer-events': 'none'
+                })
             }
             if (data.meta.results.count === 0) {
                 thingList.find('.thing-list-nav-page-info').hide()
@@ -173,6 +185,7 @@ $(function () {
         thingList.find('a.thing-list-nav-link').on('click', function (evt) {
             evt.preventDefault()
             utils.loadThingList(thingList, true, $(this).attr('href'))
+            $(window).scrollTop(0)
         })
 
         utils.initThingList(thingList)

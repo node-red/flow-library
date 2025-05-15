@@ -12,6 +12,12 @@
             }
         </script>
         {{/message}}
+        {{#deprecated}}
+        <div class="deprecated-notice">
+            <h1>This module has been deprecated.</h1>
+            {{ #deprecatedMessage }}<code>{{ deprecatedMessage }}</code>{{/deprecatedMessage}}
+        </div>
+        {{/deprecated}}
         <h1 class="flow-title" style="margin-bottom: 10px;">{{ name }} <span class="flow-version">{{ versions.latest.version }}</span></h1>
         <p class="flow-description">{{ description }}</p>
         <p class="flowmeta flow-install">
@@ -77,6 +83,7 @@
                 {{#isAdmin}}
                     <button id="remove-button" type="submit" class="user-profile-action" style="background: none; color: #aa6767"><span id="remove-node-label">remove from library</span><img id="remove-node-loader" class="loader" src="/images/loader.gif" /></button>
                     <div id="remove-node-error" class="dialog-warning" style="position:relative"></div>
+                    <button id="deprecated-button" type="submit" class="user-profile-action" style="background: none; color: #aa6767"><span id="deprecate-node-label">deprecate module</span><img id="deprecate-node-loader" class="loader" src="/images/loader.gif" /></button>
                 {{/isAdmin}}
             </div>
             {{/sessionuser}}
@@ -155,6 +162,20 @@
         </form>
     </div>
 </div>
+
+<div class="dialog-shade dialog-fixed" id="edit-node-deprecation-shade">
+    <div class="dialog" id="edit-node-deprecation">
+        <form action="/node/{{_id}}/deprecate" method="POST">
+            <input name="_csrf" type="hidden" value="{{csrfToken}}">
+            <h4>Update deprecation details</h4>
+            <p><input id="node-deprecated-cb" type="checkbox" name="deprecated" {{#deprecated}}checked{{/deprecated}}><label for="node-deprecated-cb">Mark as deprecated</label></p>
+            <p><textarea name="message" id="message">{{ deprecatedMessage }}</textarea></p>
+            <div class="dialog-buttons">
+                <button type="button" onclick="return closeDialog();">Cancel</button> <button type="submit">Update</button>
+            </div>
+        </form>
+    </div>
+</div>
 {{/isAdmin}}
 
 
@@ -172,6 +193,11 @@
             $("body").css({height:"100%",overflow:"hidden"});
             e.preventDefault();
             $("#edit-node-category-shade").show();
+        });
+        $("#deprecated-button").click(function(e) {
+            $("body").css({height:"100%",overflow:"hidden"});
+            e.preventDefault();
+            $("#edit-node-deprecation-shade").show();
         });
         {{/isAdmin}}
 

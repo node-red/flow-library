@@ -13,7 +13,8 @@ const viewster = require('../lib/view')
             keywords: 1,
             types: 1,
             categories: 1,
-            downloads: 1
+            downloads: 1,
+            deprecated: 1
         })
         const modules = things.map(function (t) {
             return {
@@ -25,7 +26,8 @@ const viewster = require('../lib/view')
                 keywords: t.keywords,
                 categories: t.categories,
                 url: 'https://flows.nodered.org/node/' + t._id,
-                downloads: t.downloads
+                downloads: t.downloads,
+                deprecated: t.deprecated || undefined
             }
         })
 

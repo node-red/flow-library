@@ -1362,7 +1362,8 @@ body.flowviewer-share {
     border-bottom-left-radius: 15px;
 
 }
-#report-node-dialog textarea {
+#report-node-dialog textarea,
+#edit-node-deprecation textarea {
     border: 1px solid #999;
     font-size: 14px;
     width: 100%;
@@ -1712,4 +1713,24 @@ span.username {
     right: 10px;
     top: 12px;
 
+}
+
+.deprecated-notice {
+    display: block;
+    border: 2px solid #eec0c0;
+    background: #eec0c0;
+    padding: 8px;
+    border-bottom-left-radius: 8px;
+    border-top-right-radius: 8px;
+    margin-bottom: 30px;
+}
+.deprecated-notice h1 {
+    margin: 10px 0;
+    font-size: 22px;
+}
+.deprecated-notice code {
+    display: block;
+    padding: 8px;
+    border-top-right-radius: 8px;
+    border-bottom-left-radius: 8px;
 }

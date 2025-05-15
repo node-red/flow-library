@@ -62,6 +62,10 @@ async function getNode (id, scope, collection, req, res) {
         node.csrfToken = req.csrfToken()
         node.pageTitle = req.params.id + ' (node)'
 
+        if (node.deprecated && typeof node.deprecated === 'string') {
+            node.deprecatedMessage = node.deprecated
+        }
+
         prepareScorecard(node)
 
         if (req.query.m) {
@@ -321,6 +325,32 @@ app.post('/node/:scope(@[^\\/]{1,})?/:id([^@][^\\/]{1,})/category', appUtils.csr
             categories = [categories]
         }
         await npmNodes.update(id, { categories })
+    }
+    res.writeHead(303, {
+        Location: '/node/' + id
+    })
+    res.end()
+})
+
+app.post('/node/:scope(@[^\\/]{1,})?/:id([^@][^\\/]{1,})/deprecate', appUtils.csrfProtection(), async function (req, res) {
+    let id = req.params.id
+    if (req.params.scope) {
+        id = req.params.scope + '/' + id
+    }
+    const isValid = validatePackage(id)
+    if (!isValid.validForNewPackages && !isValid.validForOldPackages) {
+        res.status(404).send()
+        return
+    }
+    if (req.session.user?.isAdmin || req.session.user?.isModerator) {
+        let deprecated = false
+        if (req.body.deprecated == 'on') {
+            deprecated = true
+            if (req.body.message?.trim().length > 0) {
+                deprecated = req.body.message.trim()
+            }
+        }
+        await npmNodes.update(id, { deprecated })
     }
     res.writeHead(303, {
         Location: '/node/' + id

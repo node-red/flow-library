@@ -19,7 +19,7 @@
         "csurf": "1.11.0",
         "express": "4.21.1",
         "express-rate-limit": "7.4.1",
-        "express-session": "1.18.1",
+        "express-session": "1.18.2",
         "fs-extra": "11.2.0",
         "jsdom": "25.0.1",
         "marked": "14.1.2",

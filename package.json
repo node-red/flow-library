@@ -30,7 +30,7 @@
         "oauth": "0.10.0",
         "request": "2.88.2",
         "serve-static": "1.16.2",
-        "tar": "7.4.3",
+        "tar": "7.5.8",
         "uuid": "10.0.0",
         "validate-npm-package-name": "5.0.0"
     },

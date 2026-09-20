@@ -3,7 +3,7 @@ name: PublishUpdatedCatalog
 on:
   workflow_dispatch:
   schedule:
-    - cron:  '*/30 * * * *'
+    - cron:  '7,37 * * * *'
 jobs:
   generate:
     name: 'Update Flow Library Catalogue'

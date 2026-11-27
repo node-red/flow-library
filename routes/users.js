@@ -103,7 +103,7 @@ app.post('/settings/npm-verify', appUtils.csrfProtection(), function (req, res) 
     const options = {
         host: 'registry.npmjs.org',
         port: 443,
-        path: '/-/npm/v1/user',
+        path: '/-/whoami',
         method: 'get',
         headers: {
             Authorization: 'Bearer ' + token
@@ -128,7 +128,7 @@ app.post('/settings/npm-verify', appUtils.csrfProtection(), function (req, res) 
             }
             users.get(username).then(function (user) {
                 user.npm_verified = true
-                user.npm_login = data.name
+                user.npm_login = data.username
                 return users.update(user)
             }).then(user => {
                 res.writeHead(303, {

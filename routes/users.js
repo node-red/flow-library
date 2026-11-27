@@ -120,9 +120,6 @@ app.post('/settings/npm-verify', appUtils.csrfProtection(), function (req, res) 
                 data = JSON.parse(data)
             }
             if (response.statusCode !== 200) {
-                console.log(response.statusCode)
-                console.log(response.statusMessage)
-                console.log('data', data)
                 res.writeHead(303, {
                     Location: '/settings#npm-verify=fail'
                 })
